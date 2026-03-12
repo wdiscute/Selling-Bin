@@ -1,0 +1,8 @@
+{
+  "values": {
+    "minecraft:structure_void": {
+      "base_value": 20,
+      "processors": []
+    }
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "redstone",
+  "key": {
+    "B": {
+      "item": "minecraft:barrel"
+    },
+    "C": {
+      "tag": "minecraft:wool_carpets"
+    },
+    "S": {
+      "tag": "minecraft:slabs"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "SBS",
+    "SSS"
+  ],
+  "result": {
+    "count": 1,
+    "id": "selling_bin:selling_bin"
+  }
+}

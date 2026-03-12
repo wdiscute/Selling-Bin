@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.140'
+    id 'net.neoforged.moddev' version '2.0.121'
     id 'idea'
 }
 
@@ -17,16 +17,90 @@ tasks.named('wrapper', Wrapper).configure {
 version = mod_version
 group = mod_group_id
 
-repositories {
-    // Add here additional repositories if required by some of the dependencies below.
+java {
+    withSourcesJar()
+}
+
+repositories
+        {
+            //emi
+            maven {
+                name = "TerraformersMC"
+                url = "https://maven.terraformersmc.com/"
+            }
+
+            //favouriteless
+            maven {
+                url = "https://maven.favouriteless.net/releases"
+            }
+
+            //modrinth
+            maven {
+                url = "https://api.modrinth.com/maven"
+            }
+
+            repositories {
+                exclusiveContent {
+                    forRepository {
+                        maven {
+                            url "https://cursemaven.com"
+                        }
+                    }
+                    filter {
+                        includeGroup "curse.maven"
+                    }
+                }
+            }
+        }
+
+dependencies {
+    jarJar(implementation(group: 'com.wdiscute', name: 'libtooltips')) {
+        version {
+            // Version used in your workspace and bundled in mod jar
+            prefer '1.4'
+        }
+    }
+
+    //tiny multiblock lib
+    jarJar(implementation("maven.modrinth:tiny-multiblock-lib:neo-1.21.1-${tiny_multiblock_lib_version}"))
+
+    //EMI
+    compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
+    runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
+
+}
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = base.archivesName.get()
+            from components.java
+        }
+    }
+
+    repositories {
+        if (System.getenv("MAVEN_USER") == null || System.getenv("MAVEN_PASS") == null) {
+            mavenLocal()
+        } else maven {
+            name = "wdReleases"
+            url = "https://maven.favouriteless.net/releases"
+
+            credentials {
+                username = System.getenv("MAVEN_USER")
+                password = System.getenv("MAVEN_PASS")
+            }
+        }
+    }
 }
 
 base {
     archivesName = mod_id
 }
 
-// Mojang ships Java 21 to end users in 1.21.1, so mods should target Java 21.
-java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+java {
+    toolchain.languageVersion = JavaLanguageVersion.of(21)
+    withSourcesJar()
+}
 
 neoForge {
     // Specify the version of NeoForge to use.
@@ -86,7 +160,7 @@ neoForge {
             // Recommended logging level for the console
             // You can set various levels here.
             // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-            logLevel = org.slf4j.event.Level.DEBUG
+            logLevel = org.slf4j.event.Level.WARN
         }
     }
 
@@ -111,29 +185,6 @@ configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
 
-dependencies {
-    // Example optional mod dependency with JEI
-    // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
-    // compileOnly "mezz.jei:jei-${mc_version}-common-api:${jei_version}"
-    // compileOnly "mezz.jei:jei-${mc_version}-neoforge-api:${jei_version}"
-    // We add the full version to localRuntime, not runtimeOnly, so that we do not publish a dependency on it
-    // localRuntime "mezz.jei:jei-${mc_version}-neoforge:${jei_version}"
-
-    // Example mod dependency using a mod jar from ./libs with a flat dir repository
-    // This maps to ./libs/coolmod-${mc_version}-${coolmod_version}.jar
-    // The group id is ignored when searching -- in this case, it is "blank"
-    // implementation "blank:coolmod-${mc_version}:${coolmod_version}"
-
-    // Example mod dependency using a file as dependency
-    // implementation files("libs/coolmod-${mc_version}-${coolmod_version}.jar")
-
-    // Example project dependency using a sister or child project:
-    // implementation project(":myproject")
-
-    // For more info:
-    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
-    // http://www.gradle.org/docs/current/userguide/dependency_management.html
-}
 
 // This block of code expands all declared replace properties in the specified resource targets.
 // A missing property will result in an error. Properties are expanded using ${} Groovy notation.
@@ -147,6 +198,8 @@ var generateModMetadata = tasks.register("generateModMetadata", ProcessResources
             mod_name               : mod_name,
             mod_license            : mod_license,
             mod_version            : mod_version,
+            mod_authors            : mod_authors,
+            neo_version_range      : neo_version_range
     ]
     inputs.properties replaceProperties
     expand replaceProperties
@@ -159,19 +212,6 @@ sourceSets.main.resources.srcDir generateModMetadata
 // To avoid having to run "generateModMetadata" manually, make it run on every project reload
 neoForge.ideSyncTask generateModMetadata
 
-// Example configuration to allow publishing using the maven-publish plugin
-publishing {
-    publications {
-        register('mavenJava', MavenPublication) {
-            from components.java
-        }
-    }
-    repositories {
-        maven {
-            url "file://${project.projectDir}/repo"
-        }
-    }
-}
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation

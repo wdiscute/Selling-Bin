@@ -1,0 +1,13 @@
+{
+  "selling_bin.configuration.always_show_selling_bin_price" : "Always Show Selling Bin Prices",
+  "selling_bin.configuration.selling_in_multiplier" : "Selling Bin Multiplier",
+
+  "block.selling_bin.selling_bin" : "Selling Bin",
+
+  "gui.selling_bin.selling_bin.sell" : "Sell",
+  "gui.selling_bin.selling_bin.sell_all" : "Sell All",
+  "gui.selling_bin.selling_bin.auto_sell" : "Auto-Sell",
+  "gui.selling_bin.selling_bin.sell_sound" : "Sell Sound",
+  "gui.selling_bin.selling_bin.currency_selected" : "Currency:",
+  "gui.selling_bin.selling_bin.highest" : "Highest Possible"
+}
