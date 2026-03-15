@@ -4,6 +4,7 @@ import com.wdiscute.sellingbin.Config;
 import com.wdiscute.sellingbin.SellingBin;
 import com.wdiscute.sellingbin.bin.Currency;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
@@ -27,7 +28,7 @@ public class TooltipEvents
         //selling bin info
         if (Screen.hasShiftDown() || Config.ALWAYS_SHOW_SELLING_BIN_PRICE.get())
         {
-            int value = Currency.calculateValueFromSingleStack(stack);
+            int value = Currency.calculateValueFromSingleStack(stack, Minecraft.getInstance().player);
             if (value > 0)
             {
                 MutableComponent literal = Component.literal(Currency.getStringFromValue(value));

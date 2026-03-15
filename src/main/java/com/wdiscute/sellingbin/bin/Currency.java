@@ -7,6 +7,7 @@ import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -42,7 +43,7 @@ public record Currency(Item item, int value)
     }
 
     //this does not take into account stack count!
-    public static int calculateValueFromSingleStack(ItemStack is)
+    public static int calculateValueFromSingleStack(ItemStack is, Player player)
     {
         ModDataMaps.ItemValue itemValue = ModDataMaps.getOrDefault(is, ModDataMaps.SELLING_BIN_VALUE, ModDataMaps.ItemValue.EMPTY);
 
@@ -50,7 +51,7 @@ public record Currency(Item item, int value)
 
         for (var p : itemValue.processors())
         {
-            value += p.addValue(value, itemValue.baseValue(), is);
+            value += p.addValue(value, itemValue.baseValue(), is, player);
         }
 
         return (int) (value * Config.SELLING_BIN_MULTIPLIER.get());

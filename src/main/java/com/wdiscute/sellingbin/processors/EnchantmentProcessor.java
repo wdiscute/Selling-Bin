@@ -6,6 +6,7 @@ import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -67,7 +68,7 @@ public class EnchantmentProcessor extends AbstractProcessor
     }
 
     @Override
-    public int addValue(int baseValue, int currentValue, ItemStack itemStack)
+    public int addValue(int baseValue, int currentValue, ItemStack itemStack, Player player)
     {
         if (!EnchantmentHelper.hasAnyEnchantments(itemStack)) return 0;
 

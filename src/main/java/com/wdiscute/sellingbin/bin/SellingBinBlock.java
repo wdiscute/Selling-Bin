@@ -113,7 +113,7 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
     @Override
     protected ItemInteractionResult useItemOn(ItemStack handStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
-        int value = Currency.calculateValueFromSingleStack(handStack);
+        int value = Currency.calculateValueFromSingleStack(handStack, player);
         if (value > 0)
         {
             WorldlyContainer container = getContainer(state, level, pos);

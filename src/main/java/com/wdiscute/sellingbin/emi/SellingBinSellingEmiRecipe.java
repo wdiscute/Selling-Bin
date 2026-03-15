@@ -8,6 +8,7 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -101,7 +102,7 @@ public class SellingBinSellingEmiRecipe implements EmiRecipe
 
         widgets.addText(Component.translatable("gui.selling_bin.base_price"), 67, 1, 0x000000, false);
 
-        int price = Currency.calculateValueFromSingleStack(new ItemStack(item));
+        int price = Currency.calculateValueFromSingleStack(new ItemStack(item), Minecraft.getInstance().player);
 
         widgets.addText(Component.literal(price + " "), 67, 11, 0x000000, false);
 

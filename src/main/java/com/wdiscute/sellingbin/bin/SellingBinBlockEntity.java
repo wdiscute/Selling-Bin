@@ -73,7 +73,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
 
     public void sell(boolean all)
     {
-        int value = Currency.calculateValueFromSingleStack(getItem(SellingBinMenu.ITEM_SLOT));
+        int value = Currency.calculateValueFromSingleStack(getItem(SellingBinMenu.ITEM_SLOT), null);
         ModDataMaps.ItemValue itemValue = ModDataMaps.getOrDefault(getItem(SellingBinMenu.ITEM_SLOT), ModDataMaps.SELLING_BIN_VALUE, ModDataMaps.ItemValue.EMPTY);
         if (value <= 0) return;
 
@@ -334,7 +334,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     @Override
     public boolean canPlaceItemThroughFace(int i, ItemStack itemStack, @org.jetbrains.annotations.Nullable Direction direction)
     {
-        int value = Currency.calculateValueFromSingleStack(itemStack);
+        int value = Currency.calculateValueFromSingleStack(itemStack, null);
         return value > 0 && direction != Direction.DOWN;
     }
 

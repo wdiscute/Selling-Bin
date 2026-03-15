@@ -6,6 +6,7 @@ import com.wdiscute.sellingbin.registry.ModDataMaps;
 import com.wdiscute.sellingbin.SellingBin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
@@ -48,7 +49,7 @@ public abstract class AbstractProcessor
     }
 
 
-    abstract public int addValue(int baseValue, int currentValue, ItemStack itemStack);
+    abstract public int addValue(int baseValue, int currentValue, ItemStack itemStack, Player player);
 
     public boolean shouldCancelShrink(ItemStack itemStack)
     {
