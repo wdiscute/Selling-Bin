@@ -18,6 +18,10 @@
   "gui.selling_bin.currency.empty.3" : "and tutorials on how to customize your own.",
 
 
+  "gui.selling_bin.processor.durability" : "- Price is scaled based on remaining durability.",
+  "gui.selling_bin.processor.food" : "- Price is increased by hunger & saturation.",
+  "gui.selling_bin.processor.enchanted_book" : "- Price is increased based on the enchantment.",
+
 
   "gui.selling_bin.value" : "value",
   "gui.selling_bin.base_price" : "Price:",

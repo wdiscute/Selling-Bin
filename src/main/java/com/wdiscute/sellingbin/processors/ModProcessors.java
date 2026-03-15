@@ -13,7 +13,8 @@ public interface ModProcessors
             DeferredRegister.create(SellingBin.SELLING_BIN_REGISTRY, SellingBin.MOD_ID);
 
     DeferredHolder<AbstractProcessor, AbstractProcessor> DURABILITY = register("durability_processor", DurabilityProcessor::new);
-    //DeferredHolder<AbstractSellingBinProcessor, AbstractSellingBinProcessor> SHULKER_BOX = register("shulker_box_processor", ShulkerBoxProcessor::new);
+    DeferredHolder<AbstractProcessor, AbstractProcessor > FOOD_PROCESSOR = register("food_processor", FoodProcessor::new);
+    DeferredHolder<AbstractProcessor, AbstractProcessor > ENCHANTMENTS_PROCESSOR = register("enchantments_processor", EnchantmentProcessor::new);
 
     static DeferredHolder<AbstractProcessor, AbstractProcessor> register(String name, Supplier<AbstractProcessor> sup)
     {

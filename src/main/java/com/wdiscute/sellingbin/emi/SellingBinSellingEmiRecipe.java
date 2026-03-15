@@ -1,5 +1,6 @@
 package com.wdiscute.sellingbin.emi;
 
+import com.wdiscute.sellingbin.bin.Currency;
 import com.wdiscute.sellingbin.processors.AbstractProcessor;
 import com.wdiscute.sellingbin.registry.ModDataMaps;
 import dev.emi.emi.api.recipe.EmiRecipe;
@@ -11,6 +12,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
@@ -22,6 +24,7 @@ public class SellingBinSellingEmiRecipe implements EmiRecipe
 
     private final ResourceLocation id;
     private final List<EmiIngredient> input;
+    private final Item item;
     private final ModDataMaps.ItemValue itemValue;
     private final List<Component> description;
 
@@ -29,6 +32,7 @@ public class SellingBinSellingEmiRecipe implements EmiRecipe
     {
         this.id = BuiltInRegistries.ITEM.getKey(item);
         this.input = List.of(EmiIngredient.of(Ingredient.of(item)));
+        this.item = item;
         this.itemValue = itemValue;
 
         List<Component> comps = new ArrayList<>();
@@ -96,7 +100,10 @@ public class SellingBinSellingEmiRecipe implements EmiRecipe
         widgets.addSlot(EmiIngredient.of(SellingBinEmiPlugin.currencies), 45, 2).recipeContext(this);
 
         widgets.addText(Component.translatable("gui.selling_bin.base_price"), 67, 1, 0x000000, false);
-        widgets.addText(Component.literal(itemValue.baseValue() + " "), 67, 11, 0x000000, false);
+
+        int price = Currency.calculateValueFromSingleStack(new ItemStack(item));
+
+        widgets.addText(Component.literal(price + " "), 67, 11, 0x000000, false);
 
         widgets.add(new HoverTextWidget(108, 13, 10, 10, description));
 

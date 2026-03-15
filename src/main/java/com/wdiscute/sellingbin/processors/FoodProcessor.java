@@ -2,17 +2,18 @@ package com.wdiscute.sellingbin.processors;
 
 import com.mojang.serialization.MapCodec;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class DurabilityProcessor extends AbstractProcessor
+public class FoodProcessor extends AbstractProcessor
 {
-    public DurabilityProcessor(){}
+    public FoodProcessor(){}
 
-    public static final MapCodec<DurabilityProcessor> CODEC = MapCodec.unit(DurabilityProcessor::new);
+    public static final MapCodec<FoodProcessor> CODEC = MapCodec.unit(FoodProcessor::new);
 
     @Override
     public MapCodec<? extends AbstractProcessor> codec()
@@ -23,7 +24,7 @@ public class DurabilityProcessor extends AbstractProcessor
     @Override
     public DeferredHolder<AbstractProcessor, AbstractProcessor> getRegistryHolder()
     {
-        return ModProcessors.DURABILITY;
+        return ModProcessors.FOOD_PROCESSOR;
     }
 
     @Override
@@ -35,19 +36,16 @@ public class DurabilityProcessor extends AbstractProcessor
     @Override
     public List<Component> getDescription()
     {
-        return List.of(Component.translatable("gui.selling_bin.processor.durability"));
+        return List.of(Component.translatable("gui.selling_bin.processor.food"));
     }
 
     @Override
     public int addValue(int baseValue, int currentValue, ItemStack itemStack)
     {
-        if (itemStack.getDamageValue() == 0) return 0;
+        FoodProperties foodProperties = itemStack.getFoodProperties(null);
 
-        //reduces the current value by a percentage of remaining durability
-        //100% = full untouched
-        //50% = half value
-        float durability = (float) (itemStack.getMaxDamage() - itemStack.getDamageValue()) / itemStack.getMaxDamage();
+        if (foodProperties == null) return 0;
 
-        return (int) (-currentValue * (1 - durability));
+        return (int) (foodProperties.nutrition() + foodProperties.saturation() * 2);
     }
 }

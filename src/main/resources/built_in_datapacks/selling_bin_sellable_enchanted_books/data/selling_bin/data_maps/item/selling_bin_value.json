@@ -1,0 +1,83 @@
+{
+  "values": {
+    "#c:foods": {
+      "base_value": 10,
+      "processors": [
+        {
+          "type": "selling_bin:food_processor"
+        }
+      ]
+    },
+    "minecraft:cake": {
+      "base_value": 200,
+      "processors": []
+    },
+    "minecraft:enchanted_book": {
+      "base_value": 50,
+      "processors": [
+        {
+          "type": "selling_bin:enchantments_processor",
+          "enchantments": {
+            "minecraft:aqua_affinity": 40,
+            "minecraft:bane_of_arthropods": 20,
+            "minecraft:binding_curse": 500,
+            "minecraft:blast_protection": 30,
+            "minecraft:breach": 40,
+            "minecraft:channeling": 300,
+            "minecraft:density": 80,
+            "minecraft:efficiency": 200,
+            "minecraft:feather_falling": 100,
+            "minecraft:fire_aspect": 300,
+            "minecraft:fire_protection": 30,
+            "minecraft:flame": 50,
+            "minecraft:fortune": 500,
+            "minecraft:frost_walker": 40,
+            "minecraft:impaling": 70,
+            "minecraft:infinity": 300,
+            "minecraft:knockback": 70,
+            "minecraft:looting": 700,
+            "minecraft:loyalty": 100,
+            "minecraft:luck_of_the_sea": 30,
+            "minecraft:lure": 50,
+            "minecraft:mending": 500,
+            "minecraft:multishot": 50,
+            "minecraft:piercing": 70,
+            "minecraft:power": 70,
+            "minecraft:projectile_protection": 20,
+            "minecraft:protection": 200,
+            "minecraft:punch": 30,
+            "minecraft:quick_charge": 60,
+            "minecraft:respiration": 90,
+            "minecraft:riptide": 40,
+            "minecraft:sharpness": 240,
+            "minecraft:silk_touch": 500,
+            "minecraft:smite": 240,
+            "minecraft:soul_speed": 130,
+            "minecraft:sweeping_edge": 150,
+            "minecraft:swift_sneak": 700,
+            "minecraft:thorns": 70,
+            "minecraft:unbreaking": 300,
+            "minecraft:vanishing_curse": 500,
+            "minecraft:wind_burst": 50
+          }
+        }
+      ]
+    },
+    "minecraft:enchanted_golden_apple": {
+      "base_value": 37000,
+      "processors": []
+    },
+    "minecraft:golden_apple": {
+      "base_value": 200,
+      "processors": []
+    },
+    "minecraft:honey_bottle": {
+      "base_value": 150,
+      "processors": []
+    },
+    "minecraft:ominous_bottle": {
+      "base_value": 0,
+      "processors": []
+    }
+  }
+}

@@ -26,21 +26,6 @@ public class ModClientEvents
     }
 
     @SubscribeEvent
-    public static void addPackFinders(AddPackFindersEvent event)
-    {
-        //resourcepack must be under resources/pathname/assets/etc
-
-//        event.addPackFinders(
-//                SellingBin.rl("test"),
-//                PackType.CLIENT_RESOURCES,
-//                Component.literal("test_pack"),
-//                PackSource.FEATURE,
-//                false,
-//                Pack.Position.TOP
-//        );
-    }
-
-    @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event)
     {
         event.register(ModMenuTypes.SELLING_BIN_MENU.get(), SellingBinScreen::new);
