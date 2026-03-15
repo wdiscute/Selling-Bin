@@ -45,7 +45,7 @@ public class DGDataMapsProvider extends DataMapProvider
             bin.add(Tags.Items.FOODS, new FoodProcessor().create(10), false);
 
             bin.add(Items.GOLDEN_APPLE.builtInRegistryHolder(), AbstractProcessor.createEmpty(200), false);
-            bin.add(Items.ENCHANTED_GOLDEN_APPLE.builtInRegistryHolder(), AbstractProcessor.createEmpty(37000), false);
+            bin.add(Items.ENCHANTED_GOLDEN_APPLE.builtInRegistryHolder(), AbstractProcessor.createEmpty(3700), false);
             bin.add(Items.HONEY_BOTTLE.builtInRegistryHolder(), AbstractProcessor.createEmpty(150), false);
             bin.add(Items.CAKE.builtInRegistryHolder(), AbstractProcessor.createEmpty(200), false);
 
