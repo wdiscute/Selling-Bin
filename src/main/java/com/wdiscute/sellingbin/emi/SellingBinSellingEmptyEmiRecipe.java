@@ -58,17 +58,13 @@ public class SellingBinSellingEmptyEmiRecipe implements EmiRecipe
     @Override
     public int getDisplayHeight()
     {
-        return 100;
+        return 90;
     }
 
     @Override
     public void addWidgets(WidgetHolder widgets)
     {
-
-        widgets.addText(Component.translatable("gui.selling_bin.selling.empty.0"), 5, 1, 0x000000, false);
-        widgets.addText(Component.translatable("gui.selling_bin.selling.empty.1"), 5, 10, 0x000000, false);
-        widgets.addText(Component.translatable("gui.selling_bin.selling.empty.2"), 5, 20, 0x000000, false);
-        widgets.addText(Component.translatable("gui.selling_bin.selling.empty.3"), 5, 30, 0x000000, false);
-
+        for (int i = 0; i < 9; i++)
+            widgets.addText(Component.translatable("gui.selling_bin.selling.empty." + i), 5, 1 + i * 10, 0x000000, false);
     }
 }

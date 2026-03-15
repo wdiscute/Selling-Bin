@@ -7,15 +7,25 @@
   "emi.category.selling_bin.selling_bin_currencies" : "Selling Bin Currencies",
 
   "gui.selling_bin.selling.empty.0" : "There are no Selling Bin sellable items registered!",
-  "gui.selling_bin.selling.empty.1" : "The Selling Bin does not work without a datapack!",
-  "gui.selling_bin.selling.empty.2" : "Check the mod's wiki for premade datapacks you can use,",
-  "gui.selling_bin.selling.empty.3" : "and tutorials on how to customize your own.",
+  "gui.selling_bin.selling.empty.1" : "",
+  "gui.selling_bin.selling.empty.2" : "The Selling Bin does do anything without a datapack.",
+  "gui.selling_bin.selling.empty.3" : "",
+  "gui.selling_bin.selling.empty.4" : "Check the wiki at github.com/wdiscute/Selling-Bin/wiki for premade",
+  "gui.selling_bin.selling.empty.5" : "datapacks you can use, and how to add and customize your own.",
+  "gui.selling_bin.selling.empty.6" : "",
+  "gui.selling_bin.selling.empty.7" : "You can also select one of the premade built-in datapacks",
+  "gui.selling_bin.selling.empty.8" : "during world creation, under the datapack section, same as vanilla.",
 
 
   "gui.selling_bin.currency.empty.0" : "There are no Selling Bin currencies registered!",
-  "gui.selling_bin.currency.empty.1" : "The Selling Bin does not work without a datapack!",
-  "gui.selling_bin.currency.empty.2" : "Check the mod's wiki for premade datapacks you can use,",
-  "gui.selling_bin.currency.empty.3" : "and tutorials on how to customize your own.",
+  "gui.selling_bin.currency.empty.1" : "",
+  "gui.selling_bin.currency.empty.2" : "The Selling Bin does do anything without a datapack.",
+  "gui.selling_bin.currency.empty.3" : "",
+  "gui.selling_bin.currency.empty.4" : "Check the wiki at github.com/wdiscute/Selling-Bin/wiki for premade",
+  "gui.selling_bin.currency.empty.5" : "datapacks you can use, and how to add and customize your own.",
+  "gui.selling_bin.currency.empty.6" : "",
+  "gui.selling_bin.currency.empty.7" : "You can also select one of the premade built-in datapacks",
+  "gui.selling_bin.currency.empty.8" : "during world creation, under the datapack section, same as vanilla.",
 
 
   "gui.selling_bin.processor.durability" : "- Price is scaled based on remaining durability.",
