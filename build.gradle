@@ -68,6 +68,11 @@ dependencies {
     compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
     runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
 
+    //quality foods compat
+    compileOnly("maven.modrinth:quality-food:vLFBpk1n")
+    //runtimeOnly("maven.modrinth:quality-food:vLFBpk1n")
+
+
 }
 
 publishing {

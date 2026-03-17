@@ -31,6 +31,7 @@
   "gui.selling_bin.processor.durability" : "- Price is scaled based on remaining durability.",
   "gui.selling_bin.processor.food" : "- Price is increased by hunger & saturation.",
   "gui.selling_bin.processor.enchantments" : "- Price is increased based on the enchantments.",
+  "gui.selling_bin.processor.quality_foods_processor" : "- Price is increased based on the Quality.",
 
 
   "gui.selling_bin.value" : "value",

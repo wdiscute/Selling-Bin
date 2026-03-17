@@ -69,6 +69,15 @@ public class ModEvents
                 Pack.Position.TOP
         );
 
+        event.addPackFinders(
+                SellingBin.rl("built_in_datapacks/selling_bin_quality_foods_compat"),
+                PackType.SERVER_DATA,
+                Component.literal("Selling Bin - Quality Food"),
+                packSource,
+                false,
+                Pack.Position.TOP
+        );
+
 
     }
 

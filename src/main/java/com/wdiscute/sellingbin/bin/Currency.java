@@ -58,7 +58,7 @@ public record Currency(Item item, int value)
         int value = itemValue.baseValue();
         for (var p : itemValue.processors())
         {
-            value += p.addValue(value, itemValue.baseValue(), is, blockEntity, player);
+            value += p.addValue(itemValue.baseValue(), value, is, blockEntity, player);
         }
 
         return (int) (value * Config.SELLING_BIN_MULTIPLIER.get());

@@ -3,12 +3,16 @@ package com.wdiscute.sellingbin.datagen;
 import com.wdiscute.sellingbin.processors.AbstractProcessor;
 import com.wdiscute.sellingbin.processors.EnchantmentProcessor;
 import com.wdiscute.sellingbin.processors.FoodProcessor;
+import com.wdiscute.sellingbin.processors.QualityFoodsProcessor;
 import com.wdiscute.sellingbin.registry.ModDataMaps;
+import de.cadentem.quality_food.core.codecs.QualityType;
+import de.cadentem.quality_food.registry.QFComponents;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -16,6 +20,7 @@ import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.DataMapProvider;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
@@ -38,9 +43,8 @@ public class DGDataMapsProvider extends DataMapProvider
         var currencies = this.builder(ModDataMaps.SELLING_BIN_CURRENCIES);
 
 
-
         //foods built-in datapack
-        if(false)
+        if (false)
         {
             bin.add(Tags.Items.FOODS, new FoodProcessor().create(10), false);
 
@@ -53,9 +57,24 @@ public class DGDataMapsProvider extends DataMapProvider
             bin.add(Items.OMINOUS_BOTTLE.builtInRegistryHolder(), AbstractProcessor.createEmpty(0), false);
         }
 
+        //Quality foods built-in datapack
+        if (false)
+        {
+            Map<ResourceLocation, Float> qualities = new HashMap<>();
+
+            qualities.put(ResourceLocation.fromNamespaceAndPath("quality_food", "diamond"), 2f);
+            qualities.put(ResourceLocation.fromNamespaceAndPath("quality_food", "gold"), 1.5f);
+            qualities.put(ResourceLocation.fromNamespaceAndPath("quality_food", "iron"), 1.25f);
+
+            bin.add(Tags.Items.FOODS, new ModDataMaps.ItemValue(10, List.of(
+                    new FoodProcessor(),
+                    new QualityFoodsProcessor(qualities)
+            )), false);
+        }
+
 
         //enchanted books built-in datapack
-        if(false)
+        if (false)
         {
 
             Map<Holder<Enchantment>, Integer> enchants = new HashMap<>();
@@ -107,17 +126,12 @@ public class DGDataMapsProvider extends DataMapProvider
         }
 
 
-
         //emeralds currency built-in datapack
-        if(false)
+        if (false)
         {
             currencies.add(Items.EMERALD.builtInRegistryHolder(), 100, false);
             currencies.add(Items.EMERALD_BLOCK.builtInRegistryHolder(), 900, false);
         }
-
-
-
-
 
 
     }
@@ -131,5 +145,4 @@ public class DGDataMapsProvider extends DataMapProvider
         Holder<Enchantment> delegate = registryHolder.get().getDelegate();
         return delegate;
     }
-
 }

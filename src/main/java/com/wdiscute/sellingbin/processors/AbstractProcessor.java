@@ -1,5 +1,6 @@
 package com.wdiscute.sellingbin.processors;
 
+import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.wdiscute.sellingbin.bin.SellingBinBlockEntity;
@@ -20,7 +21,17 @@ public abstract class AbstractProcessor
 {
     public static final Codec<AbstractProcessor> ABSTRACT_PROCESSOR_CODEC = ResourceLocation.CODEC
             .dispatch(processor -> processor.getRegistryHolderOrThrow().getId(),
-                    loc -> SellingBin.SELLING_BIN_REGISTRY.get(loc).getCodecOrThrow());
+                    loc ->
+                    {
+                        if(SellingBin.SELLING_BIN_REGISTRY.get(loc) == null)
+                        {
+                            LogUtils.getLogger().error("Selling Bin Processor {} is not registered! " +
+                                    "Make sure it's not dependent on another mod, and that you spelt the name correctly. " +
+                                    "Using empty processor instead.", loc);
+                            return EmptyProcessor.CODEC;
+                        }
+                        return SellingBin.SELLING_BIN_REGISTRY.get(loc).getCodecOrThrow();
+                    });
 
     public static final Codec<List<AbstractProcessor>> ABSTRACT_PROCESSOR_CODEC_LIST = ABSTRACT_PROCESSOR_CODEC.listOf();
 
