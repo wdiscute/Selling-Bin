@@ -120,7 +120,7 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
 
         //arrow tooltip
         if (x > 79 && x < 96 && y > 37 && y < 54)
-            guiGraphics.renderTooltip(this.font, Currency.getListOfCurrenciesFromValue(menu.be.currencies, progressAvailable), Optional.empty(), mouseX, mouseY);
+            guiGraphics.renderTooltip(this.font, Currency.getListOfCurrenciesFromValue(menu.be.currencies, progressAvailable, true), Optional.empty(), mouseX, mouseY);
 
         //render arrow
         //scales [0, SELLING_BIN_LOWEST_VALUE]   ->   [0, 16]

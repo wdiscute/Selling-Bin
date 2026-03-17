@@ -120,11 +120,12 @@ public record Currency(Item item, int value)
         return s;
     }
 
-    public static List<Component> getListOfCurrenciesFromValue(List<Currency> currencies, int progressAvailable)
+    public static List<Component> getListOfCurrenciesFromValue(List<Currency> currencies, int progressAvailable, boolean addCurrenciesText)
     {
         List<Component> comps = new ArrayList<>();
 
-        comps.add(Component.translatable("gui.selling_bin.selling_bin.currencies"));
+        if(addCurrenciesText)
+            comps.add(Component.translatable("gui.selling_bin.selling_bin.currencies"));
 
         for (Currency c : currencies)
         {
