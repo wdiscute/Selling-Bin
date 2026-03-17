@@ -1,5 +1,6 @@
 package com.wdiscute.sellingbin.bin;
 
+import com.sun.jna.platform.win32.COM.COMBindingBaseObject;
 import com.wdiscute.sellingbin.Config;
 import com.wdiscute.sellingbin.processors.AbstractProcessor;
 import com.wdiscute.sellingbin.registry.ModDataMaps;
@@ -122,6 +123,8 @@ public record Currency(Item item, int value)
     public static List<Component> getListOfCurrenciesFromValue(List<Currency> currencies, int progressAvailable)
     {
         List<Component> comps = new ArrayList<>();
+
+        comps.add(Component.translatable("gui.selling_bin.selling_bin.currencies"));
 
         for (Currency c : currencies)
         {
