@@ -4,12 +4,14 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.wdiscute.sellingbin.registry.ModDataMaps;
 import com.wdiscute.sellingbin.SellingBin;
+import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
+import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class AbstractProcessor
@@ -77,5 +79,10 @@ public abstract class AbstractProcessor
     public ModDataMaps.ItemValue create(int baseValue)
     {
         return new ModDataMaps.ItemValue(baseValue, List.of(this));
+    }
+
+    public boolean canSell(ItemStack itemStack, @Nullable Player player, @Nullable  BlockPos blockPos)
+    {
+        return true;
     }
 }
