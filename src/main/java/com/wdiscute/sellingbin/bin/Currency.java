@@ -51,7 +51,7 @@ public record Currency(Item item, int value)
         ModDataMaps.ItemValue itemValue = ModDataMaps.getOrDefault(is, ModDataMaps.SELLING_BIN_VALUE, ModDataMaps.ItemValue.EMPTY);
 
         //if one of the processors returns false on canSell()
-        if(itemValue.processors().stream().anyMatch(o -> !o.canSell(is, player, blockEntity))) return 0;
+        if(itemValue.processors().stream().anyMatch(o -> !o.canSell(is, blockEntity, player))) return 0;
 
         //calculate value
         int value = itemValue.baseValue();
