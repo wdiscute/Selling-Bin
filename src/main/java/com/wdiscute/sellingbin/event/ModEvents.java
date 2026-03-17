@@ -1,14 +1,17 @@
 package com.wdiscute.sellingbin.event;
 
+import com.wdiscute.sellingbin.registry.ModBlocks;
 import com.wdiscute.sellingbin.registry.ModDataMaps;
 import com.wdiscute.sellingbin.SellingBin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
+import net.minecraft.world.item.CreativeModeTabs;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
+import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 
@@ -19,6 +22,19 @@ public class ModEvents
     public static void addRegistry(NewRegistryEvent event)
     {
         event.register(SellingBin.SELLING_BIN_REGISTRY);
+    }
+
+    @SubscribeEvent
+    public static void addCreative(BuildCreativeModeTabContentsEvent event)
+    {
+        if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS)
+        {
+            event.accept(ModBlocks.SELLING_BIN);
+        }
+        if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS)
+        {
+            event.accept(ModBlocks.SELLING_BIN);
+        }
     }
 
     @SubscribeEvent

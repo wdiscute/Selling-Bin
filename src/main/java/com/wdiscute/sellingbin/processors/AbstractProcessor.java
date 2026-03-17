@@ -2,6 +2,7 @@ package com.wdiscute.sellingbin.processors;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
+import com.wdiscute.sellingbin.bin.SellingBinBlockEntity;
 import com.wdiscute.sellingbin.registry.ModDataMaps;
 import com.wdiscute.sellingbin.SellingBin;
 import net.minecraft.core.BlockPos;
@@ -9,6 +10,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 import javax.annotation.Nullable;
@@ -51,7 +53,7 @@ public abstract class AbstractProcessor
     }
 
 
-    abstract public int addValue(int baseValue, int currentValue, ItemStack itemStack, Player player);
+    abstract public int addValue(int baseValue, int currentValue, ItemStack itemStack, BlockEntity blockEntity, Player player);
 
     public boolean shouldCancelShrink(ItemStack itemStack)
     {
@@ -81,7 +83,7 @@ public abstract class AbstractProcessor
         return new ModDataMaps.ItemValue(baseValue, List.of(this));
     }
 
-    public boolean canSell(ItemStack itemStack, @Nullable Player player, @Nullable  BlockPos blockPos)
+    public boolean canSell(ItemStack itemStack, @Nullable BlockEntity blockEntity, @Nullable Player player)
     {
         return true;
     }

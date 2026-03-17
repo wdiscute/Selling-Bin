@@ -11,6 +11,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.item.enchantment.ItemEnchantments;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.List;
@@ -68,7 +69,7 @@ public class EnchantmentProcessor extends AbstractProcessor
     }
 
     @Override
-    public int addValue(int baseValue, int currentValue, ItemStack itemStack, Player player)
+    public int addValue(int baseValue, int currentValue, ItemStack itemStack, BlockEntity blockEntity, Player player)
     {
         if (!EnchantmentHelper.hasAnyEnchantments(itemStack)) return 0;
 

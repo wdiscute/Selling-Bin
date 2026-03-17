@@ -4,6 +4,7 @@ import com.mojang.serialization.MapCodec;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.ArrayList;
@@ -40,7 +41,7 @@ public class DurabilityProcessor extends AbstractProcessor
     }
 
     @Override
-    public int addValue(int baseValue, int currentValue, ItemStack itemStack, Player player)
+    public int addValue(int baseValue, int currentValue, ItemStack itemStack, BlockEntity blockEntity, Player player)
     {
         if (itemStack.getDamageValue() == 0) return 0;
 

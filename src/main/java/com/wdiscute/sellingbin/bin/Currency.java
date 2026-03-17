@@ -4,6 +4,7 @@ import com.wdiscute.sellingbin.Config;
 import com.wdiscute.sellingbin.processors.AbstractProcessor;
 import com.wdiscute.sellingbin.registry.ModDataMaps;
 import net.minecraft.client.resources.language.I18n;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -11,7 +12,9 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
+import javax.annotation.Nullable;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -43,18 +46,36 @@ public record Currency(Item item, int value)
     }
 
     //this does not take into account stack count!
-    public static int calculateValueFromSingleStack(ItemStack is, Player player)
+    public static int calculateValueFromSingleStack(ItemStack is, BlockEntity blockEntity, @Nullable Player player)
     {
         ModDataMaps.ItemValue itemValue = ModDataMaps.getOrDefault(is, ModDataMaps.SELLING_BIN_VALUE, ModDataMaps.ItemValue.EMPTY);
 
-        int value = itemValue.baseValue();
+        //if one of the processors returns false on canSell()
+        if(itemValue.processors().stream().anyMatch(o -> !o.canSell(is, player, blockEntity))) return 0;
 
+        //calculate value
+        int value = itemValue.baseValue();
         for (var p : itemValue.processors())
         {
-            value += p.addValue(value, itemValue.baseValue(), is, player);
+            value += p.addValue(value, itemValue.baseValue(), is, blockEntity, player);
         }
 
         return (int) (value * Config.SELLING_BIN_MULTIPLIER.get());
+    }
+
+    public static int calculateValueFromSingleStack(ItemStack is, BlockEntity blockEntity)
+    {
+        return calculateValueFromSingleStack(is, blockEntity, null);
+    }
+
+    public static int calculateValueFromSingleStack(ItemStack is, Player player)
+    {
+        return calculateValueFromSingleStack(is, null, player);
+    }
+
+    public static int calculateValueFromSingleStack(ItemStack is)
+    {
+        return calculateValueFromSingleStack(is, null, null);
     }
 
     //returns formatted string of highest possible currency for the value

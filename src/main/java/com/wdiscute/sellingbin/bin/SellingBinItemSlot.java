@@ -19,7 +19,7 @@ public class SellingBinItemSlot extends Slot
     @Override
     public boolean mayPlace(ItemStack stack)
     {
-        int value = Currency.calculateValueFromSingleStack(stack, null);
+        int value = Currency.calculateValueFromSingleStack(stack);
         return value > 0;
     }
 }

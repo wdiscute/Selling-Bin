@@ -5,6 +5,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
 import java.util.ArrayList;
@@ -41,7 +42,7 @@ public class FoodProcessor extends AbstractProcessor
     }
 
     @Override
-    public int addValue(int baseValue, int currentValue, ItemStack itemStack, Player player)
+    public int addValue(int baseValue, int currentValue, ItemStack itemStack, BlockEntity blockEntity, Player player)
     {
         FoodProperties foodProperties = itemStack.getFoodProperties(null);
 

@@ -138,7 +138,7 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
             guiGraphics.blit(TEXTURE, uiX + 80, uiY + 11, 192, 128, 42, 13, 256, 256);
 
         //sell / sell all
-        MutableComponent sellComp = Component.empty();
+        MutableComponent sellComp;
         if (Screen.hasShiftDown())
             sellComp = Component.translatable("gui.selling_bin.selling_bin.sell_all");
         else
