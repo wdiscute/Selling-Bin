@@ -16,7 +16,7 @@ public class ModProcessors
     public static final DeferredHolder<AbstractProcessor, AbstractProcessor> EMPTY_PROCESSOR = register("empty_processor", EmptyProcessor::new);
     public static final DeferredHolder<AbstractProcessor, AbstractProcessor> DURABILITY = register("durability_processor", DurabilityProcessor::new);
     public static final DeferredHolder<AbstractProcessor, AbstractProcessor> FOOD_PROCESSOR = register("food_processor", FoodProcessor::new);
-    public static DeferredHolder<AbstractProcessor, AbstractProcessor> ENCHANTMENTS_PROCESSOR = register("enchantments_processor", FoodProcessor::new);
+    public static DeferredHolder<AbstractProcessor, AbstractProcessor> ENCHANTMENTS_PROCESSOR = register("enchantments_processor", EnchantmentProcessor::new);
     public static DeferredHolder<AbstractProcessor, AbstractProcessor> QUALITY_FOODS_PROCESSOR;
 
     public static DeferredHolder<AbstractProcessor, AbstractProcessor> register(String name, Supplier<AbstractProcessor> sup)

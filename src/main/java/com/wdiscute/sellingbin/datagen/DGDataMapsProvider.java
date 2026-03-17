@@ -1,9 +1,6 @@
 package com.wdiscute.sellingbin.datagen;
 
-import com.wdiscute.sellingbin.processors.AbstractProcessor;
-import com.wdiscute.sellingbin.processors.EnchantmentProcessor;
-import com.wdiscute.sellingbin.processors.FoodProcessor;
-import com.wdiscute.sellingbin.processors.QualityFoodsProcessor;
+import com.wdiscute.sellingbin.processors.*;
 import com.wdiscute.sellingbin.registry.ModDataMaps;
 import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.registry.QFComponents;
@@ -125,6 +122,11 @@ public class DGDataMapsProvider extends DataMapProvider
             bin.add(Items.ENCHANTED_BOOK.builtInRegistryHolder(), new EnchantmentProcessor(enchants).create(50), false);
         }
 
+        //durability
+        if (true)
+        {
+            bin.add(Items.STONE_AXE.builtInRegistryHolder(), new DurabilityProcessor().create(200), false);
+        }
 
         //emeralds currency built-in datapack
         if (false)
@@ -132,7 +134,6 @@ public class DGDataMapsProvider extends DataMapProvider
             currencies.add(Items.EMERALD.builtInRegistryHolder(), 100, false);
             currencies.add(Items.EMERALD_BLOCK.builtInRegistryHolder(), 900, false);
         }
-
 
     }
 
