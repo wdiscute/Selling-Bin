@@ -108,6 +108,7 @@ public class SellingBinSellingEmiRecipe implements EmiRecipe
 
         widgets.add(new HoverTextWidget(108, 13, 10, 10, description));
 
-        widgets.addText(Component.literal("[!]"), 111, 15, 0x880000, false);
+        if (itemValue.processors().stream().anyMatch(AbstractProcessor::showDescriptionOnEmi))
+            widgets.addText(Component.literal("[!]"), 111, 15, 0x880000, false);
     }
 }
