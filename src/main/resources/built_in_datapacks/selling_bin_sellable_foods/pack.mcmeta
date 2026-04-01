@@ -1,6 +1,7 @@
 {
   "pack": {
-    "pack_format": 48,
-    "description": "Adds sellable #c:foods based on their nutrition & saturation"
+    "min_format": 101.1,
+    "max_format": 101.1,
+    "description": "Adds sellable #c:foods based on their nutrition"
   }
 }
