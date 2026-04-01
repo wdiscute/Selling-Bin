@@ -1,9 +1,12 @@
 package com.wdiscute.sellingbin.bin;
 
+import com.wdiscute.sellingbin.SellingBin;
 import com.wdiscute.sellingbin.registry.ModBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -23,7 +26,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.BlockHitResult;
 import net.nikdo53.tinymultiblocklib.block.AbstractMultiBlock;
 import net.nikdo53.tinymultiblocklib.block.IMultiBlock;
@@ -40,6 +43,7 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
         super(BlockBehaviour.Properties.of()
                 .noOcclusion()
                 .destroyTime(2)
+                .setId(ResourceKey.create(BuiltInRegistries.BLOCK.key(), SellingBin.rl("selling_bin")))
         );
     }
 
@@ -57,7 +61,7 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState p_309084_, BlockGetter p_309133_, BlockPos p_309097_)
+    protected boolean propagatesSkylightDown(BlockState state)
     {
         return true;
     }
@@ -88,12 +92,12 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
     }
 
     @Override
-    public @Nullable DirectionProperty getDirectionProperty()
+    public @Nullable EnumProperty<Direction> getDirectionProperty()
     {
         return FACING;
     }
 
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final EnumProperty<Direction> FACING = HorizontalDirectionalBlock.FACING;
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
@@ -103,15 +107,16 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
 
     private void playSound(Level level, BlockPos bp, BlockState state, SoundEvent sound)
     {
-        Vec3i vec3i = state.getValue(HorizontalDirectionalBlock.FACING).getNormal();
+        Vec3i vec3i = state.getValue(HorizontalDirectionalBlock.FACING).getUnitVec3i();
         double d0 = (double) bp.getX() + 0.5 + (double) vec3i.getX() / 2.0;
         double d1 = (double) bp.getY() + 0.5 + (double) vec3i.getY() / 2.0;
         double d2 = (double) bp.getZ() + 0.5 + (double) vec3i.getZ() / 2.0;
-        level.playSound(null, d0, d1, d2, sound, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F);
+        level.playSound(null, d0, d1, d2, sound, SoundSource.BLOCKS, 0.5F, level.getRandom().nextFloat() * 0.1F + 0.9F);
     }
 
+
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack handStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected InteractionResult useItemOn(ItemStack handStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         int value = Currency.calculateValueFromSingleStack(handStack, level.getBlockEntity(pos));
         if (value > 0)
@@ -127,8 +132,8 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
                     container.setItem(0, handStack.copy());
                     player.setItemInHand(hand, ItemStack.EMPTY);
 
-                    if(!level.isClientSide) playSound(level, pos, state, SoundEvents.ITEM_PICKUP);
-                    return ItemInteractionResult.SUCCESS;
+                    if(!level.isClientSide()) playSound(level, pos, state, SoundEvents.ITEM_PICKUP);
+                    return InteractionResult.SUCCESS;
                 }
                 else
                 {
@@ -140,8 +145,8 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
                     {
                         handStack.shrink(amountTransferring);
                         inside.grow(amountTransferring);
-                        if(!level.isClientSide) playSound(level, pos, state, SoundEvents.ITEM_PICKUP);
-                        return ItemInteractionResult.SUCCESS;
+                        if(!level.isClientSide()) playSound(level, pos, state, SoundEvents.ITEM_PICKUP);
+                        return InteractionResult.SUCCESS;
                     }
                 }
 
@@ -156,7 +161,7 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult)
     {
         BlockPos center = IMultiBlock.getCenter(level, pos);
-        if (level.getBlockEntity(center) instanceof SellingBinBlockEntity sbbe && !level.isClientSide)
+        if (level.getBlockEntity(center) instanceof SellingBinBlockEntity sbbe && !level.isClientSide())
         {
             player.openMenu(sbbe, center);
         }

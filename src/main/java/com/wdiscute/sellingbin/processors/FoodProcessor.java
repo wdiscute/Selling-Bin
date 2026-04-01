@@ -1,6 +1,7 @@
 package com.wdiscute.sellingbin.processors;
 
 import com.mojang.serialization.MapCodec;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
@@ -44,7 +45,7 @@ public class FoodProcessor extends AbstractProcessor
     @Override
     public int addValue(int baseValue, int currentValue, ItemStack itemStack, BlockEntity blockEntity, Player player)
     {
-        FoodProperties foodProperties = itemStack.getFoodProperties(null);
+        FoodProperties foodProperties = itemStack.get(DataComponents.FOOD);
 
         if (foodProperties == null) return 0;
 

@@ -23,7 +23,7 @@ public interface ModDataMaps
 
     static <T> T getOrDefault(ItemStack stack, DataMapType<Item, T> dataMap, T d)
     {
-        T data = stack.getItemHolder().getData(dataMap);
+        T data = stack.typeHolder().getData(dataMap);
         if(data == null) return d;
         return data;
     }

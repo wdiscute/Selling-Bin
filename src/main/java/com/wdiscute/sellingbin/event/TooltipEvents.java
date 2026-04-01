@@ -26,7 +26,7 @@ public class TooltipEvents
         ItemStack stack = event.getItemStack();
 
         //selling bin info
-        if (Screen.hasShiftDown() || Config.ALWAYS_SHOW_SELLING_BIN_PRICE.get())
+        if (Minecraft.getInstance().hasShiftDown() || Config.ALWAYS_SHOW_SELLING_BIN_PRICE.get())
         {
             int value = Currency.calculateValueFromSingleStack(stack, Minecraft.getInstance().player);
             if (value > 0)

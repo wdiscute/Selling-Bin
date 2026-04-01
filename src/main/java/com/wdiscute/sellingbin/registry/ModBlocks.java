@@ -2,6 +2,8 @@ package com.wdiscute.sellingbin.registry;
 
 import com.wdiscute.sellingbin.SellingBin;
 import com.wdiscute.sellingbin.bin.SellingBinBlock;
+import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -20,7 +22,8 @@ public interface ModBlocks
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block)
     {
         DeferredBlock<T> toReturn = BLOCKS.register(name, block);
-        ModItems.ITEMS.register(name, () -> new BlockItem(toReturn.get(), new Item.Properties()));
+        ModItems.ITEMS.register(name, () -> new BlockItem(toReturn.get(),
+                new Item.Properties().setId(ResourceKey.create(BuiltInRegistries.ITEM.key(), SellingBin.rl("selling_bin")))));
         return toReturn;
     }
 

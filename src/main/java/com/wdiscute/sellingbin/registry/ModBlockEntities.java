@@ -15,12 +15,11 @@ public interface ModBlockEntities
             DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, SellingBin.MOD_ID);
 
     Supplier<BlockEntityType<SellingBinBlockEntity>> SELLING_BIN = BLOCK_ENTITIES.register("selling_bin",
-            () -> BlockEntityType.Builder.of(SellingBinBlockEntity::new,
-                    ModBlocks.SELLING_BIN.get()
-            ).build(null));
+            () -> new BlockEntityType<>(SellingBinBlockEntity::new, ModBlocks.SELLING_BIN.get()));
 
 
-    static void register(IEventBus eventBus) {
+    static void register(IEventBus eventBus)
+    {
         BLOCK_ENTITIES.register(eventBus);
     }
 }

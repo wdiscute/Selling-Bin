@@ -33,7 +33,7 @@ public record Currency(Item item, int value)
         //add all currencies from datamap
         Map<ResourceKey<Item>, Integer> dataMap = BuiltInRegistries.ITEM.getDataMap(ModDataMaps.SELLING_BIN_CURRENCIES);
         List<Currency> currenciesUnfiltered = new ArrayList<>();
-        dataMap.forEach((i, v) -> currenciesUnfiltered.add(new Currency(BuiltInRegistries.ITEM.get(i), v)));
+        dataMap.forEach((i, v) -> currenciesUnfiltered.add(new Currency(BuiltInRegistries.ITEM.getOptional(i).get(), v)));
 
         //remove entries with negative value
         List<Currency> currencies = new ArrayList<>(currenciesUnfiltered.stream().filter(o -> o.value() > 0).toList());
@@ -97,7 +97,7 @@ public record Currency(Item item, int value)
                 DecimalFormat df = new DecimalFormat("#.##");
 
                 if (numOfCurrency == 1)
-                    s = s + df.format(numOfCurrency) + " " + c.item().getDescription().getString(100);
+                    s = s + df.format(numOfCurrency) + " " + c.item().getDescriptionId();
                 else
                     s = s + df.format(numOfCurrency) + " " + getPluralTranslation(c.item()).getString(100);
 
@@ -112,7 +112,7 @@ public record Currency(Item item, int value)
             DecimalFormat df = new DecimalFormat("#.##");
 
             if (numOfCurrency == 1)
-                s = s + df.format(numOfCurrency) + " " + currencies.getLast().item().getDescription().getString(100);
+                s = s + df.format(numOfCurrency) + " " + currencies.getLast().item().getDescriptionId();
             else
                 s = s + df.format(numOfCurrency) + " " + getPluralTranslation(currencies.getLast().item()).getString(100);
         }
@@ -135,7 +135,7 @@ public record Currency(Item item, int value)
             String s = "";
 
             if (numOfCurrency == 1)
-                s = s + df.format(numOfCurrency) + " " + c.item().getDescription().getString(100);
+                s = s + df.format(numOfCurrency) + " " + c.item().getDescriptionId();
             else
                 s = s + df.format(numOfCurrency) + " " + getPluralTranslation(c.item()).getString(100);
 

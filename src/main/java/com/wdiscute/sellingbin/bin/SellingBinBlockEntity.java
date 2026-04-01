@@ -12,16 +12,22 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.WorldlyContainer;
+import net.minecraft.world.entity.ContainerUser;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.storage.TagValueOutput;
+import net.minecraft.world.level.storage.ValueInput;
+import net.minecraft.world.level.storage.ValueOutput;
+import net.nikdo53.tinymultiblocklib.Constants;
 import net.nikdo53.tinymultiblocklib.blockentities.AbstractMultiBlockEntity;
 
 import javax.annotation.Nullable;
@@ -48,27 +54,27 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
 
     void playSound(SoundEvent soundEvent)
     {
-        if(!sound) return;
+        if (!sound) return;
         BlockState state = level.getBlockState(getBlockPos());
-        Vec3i vec3i = state.getValue(HorizontalDirectionalBlock.FACING).getNormal();
+        Vec3i vec3i = state.getValue(HorizontalDirectionalBlock.FACING).getUnitVec3i();
         double d0 = (double) this.worldPosition.getX() + 0.5 + (double) vec3i.getX() / 2.0;
         double d1 = (double) this.worldPosition.getY() + 0.5 + (double) vec3i.getY() / 2.0;
         double d2 = (double) this.worldPosition.getZ() + 0.5 + (double) vec3i.getZ() / 2.0;
-        this.level.playSound(null, d0, d1, d2, soundEvent, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
+        this.level.playSound(null, d0, d1, d2, soundEvent, SoundSource.BLOCKS, 0.5F, this.level.getRandom().nextFloat() * 0.1F + 0.9F);
     }
 
     @Override
-    public void startOpen(Player player)
+    public void startOpen(ContainerUser containerUser)
     {
-        if (!level.isClientSide && sound) playSound(SoundEvents.BARREL_OPEN);
-        WorldlyContainer.super.startOpen(player);
+        if (!level.isClientSide() && sound) playSound(SoundEvents.BARREL_OPEN);
+        WorldlyContainer.super.startOpen(containerUser);
     }
 
     @Override
-    public void stopOpen(Player player)
+    public void stopOpen(ContainerUser containerUser)
     {
-        if (!level.isClientSide && sound) playSound(SoundEvents.BARREL_CLOSE);
-        WorldlyContainer.super.stopOpen(player);
+        if (!level.isClientSide() && sound) playSound(SoundEvents.BARREL_CLOSE);
+        WorldlyContainer.super.stopOpen(containerUser);
     }
 
     public void sell(boolean all)
@@ -91,14 +97,14 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
             if (!all)
             {
                 update();
-                if (!level.isClientSide && sound)
+                if (!level.isClientSide() && sound)
                     level.playSound(null, getBlockPos(), SoundEvents.NOTE_BLOCK_BELL.value(), SoundSource.BLOCKS, 0.2f, 1.3f);
                 return;
             }
         }
 
         if (sold)
-            if (!level.isClientSide && sound)
+            if (!level.isClientSide() && sound)
                 level.playSound(null, getBlockPos(), SoundEvents.NOTE_BLOCK_BELL.value(), SoundSource.BLOCKS, 0.2f, 1.3f);
 
         update();
@@ -163,70 +169,59 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries)
+    protected void saveAdditional(ValueOutput output)
     {
-        super.saveAdditional(tag, registries);
+        super.saveAdditional(output);
 
         if (!isCenter()) return;
 
         //insta sell
-        tag.putBoolean("insta_sell", instaSell);
+        output.putBoolean("insta_sell", instaSell);
 
         //sound
-        tag.putBoolean("sound", sound);
-
+        output.putBoolean("sound", sound);
 
         //currency selected
         if (!currencySelected.isNone())
         {
             for (int i = 0; i < currencies.size(); i++)
-                if (currencySelected.equals(currencies.get(i))) tag.putInt("currency", i);
+                if (currencySelected.equals(currencies.get(i))) output.putInt("currency", i);
         }
         else
-            tag.putInt("currency", -1);
+            output.putInt("currency", -1);
 
         //stored progress
-        tag.putInt("stored_progress", storedProgress);
+        output.putInt("stored_progress", storedProgress);
 
-        //save items (from ShulkerBoxBlockEntity)
-        ContainerHelper.saveAllItems(tag, this.itemStacks, false, registries);
+        ContainerHelper.saveAllItems(output, this.itemStacks, false);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries)
+    protected void loadAdditional(ValueInput input)
     {
-        super.loadAdditional(tag, registries);
+        super.loadAdditional(input);
+
         if (!isCenter()) return;
 
         //insta sell
-        if (tag.contains("insta_sell")) instaSell = tag.getBoolean("insta_sell");
+        instaSell = input.getBooleanOr("insta_sell", false);
 
         //sound
-        if (tag.contains("sound")) sound = tag.getBoolean("sound");
+        sound = input.getBooleanOr("sound", true);
 
         //currency
-        if (tag.contains("currency"))
-            if (tag.getInt("currency") == -1) currencySelected = Currency.NONE;
-            else if (currencies.size() > tag.getInt("currency"))
-                currencySelected = currencies.get(tag.getInt("currency"));
+
+        if (input.getInt("currency").isPresent())
+            if (input.getInt("currency").get() == -1) currencySelected = Currency.NONE;
+            else if (currencies.size() > input.getInt("currency").get())
+                currencySelected = currencies.get(input.getInt("currency").get());
 
         //stored progress
-        if (tag.contains("stored_progress")) storedProgress = tag.getInt("stored_progress");
+        if (input.getInt("stored_progress").isPresent()) storedProgress = input.getInt("stored_progress").get();
 
         //retrieve items (from ShulkerBoxBlockEntity)
         this.itemStacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
-        if (tag.contains("Items", 9))
-        {
-            ContainerHelper.loadAllItems(tag, this.itemStacks, registries);
-        }
-    }
-
-    @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries)
-    {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, registries);
-        return tag;
+        ContainerHelper.loadAllItems(input, this.itemStacks);
     }
 
     @Override

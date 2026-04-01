@@ -2,14 +2,12 @@ package com.wdiscute.sellingbin.datagen;
 
 import com.wdiscute.sellingbin.processors.*;
 import com.wdiscute.sellingbin.registry.ModDataMaps;
-import de.cadentem.quality_food.core.codecs.QualityType;
-import de.cadentem.quality_food.registry.QFComponents;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
+import net.minecraft.resources.Identifier;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
@@ -57,11 +55,11 @@ public class DGDataMapsProvider extends DataMapProvider
         //Quality foods built-in datapack
         if (false)
         {
-            Map<ResourceLocation, Float> qualities = new HashMap<>();
+            Map<Identifier, Float> qualities = new HashMap<>();
 
-            qualities.put(ResourceLocation.fromNamespaceAndPath("quality_food", "diamond"), 2f);
-            qualities.put(ResourceLocation.fromNamespaceAndPath("quality_food", "gold"), 1.5f);
-            qualities.put(ResourceLocation.fromNamespaceAndPath("quality_food", "iron"), 1.25f);
+            qualities.put(Identifier.fromNamespaceAndPath("quality_food", "diamond"), 2f);
+            qualities.put(Identifier.fromNamespaceAndPath("quality_food", "gold"), 1.5f);
+            qualities.put(Identifier.fromNamespaceAndPath("quality_food", "iron"), 1.25f);
 
             bin.add(Tags.Items.FOODS, new ModDataMaps.ItemValue(10, List.of(
                     new FoodProcessor(),
@@ -141,7 +139,7 @@ public class DGDataMapsProvider extends DataMapProvider
     Holder<Enchantment> getHolderEnchant(ResourceKey<Enchantment> rk)
     {
         Optional<Holder.Reference<Enchantment>> registryHolder =
-                holderProvider.asGetterLookup().lookup(Registries.ENCHANTMENT).get().get(rk);
+                holderProvider.lookup(Registries.ENCHANTMENT).get().get(rk);
 
         Holder<Enchantment> delegate = registryHolder.get().getDelegate();
         return delegate;

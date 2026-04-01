@@ -1,7 +1,7 @@
 package com.wdiscute.sellingbin.datagen;
 
 import com.wdiscute.sellingbin.registry.ModBlocks;
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
+import net.minecraft.advancements.criterion.StatePropertiesPredicate.Builder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
@@ -28,7 +28,7 @@ public class DGModBlockLootTableProvider extends BlockLootSubProvider
     protected void generate()
     {
         //selling bin because datagen sucks
-        LootTable.Builder builder = LootTable.lootTable().withPool(this.applyExplosionCondition(ModBlocks.SELLING_BIN.get(), LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(ModBlocks.SELLING_BIN.get()).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.SELLING_BIN.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AbstractMultiBlock.CENTER, true))))));
+        LootTable.Builder builder = LootTable.lootTable().withPool(this.applyExplosionCondition(ModBlocks.SELLING_BIN.get(), LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(ModBlocks.SELLING_BIN.get()).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(ModBlocks.SELLING_BIN.get()).setProperties(Builder.properties().hasProperty(AbstractMultiBlock.CENTER, true))))));
         add(ModBlocks.SELLING_BIN.get(), builder);
     }
 
