@@ -1,11 +1,8 @@
 package com.wdiscute.sellingbin.bin;
 
-import com.sun.jna.platform.win32.COM.COMBindingBaseObject;
 import com.wdiscute.sellingbin.Config;
-import com.wdiscute.sellingbin.processors.AbstractProcessor;
-import com.wdiscute.sellingbin.registry.ModDataMaps;
+import com.wdiscute.sellingbin.registry.SBDataMaps;
 import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -31,7 +28,7 @@ public record Currency(Item item, int value)
     public static List<Currency> getCurrencies()
     {
         //add all currencies from datamap
-        Map<ResourceKey<Item>, Integer> dataMap = BuiltInRegistries.ITEM.getDataMap(ModDataMaps.SELLING_BIN_CURRENCIES);
+        Map<ResourceKey<Item>, Integer> dataMap = BuiltInRegistries.ITEM.getDataMap(SBDataMaps.SELLING_BIN_CURRENCIES);
         List<Currency> currenciesUnfiltered = new ArrayList<>();
         dataMap.forEach((i, v) -> currenciesUnfiltered.add(new Currency(BuiltInRegistries.ITEM.getOptional(i).get(), v)));
 
@@ -49,7 +46,7 @@ public record Currency(Item item, int value)
     //this does not take into account stack count!
     public static int calculateValueFromSingleStack(ItemStack is, BlockEntity blockEntity, @Nullable Player player)
     {
-        ModDataMaps.ItemValue itemValue = ModDataMaps.getOrDefault(is, ModDataMaps.SELLING_BIN_VALUE, ModDataMaps.ItemValue.EMPTY);
+        SBDataMaps.ItemValue itemValue = SBDataMaps.getOrDefault(is, SBDataMaps.SELLING_BIN_VALUE, SBDataMaps.ItemValue.EMPTY);
 
         //if one of the processors returns false on canSell()
         if(itemValue.processors().stream().anyMatch(o -> !o.canSell(is, blockEntity, player))) return 0;

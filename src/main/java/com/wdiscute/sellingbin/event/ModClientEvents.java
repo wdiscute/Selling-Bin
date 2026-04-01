@@ -1,6 +1,6 @@
 package com.wdiscute.sellingbin.event;
 
-import com.wdiscute.sellingbin.registry.ModMenuTypes;
+import com.wdiscute.sellingbin.registry.SBMenuTypes;
 import com.wdiscute.sellingbin.SellingBin;
 import com.wdiscute.sellingbin.bin.SellingBinScreen;
 import net.neoforged.api.distmarker.Dist;
@@ -14,6 +14,6 @@ public class ModClientEvents
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event)
     {
-        event.register(ModMenuTypes.SELLING_BIN_MENU.get(), SellingBinScreen::new);
+        event.register(SBMenuTypes.SELLING_BIN_MENU.get(), SellingBinScreen::new);
     }
 }

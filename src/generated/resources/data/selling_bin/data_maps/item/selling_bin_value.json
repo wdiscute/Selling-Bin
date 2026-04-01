@@ -1,12 +1,3 @@
 {
-  "values": {
-    "minecraft:stone_axe": {
-      "base_value": 200,
-      "processors": [
-        {
-          "type": "selling_bin:durability_processor"
-        }
-      ]
-    }
-  }
+  "values": {}
 }

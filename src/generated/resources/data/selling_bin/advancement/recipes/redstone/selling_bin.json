@@ -1,29 +1,27 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
+    "has_barrel": {
+      "conditions": {
+        "items": [
+          {
+            "items": "minecraft:barrel"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
     "has_the_recipe": {
       "conditions": {
         "recipe": "selling_bin:selling_bin"
       },
       "trigger": "minecraft:recipe_unlocked"
-    },
-    "selling_bin_sellable": {
-      "conditions": {
-        "items": [
-          {
-            "predicates": {
-              "selling_bin:item_ability": {}
-            }
-          }
-        ]
-      },
-      "trigger": "minecraft:inventory_changed"
     }
   },
   "requirements": [
     [
       "has_the_recipe",
-      "selling_bin_sellable"
+      "has_barrel"
     ]
   ],
   "rewards": {

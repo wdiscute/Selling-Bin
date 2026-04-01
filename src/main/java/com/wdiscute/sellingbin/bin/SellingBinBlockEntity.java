@@ -1,9 +1,8 @@
 package com.wdiscute.sellingbin.bin;
 
-import com.wdiscute.sellingbin.registry.ModBlockEntities;
-import com.wdiscute.sellingbin.registry.ModDataMaps;
+import com.wdiscute.sellingbin.registry.SBBlockEntities;
+import com.wdiscute.sellingbin.registry.SBDataMaps;
 import net.minecraft.core.*;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
@@ -12,7 +11,6 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.util.ProblemReporter;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
@@ -24,10 +22,8 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.storage.TagValueOutput;
 import net.minecraft.world.level.storage.ValueInput;
 import net.minecraft.world.level.storage.ValueOutput;
-import net.nikdo53.tinymultiblocklib.Constants;
 import net.nikdo53.tinymultiblocklib.blockentities.AbstractMultiBlockEntity;
 
 import javax.annotation.Nullable;
@@ -46,7 +42,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
 
     public SellingBinBlockEntity(BlockPos pos, BlockState blockState)
     {
-        super(ModBlockEntities.SELLING_BIN.get(), pos, blockState);
+        super(SBBlockEntities.SELLING_BIN.get(), pos, blockState);
         this.itemStacks = NonNullList.withSize(2, ItemStack.EMPTY);
         this.currencies = Currency.getCurrencies();
         this.currenciesReversed = currencies.reversed();
@@ -80,7 +76,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     public void sell(boolean all)
     {
         int value = Currency.calculateValueFromSingleStack(getItem(SellingBinMenu.ITEM_SLOT), this);
-        ModDataMaps.ItemValue itemValue = ModDataMaps.getOrDefault(getItem(SellingBinMenu.ITEM_SLOT), ModDataMaps.SELLING_BIN_VALUE, ModDataMaps.ItemValue.EMPTY);
+        SBDataMaps.ItemValue itemValue = SBDataMaps.getOrDefault(getItem(SellingBinMenu.ITEM_SLOT), SBDataMaps.SELLING_BIN_VALUE, SBDataMaps.ItemValue.EMPTY);
         if (value <= 0) return;
 
         boolean sold = false;
@@ -112,7 +108,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
 
     public int getProgressAvailable()
     {
-        return storedProgress + ModDataMaps.getOrDefault(getItem(SellingBinMenu.RESULT_SLOT), ModDataMaps.SELLING_BIN_CURRENCIES, 0) * getItem(SellingBinMenu.RESULT_SLOT).getCount();
+        return storedProgress + SBDataMaps.getOrDefault(getItem(SellingBinMenu.RESULT_SLOT), SBDataMaps.SELLING_BIN_CURRENCIES, 0) * getItem(SellingBinMenu.RESULT_SLOT).getCount();
     }
 
     //updates result slot to the highest possible currency

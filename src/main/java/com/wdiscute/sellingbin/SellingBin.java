@@ -42,14 +42,13 @@ public class SellingBin
 
     public SellingBin(IEventBus modEventBus, ModContainer modContainer)
     {
-        ModCreativeModeTabs.register(modEventBus);
+        SBCreativeModeTabs.register(modEventBus);
 
-        ModItems.register(modEventBus);
-        ModBlocks.register(modEventBus);
-        ModBlockEntities.register(modEventBus);
-        ModMenuTypes.register(modEventBus);
+        SBItems.register(modEventBus);
+        SBBlocks.register(modEventBus);
+        SBBlockEntities.register(modEventBus);
+        SBMenuTypes.register(modEventBus);
         ModProcessors.register(modEventBus);
-        ModCriterionTriggers.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
         modContainer.registerConfig(ModConfig.Type.SERVER, Config.SPEC_SERVER);

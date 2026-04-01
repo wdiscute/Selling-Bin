@@ -13,7 +13,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
-public interface ModMenuTypes
+public interface SBMenuTypes
 {
     DeferredRegister<MenuType<?>> MENUS =
             DeferredRegister.create(Registries.MENU, SellingBin.MOD_ID);

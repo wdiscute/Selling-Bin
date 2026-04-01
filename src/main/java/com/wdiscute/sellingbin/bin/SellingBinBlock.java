@@ -1,7 +1,7 @@
 package com.wdiscute.sellingbin.bin;
 
 import com.wdiscute.sellingbin.SellingBin;
-import com.wdiscute.sellingbin.registry.ModBlockEntities;
+import com.wdiscute.sellingbin.registry.SBBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -171,7 +171,7 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
     @Override
     public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState)
     {
-        return ModBlockEntities.SELLING_BIN.get().create(blockPos, blockState);
+        return SBBlockEntities.SELLING_BIN.get().create(blockPos, blockState);
     }
 
     @Override

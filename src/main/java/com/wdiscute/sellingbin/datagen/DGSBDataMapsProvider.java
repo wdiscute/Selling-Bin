@@ -1,7 +1,7 @@
 package com.wdiscute.sellingbin.datagen;
 
 import com.wdiscute.sellingbin.processors.*;
-import com.wdiscute.sellingbin.registry.ModDataMaps;
+import com.wdiscute.sellingbin.registry.SBDataMaps;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -20,11 +20,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public class DGDataMapsProvider extends DataMapProvider
+public class DGSBDataMapsProvider extends DataMapProvider
 {
     private HolderLookup.Provider holderProvider;
 
-    protected DGDataMapsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider)
+    protected DGSBDataMapsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider)
     {
         super(packOutput, lookupProvider);
     }
@@ -34,8 +34,8 @@ public class DGDataMapsProvider extends DataMapProvider
     {
         holderProvider = provider;
 
-        var bin = this.builder(ModDataMaps.SELLING_BIN_VALUE);
-        var currencies = this.builder(ModDataMaps.SELLING_BIN_CURRENCIES);
+        var bin = this.builder(SBDataMaps.SELLING_BIN_VALUE);
+        var currencies = this.builder(SBDataMaps.SELLING_BIN_CURRENCIES);
 
 
         //foods built-in datapack
@@ -61,7 +61,7 @@ public class DGDataMapsProvider extends DataMapProvider
             qualities.put(Identifier.fromNamespaceAndPath("quality_food", "gold"), 1.5f);
             qualities.put(Identifier.fromNamespaceAndPath("quality_food", "iron"), 1.25f);
 
-            bin.add(Tags.Items.FOODS, new ModDataMaps.ItemValue(10, List.of(
+            bin.add(Tags.Items.FOODS, new SBDataMaps.ItemValue(10, List.of(
                     new FoodProcessor(),
                     new QualityFoodsProcessor(qualities)
             )), false);
@@ -121,7 +121,7 @@ public class DGDataMapsProvider extends DataMapProvider
         }
 
         //durability
-        if (true)
+        if (false)
         {
             bin.add(Items.STONE_AXE.builtInRegistryHolder(), new DurabilityProcessor().create(200), false);
         }

@@ -9,13 +9,13 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
-public interface ModBlockEntities
+public interface SBBlockEntities
 {
     DeferredRegister<BlockEntityType<?>> BLOCK_ENTITIES =
             DeferredRegister.create(BuiltInRegistries.BLOCK_ENTITY_TYPE, SellingBin.MOD_ID);
 
     Supplier<BlockEntityType<SellingBinBlockEntity>> SELLING_BIN = BLOCK_ENTITIES.register("selling_bin",
-            () -> new BlockEntityType<>(SellingBinBlockEntity::new, ModBlocks.SELLING_BIN.get()));
+            () -> new BlockEntityType<>(SellingBinBlockEntity::new, SBBlocks.SELLING_BIN.get()));
 
 
     static void register(IEventBus eventBus)

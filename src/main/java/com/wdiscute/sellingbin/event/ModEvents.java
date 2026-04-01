@@ -1,7 +1,7 @@
 package com.wdiscute.sellingbin.event;
 
-import com.wdiscute.sellingbin.registry.ModBlocks;
-import com.wdiscute.sellingbin.registry.ModDataMaps;
+import com.wdiscute.sellingbin.registry.SBBlocks;
+import com.wdiscute.sellingbin.registry.SBDataMaps;
 import com.wdiscute.sellingbin.SellingBin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackType;
@@ -29,11 +29,11 @@ public class ModEvents
     {
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS)
         {
-            event.accept(ModBlocks.SELLING_BIN);
+            event.accept(SBBlocks.SELLING_BIN);
         }
         if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS)
         {
-            event.accept(ModBlocks.SELLING_BIN);
+            event.accept(SBBlocks.SELLING_BIN);
         }
     }
 
@@ -85,8 +85,8 @@ public class ModEvents
     @SubscribeEvent
     public static void registerAttributed(RegisterDataMapTypesEvent event)
     {
-        event.register(ModDataMaps.SELLING_BIN_VALUE);
-        event.register(ModDataMaps.SELLING_BIN_CURRENCIES);
+        event.register(SBDataMaps.SELLING_BIN_VALUE);
+        event.register(SBDataMaps.SELLING_BIN_CURRENCIES);
     }
 
     public static class DefaultPackSource implements PackSource

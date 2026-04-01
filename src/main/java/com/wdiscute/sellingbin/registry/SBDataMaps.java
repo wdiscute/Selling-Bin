@@ -9,10 +9,9 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.registries.datamaps.DataMapType;
 
-import java.util.ArrayList;
 import java.util.List;
 
-public interface ModDataMaps
+public interface SBDataMaps
 {
     DataMapType<Item, ItemValue> SELLING_BIN_VALUE = DataMapType.builder(
             SellingBin.rl("selling_bin_value"), Registries.ITEM, ItemValue.CODEC).synced(ItemValue.CODEC, true).build();
