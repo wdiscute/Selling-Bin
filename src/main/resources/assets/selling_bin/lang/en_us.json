@@ -14,7 +14,8 @@
   "gui.selling_bin.selling.empty.5" : "datapacks you can use, and how to add and customize your own.",
   "gui.selling_bin.selling.empty.6" : "",
   "gui.selling_bin.selling.empty.7" : "You can also select one of the premade built-in datapacks",
-  "gui.selling_bin.selling.empty.8" : "during world creation, under the datapack section, same as vanilla.",
+  "gui.selling_bin.selling.empty.8" : "during world creation, under the datapack section, same as vanilla,",
+  "gui.selling_bin.selling.empty.9" : "or use /datapack enable XXXXXXXXX",
 
 
   "gui.selling_bin.currency.empty.0" : "There are no Selling Bin currencies registered!",
@@ -25,7 +26,8 @@
   "gui.selling_bin.currency.empty.5" : "datapacks you can use, and how to add and customize your own.",
   "gui.selling_bin.currency.empty.6" : "",
   "gui.selling_bin.currency.empty.7" : "You can also select one of the premade built-in datapacks",
-  "gui.selling_bin.currency.empty.8" : "during world creation, under the datapack section, same as vanilla.",
+  "gui.selling_bin.currency.empty.8" : "during world creation, under the datapack section, same as vanilla,",
+  "gui.selling_bin.currency.empty.9" : "or use /datapack enable XXXXXXXXX",
 
 
   "gui.selling_bin.processor.durability" : "- Price is scaled based on remaining durability.",

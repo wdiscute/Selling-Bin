@@ -1,6 +1,6 @@
 package com.wdiscute.sellingbin.bin;
 
-import com.wdiscute.sellingbin.Config;
+import com.wdiscute.sellingbin.SBConfig;
 import com.wdiscute.sellingbin.registry.SBDataMaps;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -36,7 +36,7 @@ public record Currency(Item item, int value)
         List<Currency> currencies = new ArrayList<>(currenciesUnfiltered.stream().filter(o -> o.value() > 0).toList());
 
         //if no entries remain, use default of just emeralds
-        if(currencies.isEmpty()) return List.of(new Currency(Items.EMERALD, 100));
+        if(currencies.isEmpty()) return List.of(new Currency(Items.AIR, Integer.MAX_VALUE));
 
         //sort by lowest value
         currencies.sort(Comparator.comparingInt(Currency::value));
@@ -58,7 +58,7 @@ public record Currency(Item item, int value)
             value += p.addValue(itemValue.baseValue(), value, is, blockEntity, player);
         }
 
-        return (int) (value * Config.SELLING_BIN_MULTIPLIER.get());
+        return (int) (value * SBConfig.SELLING_BIN_MULTIPLIER.get());
     }
 
     public static int calculateValueFromSingleStack(ItemStack is, BlockEntity blockEntity)

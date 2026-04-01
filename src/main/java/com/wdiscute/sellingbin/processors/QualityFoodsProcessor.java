@@ -80,7 +80,6 @@ public class QualityFoodsProcessor extends AbstractProcessor
 
         if (quality == null)
         {
-            System.out.println("null");
             return 0;
         }
 

@@ -20,11 +20,11 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.CompletableFuture;
 
-public class DGDataMapsProvider extends DataMapProvider
+public class DGSBDataMapsProvider extends DataMapProvider
 {
     private HolderLookup.Provider holderProvider;
 
-    protected DGDataMapsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider)
+    protected DGSBDataMapsProvider(PackOutput packOutput, CompletableFuture<HolderLookup.Provider> lookupProvider)
     {
         super(packOutput, lookupProvider);
     }
@@ -121,7 +121,7 @@ public class DGDataMapsProvider extends DataMapProvider
         }
 
         //durability
-        if (true)
+        if (false)
         {
             bin.add(Items.STONE_AXE.builtInRegistryHolder(), new DurabilityProcessor().create(200), false);
         }

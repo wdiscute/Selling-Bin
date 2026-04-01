@@ -59,13 +59,6 @@ repositories
         }
 
 dependencies {
-    jarJar(implementation(group: 'com.wdiscute', name: 'libtooltips')) {
-        version {
-            // Version used in your workspace and bundled in mod jar
-            prefer '1.4'
-        }
-    }
-
     //tiny multiblock lib
     jarJar(implementation("maven.modrinth:tiny-multiblock-lib:neo-1.21.1-${tiny_multiblock_lib_version}"))
 

@@ -60,7 +60,7 @@ public class SellingBinCurrencyEmptyEmiRecipe implements EmiRecipe
     @Override
     public void addWidgets(WidgetHolder widgets)
     {
-        for (int i = 0; i < 9; i++)
+        for (int i = 0; i < 10; i++)
             widgets.addText(Component.translatable("gui.selling_bin.selling.empty." + i), 5, 1 + i * 10, 0x000000, false);
     }
 }
