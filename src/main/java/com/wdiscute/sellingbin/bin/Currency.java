@@ -36,7 +36,7 @@ public record Currency(Item item, int value)
         List<Currency> currencies = new ArrayList<>(currenciesUnfiltered.stream().filter(o -> o.value() > 0).toList());
 
         //if no entries remain, use default of just emeralds
-        if(currencies.isEmpty()) return List.of(new Currency(Items.EMERALD, 100));
+        if(currencies.isEmpty()) return List.of(new Currency(Items.AIR, Integer.MAX_VALUE));
 
         //sort by lowest value
         currencies.sort(Comparator.comparingInt(Currency::value));
