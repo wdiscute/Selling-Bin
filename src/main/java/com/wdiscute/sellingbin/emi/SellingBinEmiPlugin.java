@@ -1,8 +1,8 @@
 package com.wdiscute.sellingbin.emi;
 
 import com.wdiscute.sellingbin.SellingBin;
-import com.wdiscute.sellingbin.registry.ModBlocks;
-import com.wdiscute.sellingbin.registry.ModDataMaps;
+import com.wdiscute.sellingbin.registry.SBBlocks;
+import com.wdiscute.sellingbin.registry.SBDataMaps;
 import dev.emi.emi.api.EmiEntrypoint;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
@@ -23,8 +23,7 @@ import java.util.Map;
 @EmiEntrypoint
 public class SellingBinEmiPlugin implements EmiPlugin
 {
-    public static final ResourceLocation MY_SPRITE_SHEET = SellingBin.rl("textures/gui/emi_simplified_textures.png");
-    public static final EmiStack MY_WORKSTATION = EmiStack.of(ModBlocks.SELLING_BIN);
+    public static final EmiStack MY_WORKSTATION = EmiStack.of(SBBlocks.SELLING_BIN);
     public static final EmiRecipeCategory SELLING_BIN_SELLING_CATEGORY
             = new EmiRecipeCategory(
             SellingBin.rl("selling_bin_selling"),
@@ -57,7 +56,7 @@ public class SellingBinEmiPlugin implements EmiPlugin
 
 
         //add all currencies
-        Map<ResourceKey<Item>, Integer> currencies = BuiltInRegistries.ITEM.getDataMap(ModDataMaps.SELLING_BIN_CURRENCIES);
+        Map<ResourceKey<Item>, Integer> currencies = BuiltInRegistries.ITEM.getDataMap(SBDataMaps.SELLING_BIN_CURRENCIES);
         currencies.forEach((rk, value) ->
         {
             if (value != 0)
@@ -73,10 +72,10 @@ public class SellingBinEmiPlugin implements EmiPlugin
 
 
         //add all item with selling bin value
-        Map<ResourceKey<Item>, ModDataMaps.ItemValue> sellables = BuiltInRegistries.ITEM.getDataMap(ModDataMaps.SELLING_BIN_VALUE);
+        Map<ResourceKey<Item>, SBDataMaps.ItemValue> sellables = BuiltInRegistries.ITEM.getDataMap(SBDataMaps.SELLING_BIN_VALUE);
         sellables.forEach((rk, itemValue) ->
         {
-            if (!itemValue.equals(ModDataMaps.ItemValue.EMPTY))
+            if (!itemValue.equals(SBDataMaps.ItemValue.EMPTY))
             {
 
                 Item item = BuiltInRegistries.ITEM.get(rk);

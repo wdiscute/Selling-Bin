@@ -1,6 +1,6 @@
 package com.wdiscute.sellingbin.bin;
 
-import com.wdiscute.sellingbin.registry.ModMenuTypes;
+import com.wdiscute.sellingbin.registry.SBMenuTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
@@ -64,7 +64,7 @@ public class SellingBinMenu extends AbstractContainerMenu
 
     public SellingBinMenu(int containerId, Inventory playerInventory, Container container, BlockEntity blockEntity)
     {
-        super(ModMenuTypes.SELLING_BIN_MENU.get(), containerId);
+        super(SBMenuTypes.SELLING_BIN_MENU.get(), containerId);
         checkContainerSize(container, 2);
         this.be = (SellingBinBlockEntity) blockEntity;
         this.container = container;

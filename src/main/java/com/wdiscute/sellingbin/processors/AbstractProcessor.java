@@ -3,10 +3,8 @@ package com.wdiscute.sellingbin.processors;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import com.wdiscute.sellingbin.bin.SellingBinBlockEntity;
-import com.wdiscute.sellingbin.registry.ModDataMaps;
+import com.wdiscute.sellingbin.registry.SBDataMaps;
 import com.wdiscute.sellingbin.SellingBin;
-import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
@@ -79,19 +77,19 @@ public abstract class AbstractProcessor
     {
     }
 
-    public static ModDataMaps.ItemValue createEmpty(int baseValue)
+    public static SBDataMaps.ItemValue createEmpty(int baseValue)
     {
-        return new ModDataMaps.ItemValue(baseValue, List.of());
+        return new SBDataMaps.ItemValue(baseValue, List.of());
     }
 
-    public static ModDataMaps.ItemValue createEmpty()
+    public static SBDataMaps.ItemValue createEmpty()
     {
-        return new ModDataMaps.ItemValue(0, List.of());
+        return new SBDataMaps.ItemValue(0, List.of());
     }
 
-    public ModDataMaps.ItemValue create(int baseValue)
+    public SBDataMaps.ItemValue create(int baseValue)
     {
-        return new ModDataMaps.ItemValue(baseValue, List.of(this));
+        return new SBDataMaps.ItemValue(baseValue, List.of(this));
     }
 
     public boolean canSell(ItemStack itemStack, @Nullable BlockEntity blockEntity, @Nullable Player player)

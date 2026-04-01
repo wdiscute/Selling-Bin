@@ -1,19 +1,28 @@
 package com.wdiscute.sellingbin.event;
 
-import com.wdiscute.sellingbin.registry.ModBlocks;
-import com.wdiscute.sellingbin.registry.ModDataMaps;
+import com.wdiscute.sellingbin.bin.SellingBinBlockEntity;
+import com.wdiscute.sellingbin.registry.SBBlockEntities;
+import com.wdiscute.sellingbin.registry.SBBlocks;
+import com.wdiscute.sellingbin.registry.SBDataMaps;
 import com.wdiscute.sellingbin.SellingBin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
+import net.minecraft.world.WorldlyContainer;
 import net.minecraft.world.item.CreativeModeTabs;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
 import net.neoforged.neoforge.event.AddPackFindersEvent;
 import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
+import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
 import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
+
+import java.util.List;
 
 @EventBusSubscriber(modid = SellingBin.MOD_ID)
 public class ModEvents
@@ -29,12 +38,38 @@ public class ModEvents
     {
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS)
         {
-            event.accept(ModBlocks.SELLING_BIN);
+            event.accept(SBBlocks.SELLING_BIN);
         }
         if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS)
         {
-            event.accept(ModBlocks.SELLING_BIN);
+            event.accept(SBBlocks.SELLING_BIN);
         }
+    }
+
+    @SubscribeEvent
+    public static void addCapabilities(RegisterCapabilitiesEvent event)
+    {
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, SBBlockEntities.SELLING_BIN.get(),
+                (container, side) ->
+                {
+                    if(container instanceof SellingBinBlockEntity binBlockEntity)
+                    {
+                        if(binBlockEntity.isCenter())
+                        {
+                            return new SidedInvWrapper(container, side);
+                        }
+                        else
+                        {
+                            BlockEntity blockEntity = binBlockEntity.getLevel().getBlockEntity(binBlockEntity.getCenter());
+                            if(blockEntity instanceof SellingBinBlockEntity center)
+                            {
+                                return new SidedInvWrapper(center, side);
+                            }
+                        }
+                    }
+                    return null;
+                }
+        );
     }
 
     @SubscribeEvent
@@ -85,8 +120,8 @@ public class ModEvents
     @SubscribeEvent
     public static void registerAttributed(RegisterDataMapTypesEvent event)
     {
-        event.register(ModDataMaps.SELLING_BIN_VALUE);
-        event.register(ModDataMaps.SELLING_BIN_CURRENCIES);
+        event.register(SBDataMaps.SELLING_BIN_VALUE);
+        event.register(SBDataMaps.SELLING_BIN_CURRENCIES);
     }
 
     public static class DefaultPackSource implements PackSource

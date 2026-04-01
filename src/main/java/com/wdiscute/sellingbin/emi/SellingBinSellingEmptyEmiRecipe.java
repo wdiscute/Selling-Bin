@@ -1,22 +1,15 @@
 package com.wdiscute.sellingbin.emi;
 
 import com.wdiscute.sellingbin.SellingBin;
-import com.wdiscute.sellingbin.processors.AbstractProcessor;
-import com.wdiscute.sellingbin.registry.ModDataMaps;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class SellingBinSellingEmptyEmiRecipe implements EmiRecipe

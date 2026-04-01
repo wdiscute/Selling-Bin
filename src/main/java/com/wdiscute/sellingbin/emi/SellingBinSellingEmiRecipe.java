@@ -2,7 +2,7 @@ package com.wdiscute.sellingbin.emi;
 
 import com.wdiscute.sellingbin.bin.Currency;
 import com.wdiscute.sellingbin.processors.AbstractProcessor;
-import com.wdiscute.sellingbin.registry.ModDataMaps;
+import com.wdiscute.sellingbin.registry.SBDataMaps;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
@@ -26,10 +26,10 @@ public class SellingBinSellingEmiRecipe implements EmiRecipe
     private final ResourceLocation id;
     private final List<EmiIngredient> input;
     private final Item item;
-    private final ModDataMaps.ItemValue itemValue;
+    private final SBDataMaps.ItemValue itemValue;
     private final List<Component> description;
 
-    public SellingBinSellingEmiRecipe(Item item, ModDataMaps.ItemValue itemValue)
+    public SellingBinSellingEmiRecipe(Item item, SBDataMaps.ItemValue itemValue)
     {
         this.id = BuiltInRegistries.ITEM.getKey(item);
         this.input = List.of(EmiIngredient.of(Ingredient.of(item)));

@@ -1,7 +1,7 @@
 package com.wdiscute.sellingbin.bin;
 
-import com.wdiscute.sellingbin.registry.ModBlockEntities;
-import com.wdiscute.sellingbin.registry.ModDataMaps;
+import com.wdiscute.sellingbin.registry.SBBlockEntities;
+import com.wdiscute.sellingbin.registry.SBDataMaps;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -40,11 +40,13 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
 
     public SellingBinBlockEntity(BlockPos pos, BlockState blockState)
     {
-        super(ModBlockEntities.SELLING_BIN.get(), pos, blockState);
+        super(SBBlockEntities.SELLING_BIN.get(), pos, blockState);
         this.itemStacks = NonNullList.withSize(2, ItemStack.EMPTY);
         this.currencies = Currency.getCurrencies();
         this.currenciesReversed = currencies.reversed();
     }
+
+
 
     void playSound(SoundEvent soundEvent)
     {
@@ -74,7 +76,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     public void sell(boolean all)
     {
         int value = Currency.calculateValueFromSingleStack(getItem(SellingBinMenu.ITEM_SLOT), this);
-        ModDataMaps.ItemValue itemValue = ModDataMaps.getOrDefault(getItem(SellingBinMenu.ITEM_SLOT), ModDataMaps.SELLING_BIN_VALUE, ModDataMaps.ItemValue.EMPTY);
+        SBDataMaps.ItemValue itemValue = SBDataMaps.getOrDefault(getItem(SellingBinMenu.ITEM_SLOT), SBDataMaps.SELLING_BIN_VALUE, SBDataMaps.ItemValue.EMPTY);
         if (value <= 0) return;
 
         boolean sold = false;
@@ -106,7 +108,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
 
     public int getProgressAvailable()
     {
-        return storedProgress + ModDataMaps.getOrDefault(getItem(SellingBinMenu.RESULT_SLOT), ModDataMaps.SELLING_BIN_CURRENCIES, 0) * getItem(SellingBinMenu.RESULT_SLOT).getCount();
+        return storedProgress + SBDataMaps.getOrDefault(getItem(SellingBinMenu.RESULT_SLOT), SBDataMaps.SELLING_BIN_CURRENCIES, 0) * getItem(SellingBinMenu.RESULT_SLOT).getCount();
     }
 
     //updates result slot to the highest possible currency

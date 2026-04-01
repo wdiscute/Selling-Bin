@@ -1,7 +1,7 @@
 package com.wdiscute.sellingbin.datagen;
 
-import com.wdiscute.sellingbin.registry.ModBlocks;
-import com.wdiscute.sellingbin.registry.ModItemPredicate;
+import com.wdiscute.sellingbin.registry.SBBlocks;
+import com.wdiscute.sellingbin.registry.SBItemPredicate;
 import net.minecraft.advancements.critereon.ItemPredicate.Builder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -22,7 +22,7 @@ public class DGRecipeProvider extends RecipeProvider
     protected void buildRecipes(RecipeOutput output)
     {
         //rod
-        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, ModBlocks.SELLING_BIN)
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, SBBlocks.SELLING_BIN)
                 .define('B', Blocks.BARREL)
                 .define('S', ItemTags.SLABS)
                 .define('C', ItemTags.WOOL_CARPETS)
@@ -30,7 +30,7 @@ public class DGRecipeProvider extends RecipeProvider
                 .pattern("SBS")
                 .pattern("SSS")
                 .unlockedBy("selling_bin_sellable",
-                        inventoryTrigger(Builder.item().withSubPredicate(ModItemPredicate.SELLING_BIN_SELLABLE.get(), new ModItemPredicate.SellingBinSellablePredicate())))
+                        inventoryTrigger(Builder.item().withSubPredicate(SBItemPredicate.SELLING_BIN_SELLABLE.get(), new SBItemPredicate.SellingBinSellablePredicate())))
                 .save(output);
     }
 

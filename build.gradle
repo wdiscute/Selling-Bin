@@ -39,6 +39,11 @@ repositories
                 url = "https://api.modrinth.com/maven"
             }
 
+            //jei
+            maven {
+                url = "https://maven.blamejared.com/"
+            }
+
             repositories {
                 exclusiveContent {
                     forRepository {
@@ -64,9 +69,16 @@ dependencies {
     //tiny multiblock lib
     jarJar(implementation("maven.modrinth:tiny-multiblock-lib:neo-1.21.1-${tiny_multiblock_lib_version}"))
 
+    //pipez
+    runtimeOnly "maven.modrinth:pipez:z20ZR1YE"
+
     //EMI
     compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
-    runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
+    //runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
+
+    //JEI
+    compileOnly("mezz.jei:jei-${mc_version}-neoforge-api:${jei_version}")
+    runtimeOnly("mezz.jei:jei-${mc_version}-neoforge:${jei_version}")
 
     //quality foods compat
     compileOnly("maven.modrinth:quality-food:vLFBpk1n")

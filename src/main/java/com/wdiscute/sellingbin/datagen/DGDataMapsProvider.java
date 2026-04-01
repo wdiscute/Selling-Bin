@@ -1,9 +1,7 @@
 package com.wdiscute.sellingbin.datagen;
 
 import com.wdiscute.sellingbin.processors.*;
-import com.wdiscute.sellingbin.registry.ModDataMaps;
-import de.cadentem.quality_food.core.codecs.QualityType;
-import de.cadentem.quality_food.registry.QFComponents;
+import com.wdiscute.sellingbin.registry.SBDataMaps;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -36,8 +34,8 @@ public class DGDataMapsProvider extends DataMapProvider
     {
         holderProvider = provider;
 
-        var bin = this.builder(ModDataMaps.SELLING_BIN_VALUE);
-        var currencies = this.builder(ModDataMaps.SELLING_BIN_CURRENCIES);
+        var bin = this.builder(SBDataMaps.SELLING_BIN_VALUE);
+        var currencies = this.builder(SBDataMaps.SELLING_BIN_CURRENCIES);
 
 
         //foods built-in datapack
@@ -63,7 +61,7 @@ public class DGDataMapsProvider extends DataMapProvider
             qualities.put(ResourceLocation.fromNamespaceAndPath("quality_food", "gold"), 1.5f);
             qualities.put(ResourceLocation.fromNamespaceAndPath("quality_food", "iron"), 1.25f);
 
-            bin.add(Tags.Items.FOODS, new ModDataMaps.ItemValue(10, List.of(
+            bin.add(Tags.Items.FOODS, new SBDataMaps.ItemValue(10, List.of(
                     new FoodProcessor(),
                     new QualityFoodsProcessor(qualities)
             )), false);
