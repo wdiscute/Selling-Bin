@@ -1,6 +1,6 @@
 package com.wdiscute.sellingbin.bin;
 
-import com.wdiscute.sellingbin.Config;
+import com.wdiscute.sellingbin.SBConfig;
 import com.wdiscute.sellingbin.registry.SBDataMaps;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -58,7 +58,7 @@ public record Currency(Item item, int value)
             value += p.addValue(itemValue.baseValue(), value, is, blockEntity, player);
         }
 
-        return (int) (value * Config.SELLING_BIN_MULTIPLIER.get());
+        return (int) (value * SBConfig.SELLING_BIN_MULTIPLIER.get());
     }
 
     public static int calculateValueFromSingleStack(ItemStack is, BlockEntity blockEntity)

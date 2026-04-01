@@ -41,6 +41,7 @@
   "gui.selling_bin.processors" : "Processors:",
 
   "block.selling_bin.selling_bin" : "Selling Bin",
+  "item.selling_bin.selling_bin" : "Selling Bin",
 
   "gui.selling_bin.selling_bin.sell" : "Sell",
   "gui.selling_bin.selling_bin.sell_all" : "Sell All",

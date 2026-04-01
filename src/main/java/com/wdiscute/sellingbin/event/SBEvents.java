@@ -16,7 +16,7 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 
 @EventBusSubscriber(modid = SellingBin.MOD_ID)
-public class ModEvents
+public class SBEvents
 {
     @SubscribeEvent
     public static void addRegistry(NewRegistryEvent event)

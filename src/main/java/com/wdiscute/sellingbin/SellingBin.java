@@ -50,8 +50,8 @@ public class SellingBin
         SBMenuTypes.register(modEventBus);
         ModProcessors.register(modEventBus);
 
-        modContainer.registerConfig(ModConfig.Type.CLIENT, Config.SPEC);
-        modContainer.registerConfig(ModConfig.Type.SERVER, Config.SPEC_SERVER);
+        modContainer.registerConfig(ModConfig.Type.CLIENT, SBConfig.SPEC);
+        modContainer.registerConfig(ModConfig.Type.SERVER, SBConfig.SPEC_SERVER);
     }
 
     @Mod(value = SellingBin.MOD_ID, dist = Dist.CLIENT)
