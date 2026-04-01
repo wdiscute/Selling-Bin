@@ -11,9 +11,9 @@ import net.minecraft.world.level.block.Blocks;
 
 import java.util.concurrent.CompletableFuture;
 
-public class DGRecipeProvider extends RecipeProvider
+public class DGSBRecipeProvider extends RecipeProvider
 {
-    public DGRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries)
+    public DGSBRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries)
     {
         super(output, registries);
     }

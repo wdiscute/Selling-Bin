@@ -9,7 +9,7 @@ import net.neoforged.fml.common.EventBusSubscriber;
 import net.neoforged.neoforge.client.event.*;
 
 @EventBusSubscriber(modid = SellingBin.MOD_ID, value = Dist.CLIENT)
-public class ModClientEvents
+public class SBClientEvents
 {
     @SubscribeEvent
     public static void registerScreens(RegisterMenuScreensEvent event)

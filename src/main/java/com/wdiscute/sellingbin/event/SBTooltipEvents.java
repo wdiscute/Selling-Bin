@@ -1,6 +1,6 @@
 package com.wdiscute.sellingbin.event;
 
-import com.wdiscute.sellingbin.Config;
+import com.wdiscute.sellingbin.SBConfig;
 import com.wdiscute.sellingbin.SellingBin;
 import com.wdiscute.sellingbin.bin.Currency;
 import net.minecraft.ChatFormatting;
@@ -17,7 +17,7 @@ import net.neoforged.neoforge.event.entity.player.ItemTooltipEvent;
 import java.util.List;
 
 @EventBusSubscriber(modid = SellingBin.MOD_ID, value = Dist.CLIENT)
-public class TooltipEvents
+public class SBTooltipEvents
 {
     @SubscribeEvent
     public static void tooltipEvent(ItemTooltipEvent event)
@@ -26,7 +26,7 @@ public class TooltipEvents
         ItemStack stack = event.getItemStack();
 
         //selling bin info
-        if (Screen.hasShiftDown() || Config.ALWAYS_SHOW_SELLING_BIN_PRICE.get())
+        if (Screen.hasShiftDown() || SBConfig.ALWAYS_SHOW_SELLING_BIN_PRICE.get())
         {
             int value = Currency.calculateValueFromSingleStack(stack, Minecraft.getInstance().player);
             if (value > 0)

@@ -17,9 +17,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 
-public class DGModBlockLootTableProvider extends BlockLootSubProvider
+public class DGSBlockLootTableProvider extends BlockLootSubProvider
 {
-    protected DGModBlockLootTableProvider(HolderLookup.Provider registries)
+    protected DGSBlockLootTableProvider(HolderLookup.Provider registries)
     {
         super(Set.of(), FeatureFlags.REGISTRY.allFlags(), registries);
     }

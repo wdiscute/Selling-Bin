@@ -5,12 +5,9 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
-import net.minecraft.data.tags.ItemTagsProvider;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.common.data.BlockTagsProvider;
-import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.Collections;
@@ -18,7 +15,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber(modid = SellingBin.MOD_ID)
-public class DataGenerators
+public class SBDataGenerators
 {
 
     @SubscribeEvent
@@ -31,14 +28,14 @@ public class DataGenerators
 
         //loot table
         gen.addProvider(event.includeServer(), new LootTableProvider(output, Collections.emptySet(),
-                List.of(new LootTableProvider.SubProviderEntry(DGModBlockLootTableProvider::new, LootContextParamSets.BLOCK)), lookupProvider));
+                List.of(new LootTableProvider.SubProviderEntry(DGSBlockLootTableProvider::new, LootContextParamSets.BLOCK)), lookupProvider));
 
 
         //recipe
-        gen.addProvider(event.includeServer(), new DGRecipeProvider(output, lookupProvider));
+        gen.addProvider(event.includeServer(), new DGSBRecipeProvider(output, lookupProvider));
 
         //data map
-        gen.addProvider(event.includeServer(), new DGDataMapsProvider(output, lookupProvider));
+        gen.addProvider(event.includeServer(), new DGSBDataMapsProvider(output, lookupProvider));
 
     }
 }

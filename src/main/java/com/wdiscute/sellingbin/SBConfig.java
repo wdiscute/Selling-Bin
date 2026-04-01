@@ -2,7 +2,7 @@ package com.wdiscute.sellingbin;
 
 import net.neoforged.neoforge.common.ModConfigSpec;
 
-public class Config
+public class SBConfig
 {
     private static final ModConfigSpec.Builder BUILDER_CLIENT = new ModConfigSpec.Builder();
 
