@@ -21,7 +21,7 @@ public abstract class AbstractProcessor
             .dispatch(processor -> processor.getRegistryHolderOrThrow().getId(),
                     loc ->
                     {
-                        if(SellingBin.SELLING_BIN_REGISTRY.getOptional(loc).isPresent())
+                        if(SellingBin.SELLING_BIN_REGISTRY.getOptional(loc).isEmpty())
                         {
                             LogUtils.getLogger().error("Selling Bin Processor {} is not registered! " +
                                     "Make sure it's not dependent on another mod, and that you spelt the name correctly. " +
