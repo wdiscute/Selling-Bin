@@ -31,12 +31,23 @@ repositories {
     maven {
         url = "https://api.modrinth.com/maven"
     }
+
+    //jei
+    maven {
+        url = "https://maven.blamejared.com/"
+    }
 }
 
 dependencies {
 
     //tiny multiblock lib
     jarJar(implementation("maven.modrinth:tiny-multiblock-lib:neo-26.1-${tiny_multiblock_lib_version}"))
+
+
+    //JEI
+    compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
+    runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
+
 
 }
 
