@@ -24,7 +24,7 @@ public class DGSBRecipeProvider extends RecipeProvider
         //rod
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, SBBlocks.SELLING_BIN)
                 .define('B', Blocks.BARREL)
-                .define('S', ItemTags.SLABS)
+                .define('S', ItemTags.WOODEN_SLABS)
                 .define('C', ItemTags.WOOL_CARPETS)
                 .pattern("CCC")
                 .pattern("SBS")
