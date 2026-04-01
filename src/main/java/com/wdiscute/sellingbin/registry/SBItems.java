@@ -4,7 +4,7 @@ import com.wdiscute.sellingbin.SellingBin;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-public interface ModItems
+public interface SBItems
 {
     DeferredRegister.Items ITEMS = DeferredRegister.createItems(SellingBin.MOD_ID);
 

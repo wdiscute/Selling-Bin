@@ -9,7 +9,7 @@ import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredHolder;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-public interface ModItemPredicate
+public interface SBItemPredicate
 {
     DeferredRegister<ItemSubPredicate.Type<?>> ITEM_SUB_PREDICATES = DeferredRegister.create(BuiltInRegistries.ITEM_SUB_PREDICATE_TYPE, SellingBin.MOD_ID);
 
@@ -30,7 +30,7 @@ public interface ModItemPredicate
 
         public boolean matches(ItemStack stack)
         {
-            return ModDataMaps.getOrDefault(stack, ModDataMaps.SELLING_BIN_VALUE, ModDataMaps.ItemValue.EMPTY).baseValue() > 0;
+            return SBDataMaps.getOrDefault(stack,  SBDataMaps.SELLING_BIN_VALUE, SBDataMaps.ItemValue.EMPTY).baseValue() > 0;
         }
     }
 }
