@@ -61,6 +61,6 @@ public class SellingBinCurrencyEmptyEmiRecipe implements EmiRecipe
     public void addWidgets(WidgetHolder widgets)
     {
         for (int i = 0; i < 10; i++)
-            widgets.addText(Component.translatable("gui.selling_bin.selling.empty." + i), 5, 1 + i * 10, 0x000000, false);
+            widgets.addText(Component.translatable("gui.selling_bin.currency.empty." + i), 5, 1 + i * 10, 0x000000, false);
     }
 }

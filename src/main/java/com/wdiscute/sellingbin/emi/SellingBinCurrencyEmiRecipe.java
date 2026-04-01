@@ -13,6 +13,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 
@@ -72,7 +73,7 @@ public class SellingBinCurrencyEmiRecipe implements EmiRecipe
     @Override
     public void addWidgets(WidgetHolder widgets)
     {
-        widgets.addSlot(EmiIngredient.of(SellingBinEmiPlugin.sellable), 5, 2);
+        widgets.addSlot(EmiIngredient.of(SellingBinEmiPlugin.sellable.isEmpty() ? List.of(EmiIngredient.of(Ingredient.of(Items.BARRIER))) : SellingBinEmiPlugin.sellable), 5, 2);
 
         widgets.addTexture(SellingBinEmiPlugin.ARROW, 25, 2);
 
