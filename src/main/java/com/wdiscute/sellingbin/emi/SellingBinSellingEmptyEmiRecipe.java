@@ -51,7 +51,7 @@ public class SellingBinSellingEmptyEmiRecipe implements EmiRecipe
     @Override
     public int getDisplayHeight()
     {
-        return 90;
+        return 100;
     }
 
     @Override
