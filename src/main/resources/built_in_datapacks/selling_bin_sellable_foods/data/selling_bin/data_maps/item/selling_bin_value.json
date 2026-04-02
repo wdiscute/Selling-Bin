@@ -1,5 +1,7 @@
 {
   "values": {
+
+
     "#c:foods": {
       "base_value": 10,
       "processors": [
@@ -8,6 +10,8 @@
         }
       ]
     },
+
+
     "minecraft:cake": {
       "base_value": 200,
       "processors": []

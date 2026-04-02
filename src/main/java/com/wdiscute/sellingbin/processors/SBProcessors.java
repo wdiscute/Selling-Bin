@@ -8,7 +8,7 @@ import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
 
-public class ModProcessors
+public class SBProcessors
 {
     public static final DeferredRegister<AbstractProcessor> SELLING_BIN_PROCESSORS =
             DeferredRegister.create(SellingBin.SELLING_BIN_REGISTRY, SellingBin.MOD_ID);
@@ -18,16 +18,20 @@ public class ModProcessors
     public static final DeferredHolder<AbstractProcessor, AbstractProcessor> FOOD_PROCESSOR = register("food_processor", FoodProcessor::new);
     public static DeferredHolder<AbstractProcessor, AbstractProcessor> ENCHANTMENTS_PROCESSOR = register("enchantments_processor", EnchantmentProcessor::new);
     public static DeferredHolder<AbstractProcessor, AbstractProcessor> QUALITY_FOODS_PROCESSOR;
-
-    public static DeferredHolder<AbstractProcessor, AbstractProcessor> register(String name, Supplier<AbstractProcessor> sup)
-    {
-        return SELLING_BIN_PROCESSORS.register(name, sup);
-    }
+    public static DeferredHolder<AbstractProcessor, AbstractProcessor> WINE_AGE_PROCESSOR;
 
     public static void registerOptionals()
     {
         if (ModList.get().isLoaded("quality_food"))
             QUALITY_FOODS_PROCESSOR = register("quality_foods_processor", QualityFoodsProcessor::new);
+
+        if (ModList.get().isLoaded("vinery"))
+            WINE_AGE_PROCESSOR = register("wine_age_processor", WineAgeProcessor::new);
+    }
+
+    public static DeferredHolder<AbstractProcessor, AbstractProcessor> register(String name, Supplier<AbstractProcessor> sup)
+    {
+        return SELLING_BIN_PROCESSORS.register(name, sup);
     }
 
     public static void register(IEventBus eventBus)

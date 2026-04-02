@@ -8,7 +8,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class FoodProcessor extends AbstractProcessor
@@ -26,7 +25,7 @@ public class FoodProcessor extends AbstractProcessor
     @Override
     public DeferredHolder<AbstractProcessor, AbstractProcessor> getRegistryHolder()
     {
-        return ModProcessors.FOOD_PROCESSOR;
+        return SBProcessors.FOOD_PROCESSOR;
     }
 
     @Override

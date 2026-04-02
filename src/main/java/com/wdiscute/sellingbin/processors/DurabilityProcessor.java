@@ -7,7 +7,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public class DurabilityProcessor extends AbstractProcessor
@@ -25,7 +24,7 @@ public class DurabilityProcessor extends AbstractProcessor
     @Override
     public DeferredHolder<AbstractProcessor, AbstractProcessor> getRegistryHolder()
     {
-        return ModProcessors.DURABILITY;
+        return SBProcessors.DURABILITY;
     }
 
     @Override

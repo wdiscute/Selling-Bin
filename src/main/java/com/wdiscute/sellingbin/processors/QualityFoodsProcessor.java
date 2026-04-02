@@ -3,23 +3,15 @@ package com.wdiscute.sellingbin.processors;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import de.cadentem.quality_food.QualityFood;
 import de.cadentem.quality_food.core.codecs.Quality;
-import de.cadentem.quality_food.core.codecs.QualityType;
 import de.cadentem.quality_food.registry.QFComponents;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.RegistryFixedCodec;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.server.packs.resources.Resource;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.neoforged.neoforge.registries.DeferredHolder;
 
-import javax.print.DocFlavor;
 import java.util.List;
 import java.util.Map;
 
@@ -58,7 +50,7 @@ public class QualityFoodsProcessor extends AbstractProcessor
     @Override
     public DeferredHolder<AbstractProcessor, AbstractProcessor> getRegistryHolder()
     {
-        return ModProcessors.QUALITY_FOODS_PROCESSOR;
+        return SBProcessors.QUALITY_FOODS_PROCESSOR;
     }
 
     @Override

@@ -1,5 +1,6 @@
 package com.wdiscute.sellingbin.datagen;
 
+import com.wdiscute.sellingbin.SellingBin;
 import com.wdiscute.sellingbin.processors.*;
 import com.wdiscute.sellingbin.registry.SBDataMaps;
 import net.minecraft.core.Holder;
@@ -8,11 +9,13 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.DataMapProvider;
+import net.satisfy.vinery.core.registry.ObjectRegistry;
 
 import java.util.HashMap;
 import java.util.List;
@@ -65,6 +68,23 @@ public class DGSBDataMapsProvider extends DataMapProvider
                     new FoodProcessor(),
                     new QualityFoodsProcessor(qualities)
             )), false);
+        }
+
+
+        //Let's do Vinery
+        if (true)
+        {
+            Map<String, Float> ages = new HashMap<>();
+
+            ages.put("1", 1.5f);
+            ages.put("2", 3f);
+            ages.put("3", 5f);
+
+            bin.add(ItemTags.create(SellingBin.rl("vinery", "red_wine")),
+                    new WineAgeProcessor(ages).create(200), false);
+
+            bin.add(ItemTags.create(SellingBin.rl("vinery", "white_wine")),
+                    new WineAgeProcessor(ages).create(200), false);
         }
 
 
