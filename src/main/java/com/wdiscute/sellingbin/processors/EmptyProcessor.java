@@ -24,7 +24,7 @@ public class EmptyProcessor extends AbstractProcessor
     @Override
     public DeferredHolder<AbstractProcessor, AbstractProcessor> getRegistryHolder()
     {
-        return ModProcessors.EMPTY_PROCESSOR;
+        return SBProcessors.EMPTY_PROCESSOR;
     }
 
     @Override

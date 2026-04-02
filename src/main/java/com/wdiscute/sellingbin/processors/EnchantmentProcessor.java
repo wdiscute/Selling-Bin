@@ -53,7 +53,7 @@ public class EnchantmentProcessor extends AbstractProcessor
     @Override
     public DeferredHolder<AbstractProcessor, AbstractProcessor> getRegistryHolder()
     {
-        return ModProcessors.ENCHANTMENTS_PROCESSOR;
+        return SBProcessors.ENCHANTMENTS_PROCESSOR;
     }
 
     @Override
