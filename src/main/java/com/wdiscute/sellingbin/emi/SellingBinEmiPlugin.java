@@ -10,11 +10,10 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.item.Item;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -56,13 +55,13 @@ public class SellingBinEmiPlugin implements EmiPlugin
 
 
         //add all currencies
-        Map<ResourceKey<Item>, Integer> currencies = BuiltInRegistries.ITEM.getDataMap(SBDataMaps.SELLING_BIN_CURRENCIES);
+        Map<RegistryKey<Item>, Integer> currencies = SBDataMaps.getAllItems(SBDataMaps.SELLING_BIN_CURRENCIES);
         currencies.forEach((rk, value) ->
         {
             if (value != 0)
             {
-                Item item = BuiltInRegistries.ITEM.get(rk);
-                SellingBinEmiPlugin.currencies.add(EmiIngredient.of(Ingredient.of(item)));
+                Item item = Registries.ITEM.get(rk);
+                SellingBinEmiPlugin.currencies.add(EmiIngredient.of(Ingredient.ofItems(item)));
                 registry.addRecipe(new SellingBinCurrencyEmiRecipe(item, value));
             }
         });
@@ -72,14 +71,14 @@ public class SellingBinEmiPlugin implements EmiPlugin
 
 
         //add all item with selling bin value
-        Map<ResourceKey<Item>, SBDataMaps.ItemValue> sellables = BuiltInRegistries.ITEM.getDataMap(SBDataMaps.SELLING_BIN_VALUE);
+        Map<RegistryKey<Item>, SBDataMaps.ItemValue> sellables = SBDataMaps.getAllItems(SBDataMaps.SELLING_BIN_VALUE);
         sellables.forEach((rk, itemValue) ->
         {
             if (!itemValue.equals(SBDataMaps.ItemValue.EMPTY))
             {
 
-                Item item = BuiltInRegistries.ITEM.get(rk);
-                sellable.add(EmiIngredient.of(Ingredient.of(item)));
+                Item item = Registries.ITEM.get(rk);
+                sellable.add(EmiIngredient.of(Ingredient.ofItems(item)));
                 registry.addRecipe(new SellingBinSellingEmiRecipe(item, itemValue));
             }
 

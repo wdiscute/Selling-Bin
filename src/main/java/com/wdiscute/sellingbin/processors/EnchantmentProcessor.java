@@ -3,16 +3,13 @@ package com.wdiscute.sellingbin.processors;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.Enchantment;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.registry.entry.RegistryEntry;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import java.util.List;
 import java.util.Map;
@@ -20,13 +17,13 @@ import java.util.concurrent.atomic.AtomicInteger;
 
 public class EnchantmentProcessor extends AbstractProcessor
 {
-    private Map<Holder<Enchantment>, Integer> enchantments;
+    private Map<RegistryEntry<Enchantment>, Integer> enchantments;
 
     public EnchantmentProcessor()
     {
     }
 
-    public EnchantmentProcessor(Map<Holder<Enchantment>, Integer> enchantments)
+    public EnchantmentProcessor(Map<RegistryEntry<Enchantment>, Integer> enchantments)
     {
         this.enchantments = enchantments;
     }
@@ -38,7 +35,7 @@ public class EnchantmentProcessor extends AbstractProcessor
                             .forGetter(EnchantmentProcessor::getEnchantments)
             ).apply(instance, EnchantmentProcessor::new));
 
-    private Map<Holder<Enchantment>, Integer> getEnchantments()
+    private Map<RegistryEntry<Enchantment>, Integer> getEnchantments()
     {
         return enchantments;
     }
@@ -51,7 +48,7 @@ public class EnchantmentProcessor extends AbstractProcessor
     }
 
     @Override
-    public DeferredHolder<AbstractProcessor, AbstractProcessor> getRegistryHolder()
+    public Identifier getIdentifier()
     {
         return SBProcessors.ENCHANTMENTS_PROCESSOR;
     }
@@ -63,13 +60,13 @@ public class EnchantmentProcessor extends AbstractProcessor
     }
 
     @Override
-    public List<Component> getDescription()
+    public List<Text> getDescription()
     {
-        return List.of(Component.translatable("gui.selling_bin.processor.enchantments"));
+        return List.of(Text.translatable("gui.selling_bin.processor.enchantments"));
     }
 
     @Override
-    public int addValue(int baseValue, int currentValue, ItemStack itemStack, BlockEntity blockEntity, Player player)
+    public int addValue(int baseValue, int currentValue, ItemStack itemStack, BlockEntity blockEntity, PlayerEntity player)
     {
         if (!EnchantmentHelper.hasAnyEnchantments(itemStack)) return 0;
 

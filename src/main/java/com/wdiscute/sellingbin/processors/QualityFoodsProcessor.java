@@ -48,7 +48,7 @@ public class QualityFoodsProcessor extends AbstractProcessor
     }
 
     @Override
-    public DeferredHolder<AbstractProcessor, AbstractProcessor> getRegistryHolder()
+    public DeferredHolder<AbstractProcessor, AbstractProcessor> getIdentifier()
     {
         return SBProcessors.QUALITY_FOODS_PROCESSOR;
     }

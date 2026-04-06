@@ -2,15 +2,15 @@ package com.wdiscute.sellingbin.bin;
 
 import com.wdiscute.sellingbin.SBConfig;
 import com.wdiscute.sellingbin.registry.SBDataMaps;
-import net.minecraft.client.resources.language.I18n;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.client.resource.language.I18n;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.text.Text;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
@@ -28,9 +28,9 @@ public record Currency(Item item, int value)
     public static List<Currency> getCurrencies()
     {
         //add all currencies from datamap
-        Map<ResourceKey<Item>, Integer> dataMap = BuiltInRegistries.ITEM.getDataMap(SBDataMaps.SELLING_BIN_CURRENCIES);
+        Map<RegistryKey<Item>, Integer> dataMap = Registries.ITEM.getDataMap(SBDataMaps.SELLING_BIN_CURRENCIES);
         List<Currency> currenciesUnfiltered = new ArrayList<>();
-        dataMap.forEach((i, v) -> currenciesUnfiltered.add(new Currency(BuiltInRegistries.ITEM.get(i), v)));
+        dataMap.forEach((i, v) -> currenciesUnfiltered.add(new Currency(Registries.ITEM.get(i), v)));
 
         //remove entries with negative value
         List<Currency> currencies = new ArrayList<>(currenciesUnfiltered.stream().filter(o -> o.value() > 0).toList());
@@ -44,7 +44,7 @@ public record Currency(Item item, int value)
     }
 
     //this does not take into account stack count!
-    public static int calculateValueFromSingleStack(ItemStack is, BlockEntity blockEntity, @Nullable Player player)
+    public static int calculateValueFromSingleStack(ItemStack is, BlockEntity blockEntity, @Nullable PlayerEntity player)
     {
         SBDataMaps.ItemValue itemValue = SBDataMaps.getOrDefault(is, SBDataMaps.SELLING_BIN_VALUE, SBDataMaps.ItemValue.EMPTY);
 
@@ -66,7 +66,7 @@ public record Currency(Item item, int value)
         return calculateValueFromSingleStack(is, blockEntity, null);
     }
 
-    public static int calculateValueFromSingleStack(ItemStack is, Player player)
+    public static int calculateValueFromSingleStack(ItemStack is, PlayerEntity player)
     {
         return calculateValueFromSingleStack(is, null, player);
     }
@@ -94,9 +94,9 @@ public record Currency(Item item, int value)
                 DecimalFormat df = new DecimalFormat("#.##");
 
                 if (numOfCurrency == 1)
-                    s = s + df.format(numOfCurrency) + " " + c.item().getDescription().getString(100);
+                    s = s + df.format(numOfCurrency) + " " + c.item().getName().getString();
                 else
-                    s = s + df.format(numOfCurrency) + " " + getPluralTranslation(c.item()).getString(100);
+                    s = s + df.format(numOfCurrency) + " " + getPluralTranslation(c.item()).getString();
 
                 found = true;
                 break;
@@ -109,20 +109,20 @@ public record Currency(Item item, int value)
             DecimalFormat df = new DecimalFormat("#.##");
 
             if (numOfCurrency == 1)
-                s = s + df.format(numOfCurrency) + " " + currencies.getLast().item().getDescription().getString(100);
+                s = s + df.format(numOfCurrency) + " " + currencies.getLast().item().getName().getString();
             else
-                s = s + df.format(numOfCurrency) + " " + getPluralTranslation(currencies.getLast().item()).getString(100);
+                s = s + df.format(numOfCurrency) + " " + getPluralTranslation(currencies.getLast().item()).getString();
         }
 
         return s;
     }
 
-    public static List<Component> getListOfCurrenciesFromValue(List<Currency> currencies, int progressAvailable, boolean addCurrenciesText)
+    public static List<Text> getListOfCurrenciesFromValue(List<Currency> currencies, int progressAvailable, boolean addCurrenciesText)
     {
-        List<Component> comps = new ArrayList<>();
+        List<Text> comps = new ArrayList<>();
 
         if(addCurrenciesText)
-            comps.add(Component.translatable("gui.selling_bin.selling_bin.currencies"));
+            comps.add(Text.translatable("gui.selling_bin.selling_bin.currencies"));
 
         for (Currency c : currencies)
         {
@@ -136,17 +136,17 @@ public record Currency(Item item, int value)
             else
                 s = s + df.format(numOfCurrency) + " " + getPluralTranslation(c.item()).getString(100);
 
-            comps.add(Component.literal(s));
+            comps.add(Text.literal(s));
         }
 
         return comps;
     }
 
-    public static Component getPluralTranslation(Item item)
+    public static Text getPluralTranslation(Item item)
     {
-        if(I18n.exists(item.getDescriptionId() + ".plural"))
-            return Component.translatable(item.getDescriptionId() + ".plural");
+        if(I18n.hasTranslation(item.getTranslationKey() + ".plural"))
+            return Text.translatable(item.getTranslationKey() + ".plural");
         else
-            return Component.translatable(item.getDescriptionId());
+            return Text.translatable(item.getTranslationKey());
     }
 }

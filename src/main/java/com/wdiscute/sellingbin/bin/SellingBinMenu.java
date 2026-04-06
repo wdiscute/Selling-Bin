@@ -1,30 +1,31 @@
 package com.wdiscute.sellingbin.bin;
 
 import com.wdiscute.sellingbin.registry.SBMenuTypes;
-import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.world.Container;
-import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SimpleInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.network.PacketByteBuf;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.slot.Slot;
+import net.minecraft.util.math.BlockPos;
 
-public class SellingBinMenu extends AbstractContainerMenu
+public class SellingBinMenu extends ScreenHandler
 {
-    private final Container container;
+    private final Inventory container;
     public final SellingBinBlockEntity be;
     public static final int ITEM_SLOT = 0;
     public static final int RESULT_SLOT = 1;
 
-    public SellingBinMenu(int containerId, Inventory inv, FriendlyByteBuf extraData)
+    public SellingBinMenu(int containerId, PlayerInventory inv, BlockPos blockPos)
     {
-        this(containerId, inv, new SimpleContainer(2), inv.player.level().getBlockEntity(extraData.readBlockPos()));
+        this(containerId, inv, new SimpleInventory(2), inv.player.getWorld().getBlockEntity(blockPos));
     }
 
     @Override
-    public boolean clickMenuButton(Player player, int id)
+    public boolean onButtonClick(PlayerEntity player, int id)
     {
         //sell
         if (id == 67)
@@ -59,16 +60,16 @@ public class SellingBinMenu extends AbstractContainerMenu
             be.updateToClient();
         }
 
-        return super.clickMenuButton(player, id);
+        return super.onButtonClick(player, id);
     }
 
-    public SellingBinMenu(int containerId, Inventory playerInventory, Container container, BlockEntity blockEntity)
+    public SellingBinMenu(int containerId, PlayerInventory playerInventory, Inventory container, BlockEntity blockEntity)
     {
-        super(SBMenuTypes.SELLING_BIN_MENU.get(), containerId);
-        checkContainerSize(container, 2);
+        super(SBMenuTypes.SELLING_BIN_MENU, containerId);
+        checkSize(container, 2);
         this.be = (SellingBinBlockEntity) blockEntity;
         this.container = container;
-        container.startOpen(playerInventory.player);
+        container.onOpen(playerInventory.player);
 
         this.addSlot(new SellingBinItemSlot(this, container, ITEM_SLOT, 56, 33, blockEntity != null));
 
@@ -84,44 +85,48 @@ public class SellingBinMenu extends AbstractContainerMenu
 
     }
 
-    public boolean stillValid(Player player)
+    @Override
+    public boolean canUse(PlayerEntity player)
     {
-        return this.container.stillValid(player);
+        return this.container.canPlayerUse(player);
     }
 
-    public ItemStack quickMoveStack(Player player, int index)
+    @Override
+    public ItemStack quickMove(PlayerEntity player, int index)
     {
         ItemStack itemstack = ItemStack.EMPTY;
         Slot slot = this.slots.get(index);
-        if (slot.hasItem())
+        if (slot.hasStack())
         {
-            ItemStack itemstack1 = slot.getItem();
+            ItemStack itemstack1 = slot.getStack();
             itemstack = itemstack1.copy();
-            if (index < this.container.getContainerSize())
+            if (index < this.container.size())
             {
-                if (!this.moveItemStackTo(itemstack1, this.container.getContainerSize(), this.slots.size(), true))
+                if (!this.insertItem(itemstack1, this.container.size(), this.slots.size(), true))
                 {
                     return ItemStack.EMPTY;
                 }
             }
-            else if (!this.moveItemStackTo(itemstack1, 0, this.container.getContainerSize() - 1, false))
+            else if (!this.insertItem(itemstack1, 0, this.container.size() - 1, false))
             {
                 return ItemStack.EMPTY;
             }
 
             if (itemstack1.isEmpty())
-                slot.setByPlayer(ItemStack.EMPTY);
+                slot.setStack(ItemStack.EMPTY);
             else
-                slot.setChanged();
+                slot.markDirty();
         }
 
         be.update();
         return itemstack;
     }
 
-    public void removed(Player player)
+    @Override
+    public void onClosed(PlayerEntity player)
     {
-        super.removed(player);
-        this.container.stopOpen(player);
+        super.onClosed(player);
+        this.container.onClose(player);
     }
+
 }

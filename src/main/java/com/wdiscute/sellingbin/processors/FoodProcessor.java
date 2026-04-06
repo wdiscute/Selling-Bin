@@ -23,7 +23,7 @@ public class FoodProcessor extends AbstractProcessor
     }
 
     @Override
-    public DeferredHolder<AbstractProcessor, AbstractProcessor> getRegistryHolder()
+    public DeferredHolder<AbstractProcessor, AbstractProcessor> getIdentifier()
     {
         return SBProcessors.FOOD_PROCESSOR;
     }

@@ -2,30 +2,42 @@ package com.wdiscute.sellingbin.registry;
 
 import com.wdiscute.sellingbin.SellingBin;
 import com.wdiscute.sellingbin.bin.SellingBinBlock;
-import net.minecraft.world.item.BlockItem;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredRegister;
-
-import java.util.function.Supplier;
+import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
+import net.minecraft.block.Block;
+import net.minecraft.item.BlockItem;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemGroups;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.util.Identifier;
 
 public interface SBBlocks
 {
-    DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(SellingBin.MOD_ID);
 
-    DeferredBlock<Block> SELLING_BIN = registerBlock("selling_bin", SellingBinBlock::new);
+    Block SELLING_BIN = registerBlock("selling_bin", new SellingBinBlock());
 
-    private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block)
+    private static Block registerBlock(String name, Block block)
     {
-        DeferredBlock<T> toReturn = BLOCKS.register(name, block);
-        SBItems.ITEMS.register(name, () -> new BlockItem(toReturn.get(), new Item.Properties()));
-        return toReturn;
+        registerBlockItem(name, block);
+        return Registry.register(Registries.BLOCK, Identifier.of(SellingBin.MOD_ID, name), block);
     }
 
-    static void register(IEventBus eventBus)
+    private static void registerBlockItem(String name, Block block)
     {
-        BLOCKS.register(eventBus);
+        Registry.register(Registries.ITEM, Identifier.of(SellingBin.MOD_ID, name),
+                new BlockItem(block, new Item.Settings()));
+    }
+
+    static void init()
+    {
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.FUNCTIONAL).register(entries ->
+        {
+            entries.add(SELLING_BIN);
+        });
+
+        ItemGroupEvents.modifyEntriesEvent(ItemGroups.REDSTONE).register(entries ->
+        {
+            entries.add(SELLING_BIN);
+        });
     }
 }

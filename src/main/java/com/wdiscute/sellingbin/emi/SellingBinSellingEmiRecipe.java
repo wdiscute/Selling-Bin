@@ -8,14 +8,14 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.recipe.Ingredient;
+import net.minecraft.registry.Registries;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -24,20 +24,20 @@ import java.util.List;
 public class SellingBinSellingEmiRecipe implements EmiRecipe
 {
 
-    private final ResourceLocation id;
+    private final Identifier id;
     private final List<EmiIngredient> input;
     private final Item item;
     private final SBDataMaps.ItemValue itemValue;
-    private final List<Component> description;
+    private final List<Text> description;
 
     public SellingBinSellingEmiRecipe(Item item, SBDataMaps.ItemValue itemValue)
     {
-        this.id = BuiltInRegistries.ITEM.getKey(item);
-        this.input = List.of(EmiIngredient.of(Ingredient.of(item)));
+        this.id = Registries.ITEM.getId(item);
+        this.input = List.of(EmiIngredient.of(Ingredient.ofItems(item)));
         this.item = item;
         this.itemValue = itemValue;
 
-        List<Component> comps = new ArrayList<>();
+        List<Text> comps = new ArrayList<>();
 
         for (int i = 0; i < itemValue.processors().size(); i++)
         {
@@ -56,9 +56,9 @@ public class SellingBinSellingEmiRecipe implements EmiRecipe
     }
 
     @Override
-    public @Nullable ResourceLocation getId()
+    public @Nullable Identifier getId()
     {
-        return ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "/selling/" + id.getPath());
+        return Identifier.of(id.getNamespace(), "/selling/" + id.getPath());
     }
 
     @Override
@@ -98,17 +98,17 @@ public class SellingBinSellingEmiRecipe implements EmiRecipe
 
         widgets.addTexture(SellingBinEmiPlugin.ARROW, 25, 2);
 
-        widgets.addSlot(EmiIngredient.of(SellingBinEmiPlugin.currencies.isEmpty() ? List.of(EmiIngredient.of(Ingredient.of(Items.BARRIER))) : SellingBinEmiPlugin.currencies), 45, 2).recipeContext(this);
+        widgets.addSlot(EmiIngredient.of(SellingBinEmiPlugin.currencies.isEmpty() ? List.of(EmiIngredient.of(Ingredient.ofItems(Items.BARRIER))) : SellingBinEmiPlugin.currencies), 45, 2).recipeContext(this);
 
-        widgets.addText(Component.translatable("gui.selling_bin.base_price"), 67, 1, 0x000000, false);
+        widgets.addText(Text.translatable("gui.selling_bin.base_price"), 67, 1, 0x000000, false);
 
-        int price = Currency.calculateValueFromSingleStack(new ItemStack(item), Minecraft.getInstance().player);
+        int price = Currency.calculateValueFromSingleStack(new ItemStack(item), MinecraftClient.getInstance().player);
 
-        widgets.addText(Component.literal(price + " "), 67, 11, 0x000000, false);
+        widgets.addText(Text.literal(price + " "), 67, 11, 0x000000, false);
 
         widgets.add(new HoverTextWidget(108, 13, 10, 10, description));
 
         if (itemValue.processors().stream().anyMatch(AbstractProcessor::showDescriptionOnEmi))
-            widgets.addText(Component.literal("[!]"), 111, 15, 0x880000, false);
+            widgets.addText(Text.literal("[!]"), 111, 15, 0x880000, false);
     }
 }

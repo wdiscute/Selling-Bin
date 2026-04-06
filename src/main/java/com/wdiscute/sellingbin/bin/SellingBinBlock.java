@@ -1,30 +1,31 @@
 package com.wdiscute.sellingbin.bin;
 
+
+
 import com.wdiscute.sellingbin.registry.SBBlockEntities;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.*;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.context.BlockPlaceContext;
-import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.RenderShape;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.entity.BlockEntityTicker;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.block.*;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.block.entity.BlockEntityTicker;
+import net.minecraft.block.entity.BlockEntityType;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.SidedInventory;
+import net.minecraft.item.ItemPlacementContext;
+import net.minecraft.item.ItemStack;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.state.StateManager;
+import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.util.ActionResult;
+import net.minecraft.util.Hand;
+import net.minecraft.util.ItemActionResult;
+import net.minecraft.util.hit.BlockHitResult;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.BlockView;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import net.nikdo53.tinymultiblocklib.block.AbstractMultiBlock;
 import net.nikdo53.tinymultiblocklib.block.IMultiBlock;
 import net.nikdo53.tinymultiblocklib.block.IPreviewableMultiblock;
@@ -32,47 +33,41 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableMultiblock, WorldlyContainerHolder
+public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableMultiblock, InventoryProvider
 {
 
     public SellingBinBlock()
     {
-        super(BlockBehaviour.Properties.of()
-                .noOcclusion()
-                .destroyTime(2)
+        super(AbstractBlock.Settings.create()
+                .nonOpaque()
+                .hardness(2)
         );
     }
 
     @Override
-    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType)
+    public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(World level, BlockState state, BlockEntityType<T> blockEntityType)
     {
-        if (!state.getValue(AbstractMultiBlock.CENTER)) return null;
+        if (!state.get(AbstractMultiBlock.CENTER)) return null;
         return TickableBlockEntity.getTicketHelper(level);
     }
 
     @Override
-    protected float getShadeBrightness(BlockState p_308911_, BlockGetter p_308952_, BlockPos p_308918_)
+    protected float getAmbientOcclusionLightLevel(BlockState state, BlockView world, BlockPos pos)
     {
-        return 1.0F;
+        return 1.0f;
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState p_309084_, BlockGetter p_309133_, BlockPos p_309097_)
+    protected boolean isTransparent(BlockState state, BlockView world, BlockPos pos)
     {
         return true;
     }
 
     @Override
-    public List<BlockPos> makeFullBlockShape(Level level, BlockPos center, BlockState blockState, @Nullable BlockEntity blockEntity, @Nullable Direction direction)
+    public List<BlockPos> makeFullBlockShape(World level, BlockPos center, BlockState state, BlockEntity blockEntity, Direction direction)
     {
         assert direction != null;
-        return List.of(center, center.relative(direction.getClockWise()));
-    }
-
-    @Override
-    public @Nullable BlockState getStateForPlacement(BlockPlaceContext context)
-    {
-        return super.getStateForPlacement(context);
+        return List.of(center, center.offset(direction.rotateYClockwise()));
     }
 
     @Override
@@ -82,9 +77,9 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
     }
 
     @Override
-    public RenderShape getMultiblockRenderShape(BlockState state, boolean c)
+    public BlockRenderType getMultiblockRenderShape(BlockState state, boolean c)
     {
-        return RenderShape.MODEL;
+        return BlockRenderType.MODEL;
     }
 
     @Override
@@ -93,55 +88,56 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
         return FACING;
     }
 
-    public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
+    public static final DirectionProperty FACING = HorizontalFacingBlock.FACING;
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder)
+    protected void appendProperties(StateManager.Builder<Block, BlockState> builder)
     {
-        super.createBlockStateDefinition(builder);
+        super.appendProperties(builder);
     }
 
-    private void playSound(Level level, BlockPos bp, BlockState state, SoundEvent sound)
+
+    private void playSound(World level, BlockPos bp, BlockState state, SoundEvent sound)
     {
-        Vec3i vec3i = state.getValue(HorizontalDirectionalBlock.FACING).getNormal();
+        Vec3i vec3i = state.get(HorizontalFacingBlock.FACING).getVector();
         double d0 = (double) bp.getX() + 0.5 + (double) vec3i.getX() / 2.0;
         double d1 = (double) bp.getY() + 0.5 + (double) vec3i.getY() / 2.0;
         double d2 = (double) bp.getZ() + 0.5 + (double) vec3i.getZ() / 2.0;
-        level.playSound(null, d0, d1, d2, sound, SoundSource.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F);
+        level.playSound(null, d0, d1, d2, sound, SoundCategory.BLOCKS, 0.5F, level.random.nextFloat() * 0.1F + 0.9F);
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack handStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    protected ItemActionResult onUseWithItem(ItemStack handStack, BlockState state, World level, BlockPos pos, PlayerEntity player, Hand hand, BlockHitResult hit)
     {
         int value = Currency.calculateValueFromSingleStack(handStack, level.getBlockEntity(pos));
         if (value > 0)
         {
-            WorldlyContainer container = getContainer(state, level, pos);
+            SidedInventory container = getInventory(state, level, pos);
 
             if (container != null)
             {
-                ItemStack inside = container.getItem(0);
+                ItemStack inside = container.getStack(0);
 
                 if (inside.isEmpty())
                 {
-                    container.setItem(0, handStack.copy());
-                    player.setItemInHand(hand, ItemStack.EMPTY);
+                    container.setStack(0, handStack.copy());
+                    player.setStackInHand(hand, ItemStack.EMPTY);
 
-                    if(!level.isClientSide) playSound(level, pos, state, SoundEvents.ITEM_PICKUP);
-                    return ItemInteractionResult.SUCCESS;
+                    if(!level.isClient) playSound(level, pos, state, SoundEvents.ENTITY_ITEM_PICKUP);
+                    return ItemActionResult.SUCCESS;
                 }
                 else
                 {
-                    int fitInsideCount = inside.getMaxStackSize();
+                    int fitInsideCount = inside.getMaxCount();
                     fitInsideCount -= inside.getCount();
 
                     int amountTransferring = Math.min(handStack.getCount(), fitInsideCount);
-                    if(inside.isStackable() && ItemStack.isSameItemSameComponents(handStack, inside) && fitInsideCount > 0)
+                    if(inside.isStackable() && ItemStack.areEqual(handStack, inside) && fitInsideCount > 0)
                     {
-                        handStack.shrink(amountTransferring);
-                        inside.grow(amountTransferring);
-                        if(!level.isClientSide) playSound(level, pos, state, SoundEvents.ITEM_PICKUP);
-                        return ItemInteractionResult.SUCCESS;
+                        handStack.decrement(amountTransferring);
+                        inside.increment(amountTransferring);
+                        if(!level.isClient) playSound(level, pos, state, SoundEvents.ENTITY_ITEM_PICKUP);
+                        return ItemActionResult.SUCCESS;
                     }
                 }
 
@@ -149,22 +145,24 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
 
 
         }
-        return super.useItemOn(handStack, state, level, pos, player, hand, hitResult);
+        return super.onUseWithItem(handStack, state, level, pos, player, hand, hit);
     }
 
+
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult)
+    protected ActionResult onUse(BlockState state, World level, BlockPos pos, PlayerEntity player, BlockHitResult hit)
     {
         BlockPos center = IMultiBlock.getCenter(level, pos);
-        if (level.getBlockEntity(center) instanceof SellingBinBlockEntity sbbe && !level.isClientSide)
+        if (level.getBlockEntity(center) instanceof SellingBinBlockEntity sbbe && !level.isClient)
         {
-            player.openMenu(sbbe, center);
+            player.openHandledScreen(sbbe, center);
         }
-        return InteractionResult.SUCCESS;
+        return ActionResult.SUCCESS;
     }
 
+
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState)
+    public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state)
     {
         return SBBlockEntities.SELLING_BIN.get().create(blockPos, blockState);
     }
@@ -175,10 +173,11 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
         return true;
     }
 
+
     @Override
-    public WorldlyContainer getContainer(BlockState blockState, LevelAccessor levelAccessor, BlockPos blockPos)
+    public SidedInventory getInventory(BlockState blockState, WorldAccess levelAccessor, BlockPos blockPos)
     {
-        if (blockState.getValue(AbstractMultiBlock.CENTER))
+        if (blockState.get(AbstractMultiBlock.CENTER))
             if (levelAccessor.getBlockEntity(blockPos) instanceof SellingBinBlockEntity sbbe) return sbbe;
 
         if (levelAccessor.getBlockEntity(blockPos) instanceof SellingBinBlockEntity notCenter)

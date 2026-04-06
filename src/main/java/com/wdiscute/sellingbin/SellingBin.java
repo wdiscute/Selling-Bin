@@ -4,23 +4,19 @@ import com.mojang.logging.LogUtils;
 import com.wdiscute.sellingbin.processors.AbstractProcessor;
 import com.wdiscute.sellingbin.processors.SBProcessors;
 import com.wdiscute.sellingbin.registry.*;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.neoforge.client.gui.ConfigurationScreen;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import net.neoforged.neoforge.registries.RegistryBuilder;
+import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
+import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
+import net.minecraft.registry.Registry;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.screen.ScreenHandlerSyncHandler;
+import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
 
 import java.util.Random;
 
-@Mod(SellingBin.MOD_ID)
-public class SellingBin
+public class SellingBin implements ModInitializer
 {
     public static final String MOD_ID = "selling_bin";
     public static final Random r = new Random();
@@ -35,38 +31,44 @@ public class SellingBin
             .sync(true)
             .create();
 
-    public static ResourceLocation rl(String s)
+    public static Identifier rl(String s)
     {
-        return ResourceLocation.fromNamespaceAndPath(SellingBin.MOD_ID, s);
+        return Identifier.of(SellingBin.MOD_ID, s);
     }
 
-    public static ResourceLocation rl(String ns, String path)
+    public static Identifier rl(String ns, String path)
     {
-        return ResourceLocation.fromNamespaceAndPath(ns, path);
+        return Identifier.of(ns, path);
     }
 
-    public SellingBin(IEventBus modEventBus, ModContainer modContainer)
+    @Override
+    public void onInitialize()
     {
-        SBCreativeModeTabs.register(modEventBus);
+        SBBlocks.init();
+        SBMenuTypes.init();
+        //SBBlockEntities.register(modEventBus);
+        //SBMenuTypes.register(modEventBus);
+        //SBProcessors.register(modEventBus);
+        //SBCriterionTriggers.register(modEventBus);
+        //SBItemPredicate.register(modEventBus);
 
-        SBItems.register(modEventBus);
-        SBBlocks.register(modEventBus);
-        SBBlockEntities.register(modEventBus);
-        SBMenuTypes.register(modEventBus);
-        SBProcessors.register(modEventBus);
-        SBCriterionTriggers.register(modEventBus);
-        SBItemPredicate.register(modEventBus);
+        //modContainer.registerConfig(ModConfig.Type.CLIENT, SBConfig.SPEC);
+        //modContainer.registerConfig(ModConfig.Type.SERVER, SBConfig.SPEC_SERVER);
 
-        modContainer.registerConfig(ModConfig.Type.CLIENT, SBConfig.SPEC);
-        modContainer.registerConfig(ModConfig.Type.SERVER, SBConfig.SPEC_SERVER);
+
+
+
+        RegistryKey<Registry<AbstractProcessor>> registryKey = RegistryKey.ofRegistry(Identifier.of(MOD_ID, "selling_bin"));
+        Registry<AbstractProcessor> registry = FabricRegistryBuilder.createSimple(registryKey)
+                .attribute(RegistryAttribute.SYNCED)
+                .buildAndRegister();
     }
 
-    @Mod(value = SellingBin.MOD_ID, dist = Dist.CLIENT)
-    public static class Client
-    {
-        public Client(ModContainer modContainer)
-        {
-            modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
-        }
-    }
+//    public static class Client
+//    {
+//        public Client(ModContainer modContainer)
+//        {
+//            modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
+//        }
+//    }
 }

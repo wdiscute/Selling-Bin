@@ -10,13 +10,13 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
-import net.minecraft.client.Minecraft;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.registry.Registries;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,8 +24,8 @@ import java.util.List;
 @JeiPlugin
 public class SellingBinJeiPlugin implements IModPlugin
 {
-    public static final ResourceLocation ARROW = SellingBin.rl("textures/gui/selling_bin/selling_bin_background.png");
-    public static final ResourceLocation SLOT_BACKGROUND = SellingBin.rl("textures/gui/slot_background.png");
+    public static final Identifier ARROW = SellingBin.rl("textures/gui/selling_bin/selling_bin_background.png");
+    public static final Identifier SLOT_BACKGROUND = SellingBin.rl("textures/gui/slot_background.png");
 
     public static List<ItemStack> currencies = new ArrayList<>();
     public static List<ItemStack> sellables = new ArrayList<>();
@@ -42,22 +42,22 @@ public class SellingBinJeiPlugin implements IModPlugin
         listSellables.clear();
 
         //add all currencies
-        BuiltInRegistries.ITEM.getDataMap(SBDataMaps.SELLING_BIN_CURRENCIES).forEach((rk, value) ->
+        SBDataMaps.getAllItems(SBDataMaps.SELLING_BIN_CURRENCIES).forEach((rk, value) ->
         {
             if (value != 0)
             {
-                Item item = BuiltInRegistries.ITEM.get(rk);
+                Item item = Registries.ITEM.get(rk);
                 currencies.add(new ItemStack(item));
                 listCurrencies.add(new SellingBinCurrencyJeiRecipe.Recipe(item, value));
             }
         });
 
         //add all item with selling bin value
-        BuiltInRegistries.ITEM.getDataMap(SBDataMaps.SELLING_BIN_VALUE).forEach((rk, itemValue) ->
+        SBDataMaps.getAllItems(SBDataMaps.SELLING_BIN_VALUE).forEach((rk, itemValue) ->
         {
             if (!itemValue.equals(SBDataMaps.ItemValue.EMPTY))
             {
-                List<Component> comps = new ArrayList<>();
+                List<Text> comps = new ArrayList<>();
 
                 for (int i = 0; i < itemValue.processors().size(); i++)
                 {
@@ -65,12 +65,12 @@ public class SellingBinJeiPlugin implements IModPlugin
                     if (processor.showDescriptionOnEmi())
                         comps.addAll(processor.getDescription());
                 }
-                Item item = BuiltInRegistries.ITEM.get(rk);
+                Item item = Registries.ITEM.get(rk);
                 sellables.add(new ItemStack(item));
                 listSellables.add(new SellingBinSellingJeiRecipe.Recipe(
                         item,
                         itemValue,
-                        Currency.calculateValueFromSingleStack(new ItemStack(item), Minecraft.getInstance().player),
+                        Currency.calculateValueFromSingleStack(new ItemStack(item), MinecraftClient.getInstance().player),
                         comps
                 ));
             }
@@ -111,7 +111,7 @@ public class SellingBinJeiPlugin implements IModPlugin
     }
 
     @Override
-    public ResourceLocation getPluginUid()
+    public Identifier getPluginUid()
     {
         return SellingBin.rl("selling_bin_jei_plugin");
     }

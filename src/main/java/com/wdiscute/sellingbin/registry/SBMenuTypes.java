@@ -2,31 +2,24 @@ package com.wdiscute.sellingbin.registry;
 
 import com.wdiscute.sellingbin.SellingBin;
 import com.wdiscute.sellingbin.bin.SellingBinMenu;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.inventory.MenuType;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
-import net.neoforged.neoforge.network.IContainerFactory;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
+import net.minecraft.registry.Registries;
+import net.minecraft.registry.Registry;
+import net.minecraft.resource.featuretoggle.FeatureSet;
+import net.minecraft.screen.ScreenHandlerType;
+import net.minecraft.util.Identifier;
+import net.minecraft.util.math.BlockPos;
 
 import java.util.function.Supplier;
 
 public interface SBMenuTypes
 {
-    DeferredRegister<MenuType<?>> MENUS =
-            DeferredRegister.create(Registries.MENU, SellingBin.MOD_ID);
 
-    Supplier<MenuType<SellingBinMenu>> SELLING_BIN_MENU =
-            registerMenuType("selling_bin_menu", SellingBinMenu::new);
+    ScreenHandlerType<SellingBinMenu> SELLING_BIN_MENU = Registry.register(Registries.SCREEN_HANDLER,
+            Identifier.of(SellingBin.MOD_ID, "selling_bin_menu"), new ExtendedScreenHandlerType<>(SellingBinMenu::new, BlockPos.PACKET_CODEC));
 
-    private static <T extends AbstractContainerMenu>DeferredHolder<MenuType<?>, MenuType<T>> registerMenuType(String name,
-                                                                                                              IContainerFactory<T> factory) {
-        return MENUS.register(name, () -> IMenuTypeExtension.create(factory));
-    }
+    static void init()
+    {
 
-    static void register(IEventBus eventBus) {
-        MENUS.register(eventBus);
     }
 }

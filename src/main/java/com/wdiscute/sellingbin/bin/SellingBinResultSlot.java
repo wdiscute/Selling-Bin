@@ -1,16 +1,16 @@
 package com.wdiscute.sellingbin.bin;
 
-import net.minecraft.world.Container;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.Slot;
-import net.minecraft.world.item.ItemStack;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.screen.slot.Slot;
 
 public class SellingBinResultSlot extends Slot
 {
     SellingBinMenu menu;
     boolean isServer;
 
-    public SellingBinResultSlot(SellingBinMenu menu, Container container, int slot, int x, int y, boolean isServer)
+    public SellingBinResultSlot(SellingBinMenu menu, Inventory container, int slot, int x, int y, boolean isServer)
     {
         super(container, slot, x, y);
         this.menu = menu;
@@ -18,21 +18,21 @@ public class SellingBinResultSlot extends Slot
     }
 
     @Override
-    public boolean mayPickup(Player player)
+    public boolean canTakeItems(PlayerEntity player)
     {
         if(isServer) menu.be.update();
         return true;
     }
 
     @Override
-    public void onTake(Player player, ItemStack stack)
+    public void onTakeItem(PlayerEntity player, ItemStack stack)
     {
-        super.onTake(player, stack);
+        super.onTakeItem(player, stack);
         if(isServer) menu.be.update();
     }
 
     @Override
-    public boolean mayPlace(ItemStack stack)
+    public boolean canInsert(ItemStack stack)
     {
         if(isServer) menu.be.update();
         return false;

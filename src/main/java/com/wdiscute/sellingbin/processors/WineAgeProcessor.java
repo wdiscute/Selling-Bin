@@ -48,7 +48,7 @@ public class WineAgeProcessor extends AbstractProcessor
     }
 
     @Override
-    public DeferredHolder<AbstractProcessor, AbstractProcessor> getRegistryHolder()
+    public DeferredHolder<AbstractProcessor, AbstractProcessor> getIdentifier()
     {
         return SBProcessors.WINE_AGE_PROCESSOR;
     }

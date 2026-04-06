@@ -1,39 +1,41 @@
 package com.wdiscute.sellingbin.bin;
 
-import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import com.mojang.blaze3d.vertex.PoseStack;
 import com.wdiscute.sellingbin.SellingBin;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Font;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.client.renderer.texture.OverlayTexture;
-import net.minecraft.client.resources.model.BakedModel;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.util.FormattedCharSequence;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.ItemDisplayContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.Level;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.font.Font;
+import net.minecraft.client.font.TextRenderer;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.screen.ingame.HandledScreen;
+import net.minecraft.client.render.DiffuseLighting;
+import net.minecraft.client.render.OverlayTexture;
+import net.minecraft.client.render.model.BakedModel;
+import net.minecraft.client.render.model.json.ModelTransformationMode;
+import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.MutableText;
+import net.minecraft.text.OrderedText;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
+public class SellingBinScreen extends HandledScreen<SellingBinMenu>
 {
-    private static final ResourceLocation TEXTURE = SellingBin.rl("textures/gui/selling_bin/selling_bin_background.png");
+    private static final Identifier TEXTURE = SellingBin.rl("textures/gui/selling_bin/selling_bin_background.png");
 
     private int uiX = 0;
     private int uiY = 0;
-    int imageHeight = 176;
+    int backgroundHeight = 176;
 
     private boolean mousePressed;
 
@@ -41,9 +43,9 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
     protected void init()
     {
         super.init();
-        imageHeight = 176;
-        uiX = (this.width - this.imageWidth) / 2;
-        uiY = (this.height - this.imageHeight) / 2;
+        backgroundHeight = 176;
+        uiX = (this.width - this.backgroundWidth) / 2;
+        uiY = (this.height - this.backgroundHeight) / 2;
     }
 
     @Override
@@ -64,215 +66,218 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
 
 
         //sell / sell all
-        if (x > 80 && x < 121 && y > 10 && y < 24 && !menu.be.instaSell)
+        if (x > 80 && x < 121 && y > 10 && y < 24 && !handler.be.instaSell)
         {
             mousePressed = true;
-            if (menu.be.getItem(0).isEmpty())
-                Minecraft.getInstance().player.playSound(SoundEvents.DISPENSER_FAIL, 0.7f, SellingBin.r.nextFloat() / 8 + 1f);
+            if (handler.be.getStack(0).isEmpty())
+                MinecraftClient.getInstance().player.playSound(SoundEvents.BLOCK_DISPENSER_FAIL, 0.7f, SellingBin.r.nextFloat() / 8 + 1f);
 
             if (Screen.hasShiftDown())
                 //sell all
-                Minecraft.getInstance().gameMode.handleInventoryButtonClick(this.menu.containerId, 68);
+                MinecraftClient.getInstance().interactionManager.clickButton(this.handler.syncId, 68);
             else
                 //sell
-                Minecraft.getInstance().gameMode.handleInventoryButtonClick(this.menu.containerId, 67);
+                MinecraftClient.getInstance().interactionManager.clickButton(this.handler.syncId, 67);
         }
 
         //toggle currency
         if (x > 126 && x < 137 && y > 40 && y < 51)
         {
-            Minecraft.getInstance().player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.7f, 1f);
-            Minecraft.getInstance().gameMode.handleInventoryButtonClick(this.menu.containerId, 70);
+            MinecraftClient.getInstance().player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.7f, 1f);
+            MinecraftClient.getInstance().interactionManager.clickButton(this.handler.syncId, 70);
         }
 
         //toggle sound
         if (x > 140 && x < 151 && y > 40 && y < 51)
         {
-            Minecraft.getInstance().player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.7f, 1f);
-            Minecraft.getInstance().gameMode.handleInventoryButtonClick(this.menu.containerId, 71);
+            MinecraftClient.getInstance().player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.7f, 1f);
+            MinecraftClient.getInstance().interactionManager.clickButton(this.handler.syncId, 71);
         }
 
         //toggle insta-sell
         if (x > 56 && x < 70 && y > 10 && y < 24)
         {
-            Minecraft.getInstance().player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.7f, 1f);
-            Minecraft.getInstance().gameMode.handleInventoryButtonClick(this.menu.containerId, 69);
+            MinecraftClient.getInstance().player.playSound(SoundEvents.UI_BUTTON_CLICK.value(), 0.7f, 1f);
+            MinecraftClient.getInstance().interactionManager.clickButton(this.handler.syncId, 69);
         }
 
         return super.mouseClicked(mouseX, mouseY, button);
     }
 
     @Override
-    protected void renderLabels(GuiGraphics guiGraphics, int mouseX, int mouseY)
+    protected void drawForeground(DrawContext context, int mouseX, int mouseY)
     {
     }
 
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick)
+    @Override
+    public void render(DrawContext guiGraphics, int mouseX, int mouseY, float partialTick)
     {
         super.render(guiGraphics, mouseX, mouseY, partialTick);
-        this.renderTooltip(guiGraphics, mouseX, mouseY);
+        this.drawMouseoverTooltip(guiGraphics, mouseX, mouseY);
 
         double x = mouseX - uiX;
         double y = mouseY - uiY;
 
 
-        int progressAvailable = menu.be.getProgressAvailable();
+        int progressAvailable = handler.be.getProgressAvailable();
 
         //arrow tooltip
         if (x > 79 && x < 96 && y > 37 && y < 54)
-            guiGraphics.renderTooltip(this.font, Currency.getListOfCurrenciesFromValue(menu.be.currencies, progressAvailable, true), Optional.empty(), mouseX, mouseY);
+            guiGraphics.drawTooltip(this.textRenderer, Currency.getListOfCurrenciesFromValue(handler.be.currencies, progressAvailable, true), Optional.empty(), mouseX, mouseY);
 
         //render arrow
         //scales [0, SELLING_BIN_LOWEST_VALUE]   ->   [0, 16]
-        Currency currency = menu.be.currencySelected;
-        if (currency.isNone()) currency = menu.be.currencies.getFirst();
+        Currency currency = handler.be.currencySelected;
+        if (currency.isNone()) currency = handler.be.currencies.getFirst();
         int arrow = (int) ((((float) progressAvailable) / ((float) currency.value())) * 16);
-        guiGraphics.blit(TEXTURE, uiX + 80, uiY + 37, 192, 16, Math.clamp(arrow, 0, 16), 16, 256, 256);
+        guiGraphics.drawGuiTexture(TEXTURE, uiX + 80, uiY + 37, 192, 16, Math.clamp(arrow, 0, 16), 16, 256, 256);
 
         //insta sell pressed
-        if (menu.be.instaSell)
-            guiGraphics.blit(TEXTURE, uiX + 80, uiY + 11, 192, 128, 42, 13, 256, 256);
+        if (handler.be.instaSell)
+            guiGraphics.drawGuiTexture(TEXTURE, uiX + 80, uiY + 11, 192, 128, 42, 13, 256, 256);
 
         //sell button pressed down
         if (mousePressed)
-            guiGraphics.blit(TEXTURE, uiX + 80, uiY + 11, 192, 128, 42, 13, 256, 256);
+            guiGraphics.drawGuiTexture(TEXTURE, uiX + 80, uiY + 11, 192, 128, 42, 13, 256, 256);
 
         //sell / sell all
-        MutableComponent sellComp;
+        MutableText sellComp;
         if (Screen.hasShiftDown())
-            sellComp = Component.translatable("gui.selling_bin.selling_bin.sell_all");
+            sellComp = Text.translatable("gui.selling_bin.selling_bin.sell_all");
         else
-            sellComp = Component.translatable("gui.selling_bin.selling_bin.sell");
+            sellComp = Text.translatable("gui.selling_bin.selling_bin.sell");
 
         //sell text
-        renderCenteredString(guiGraphics, this.font, sellComp, uiX + 101, uiY + 14, 0x87583a, false);
+        renderCenteredString(guiGraphics, this.textRenderer, sellComp, uiX + 101, uiY + 14, 0x87583a, false);
 
         //sell outline when hovering
-        if (x > 80 && x < 121 && y > 10 && y < 24 && !menu.be.instaSell)
+        if (x > 80 && x < 121 && y > 10 && y < 24 && !handler.be.instaSell)
         {
-            guiGraphics.blit(TEXTURE, uiX + 79, uiY + 10, 192, 80, 48, 16, 256, 256);
-            renderCenteredFatString(guiGraphics, this.font, sellComp, uiX + 101, uiY + 14, 0x87583a);
+            guiGraphics.drawGuiTexture(TEXTURE, uiX + 79, uiY + 10, 192, 80, 48, 16, 256, 256);
+            renderCenteredFatString(guiGraphics, this.textRenderer, sellComp, uiX + 101, uiY + 14, 0x87583a);
         }
 
         //insta sell outline when hovering
         if (x > 56 && x < 70 && y > 10 && y < 24)
-            guiGraphics.blit(TEXTURE, uiX + 56, uiY + 10, 192, 96, 16, 16, 256, 256);
+            guiGraphics.drawGuiTexture(TEXTURE, uiX + 56, uiY + 10, 192, 96, 16, 16, 256, 256);
 
 
         //insta sell checkmark
-        if (menu.be.instaSell)
-            guiGraphics.blit(TEXTURE, uiX + 56, uiY + 9, 208, 16, 16, 16, 256, 256);
+        if (handler.be.instaSell)
+            guiGraphics.drawGuiTexture(TEXTURE, uiX + 56, uiY + 9, 208, 16, 16, 16, 256, 256);
 
         //auto sell tooltip
         if (x > 58 && x < 69 && y > 12 && y < 23)
         {
-            if (menu.be.instaSell)
-                guiGraphics.blit(TEXTURE, uiX + 55, uiY + 10, 192, 112, 18, 16, 256, 256);
+            if (handler.be.instaSell)
+                guiGraphics.drawGuiTexture(TEXTURE, uiX + 55, uiY + 10, 192, 112, 18, 16, 256, 256);
 
-            guiGraphics.renderTooltip(this.font, Component.translatable("gui.selling_bin.selling_bin.auto_sell"), mouseX, mouseY);
+            guiGraphics.drawTooltip(this.textRenderer, Text.translatable("gui.selling_bin.selling_bin.auto_sell"), mouseX, mouseY);
         }
 
         //sound tooltip
         if (x > 140 && x < 151 && y > 40 && y < 51)
-            guiGraphics.renderTooltip(this.font, Component.translatable("gui.selling_bin.selling_bin.sell_sound"), mouseX, mouseY);
+            guiGraphics.drawTooltip(this.textRenderer, Text.translatable("gui.selling_bin.selling_bin.sell_sound"), mouseX, mouseY);
 
         //render currency selected
-        ItemStack currencyStack = new ItemStack(menu.be.currencySelected.item());
+        ItemStack currencyStack = new ItemStack(handler.be.currencySelected.item());
         if (currencyStack.isEmpty())
-            guiGraphics.blit(TEXTURE, uiX + 128, uiY + 42, 192, 144, 10, 10, 256, 256);
+            guiGraphics.drawGuiTexture(TEXTURE, uiX + 128, uiY + 42, 192, 144, 10, 10, 256, 256);
         else
             renderItem(currencyStack, uiX + 124, uiY + 38, 0.5f);
 
         //render sound
         ItemStack bell = new ItemStack(Items.BELL);
         renderItem(bell, uiX + 138, uiY + 38, 0.5f);
-        if (!menu.be.sound)
+        if (!handler.be.sound)
             renderItem(new ItemStack(Items.BARRIER), uiX + 138, uiY + 38, 0.5f);
 
         //currency selected tooltip
         if (x > 126 && x < 137 && y > 40 && y < 51)
         {
-            List<Component> components = new ArrayList<>();
-            components.add(Component.translatable("gui.selling_bin.selling_bin.currency_selected"));
-            if (menu.be.currencySelected.isNone())
-                components.add(Component.translatable("gui.selling_bin.selling_bin.highest"));
+            List<Text> components = new ArrayList<>();
+            components.add(Text.translatable("gui.selling_bin.selling_bin.currency_selected"));
+            if (handler.be.currencySelected.isNone())
+                components.add(Text.translatable("gui.selling_bin.selling_bin.highest"));
             else
             {
-                MutableComponent mutableComponent = Component.empty();
-                mutableComponent.append(menu.be.currencySelected.item().getDescription());
+                MutableText mutableComponent = Text.empty();
+                mutableComponent.append(handler.be.currencySelected.item().getName());
                 if (Screen.hasShiftDown())
-                    mutableComponent.append(" (" + menu.be.currencySelected.value() + ")");
+                    mutableComponent.append(" (" + handler.be.currencySelected.value() + ")");
 
                 components.add(mutableComponent);
             }
-            guiGraphics.renderTooltip(this.font, components, Optional.empty(), mouseX, mouseY);
+            guiGraphics.drawTooltip(this.textRenderer, components, Optional.empty(), mouseX, mouseY);
         }
     }
 
-    protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY)
+    @Override
+    protected void drawBackground(DrawContext guiGraphics, float delta, int mouseX, int mouseY)
     {
-        guiGraphics.blit(TEXTURE, uiX, uiY, 0, 0, this.imageWidth, this.imageHeight);
+        guiGraphics.drawTexture(TEXTURE, uiX, uiY, 0, 0, this.backgroundWidth, this.backgroundHeight);
+
     }
 
-    public SellingBinScreen(SellingBinMenu menu, Inventory playerInventory, Component title)
+    public SellingBinScreen(SellingBinMenu menu, PlayerInventory playerInventory, Text title)
     {
         super(menu, playerInventory, title);
-        ++this.imageHeight;
+        ++this.backgroundHeight;
     }
 
     private void renderItem(ItemStack stack, int x, int y, float scale)
     {
 
-        Level level = Minecraft.getInstance().level;
-        LivingEntity entity = Minecraft.getInstance().player;
+        World level = MinecraftClient.getInstance().world;
+        LivingEntity entity = MinecraftClient.getInstance().player;
 
         if (!stack.isEmpty())
         {
-            BakedModel bakedmodel = this.minecraft.getItemRenderer().getModel(stack, level, entity, 234234);
+            BakedModel bakedmodel = this.client.getItemRenderer().getModel(stack, level, entity, 234234);
 
-            PoseStack pose = new PoseStack();
+            MatrixStack pose = new MatrixStack();
 
-            pose.pushPose();
+            pose.push();
             pose.translate((float) (x + 8), (float) (y + 8), (float) (150));
 
             pose.scale(16F * scale, -16F * scale, 16F * scale);
-            boolean usesBlockLight = !bakedmodel.usesBlockLight();
+            boolean usesBlockLight = !bakedmodel.isSideLit();
             if (usesBlockLight)
             {
-                Lighting.setupForFlatItems();
+                DiffuseLighting.disableGuiDepthLighting();
             }
 
-            this.minecraft.getItemRenderer().render(
-                    stack, ItemDisplayContext.GUI, false, pose, Minecraft.getInstance().renderBuffers().bufferSource(),
-                    15728880, OverlayTexture.NO_OVERLAY, bakedmodel);
+            this.client.getItemRenderer().renderItem(
+                    stack, ModelTransformationMode.GUI, false, pose, MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers(),
+                    15728880, OverlayTexture.DEFAULT_UV, bakedmodel);
 
             //flush()
             RenderSystem.disableDepthTest();
-            Minecraft.getInstance().renderBuffers().bufferSource().endBatch();
+            MinecraftClient.getInstance().getBufferBuilders().getEntityVertexConsumers().draw();
             RenderSystem.enableDepthTest();
 
             if (usesBlockLight)
             {
-                Lighting.setupFor3DItems();
+                DiffuseLighting.enableGuiDepthLighting();
             }
 
-            pose.popPose();
+            pose.pop();
         }
     }
 
 
-    public void renderCenteredString(GuiGraphics guiGraphics, Font font, Component text, int x, int y, int color, boolean shadow)
+    public void renderCenteredString(DrawContext guiGraphics, TextRenderer font, Text text, int x, int y, int color, boolean shadow)
     {
-        FormattedCharSequence formattedcharsequence = text.getVisualOrderText();
-        guiGraphics.drawString(font, formattedcharsequence, x - font.width(formattedcharsequence) / 2, y, color, shadow);
+        OrderedText formattedcharsequence = text.asOrderedText();
+        guiGraphics.drawText(font, formattedcharsequence, x - font.getWidth(formattedcharsequence) / 2, y, color, shadow);
     }
 
-    public void renderCenteredFatString(GuiGraphics guiGraphics, Font font, Component c, int x, int y, int color)
+    public void renderCenteredFatString(DrawContext guiGraphics, TextRenderer font, Text c, int x, int y, int color)
     {
-        renderCenteredString(guiGraphics, this.font, c, x + 1, y, 0xffffff, false);
-        renderCenteredString(guiGraphics, this.font, c, x - 1, y, 0xffffff, false);
-        renderCenteredString(guiGraphics, this.font, c, x, y + 1, 0xffffff, false);
-        renderCenteredString(guiGraphics, this.font, c, x, y - 1, 0xffffff, false);
-        renderCenteredString(guiGraphics, this.font, c, x, y, color, false);
+        renderCenteredString(guiGraphics, font, c, x + 1, y, 0xffffff, false);
+        renderCenteredString(guiGraphics, font, c, x - 1, y, 0xffffff, false);
+        renderCenteredString(guiGraphics, font, c, x, y + 1, 0xffffff, false);
+        renderCenteredString(guiGraphics, font, c, x, y - 1, 0xffffff, false);
+        renderCenteredString(guiGraphics, font, c, x, y, color, false);
     }
 }

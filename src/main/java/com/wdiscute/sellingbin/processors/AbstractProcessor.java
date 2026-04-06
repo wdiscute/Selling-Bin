@@ -5,20 +5,19 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.wdiscute.sellingbin.registry.SBDataMaps;
 import com.wdiscute.sellingbin.SellingBin;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
 public abstract class AbstractProcessor
 {
-    public static final Codec<AbstractProcessor> ABSTRACT_PROCESSOR_CODEC = ResourceLocation.CODEC
-            .dispatch(processor -> processor.getRegistryHolderOrThrow().getId(),
+    public static final Codec<AbstractProcessor> ABSTRACT_PROCESSOR_CODEC = Identifier.CODEC
+            .dispatch(AbstractProcessor::getRegistryHolderOrThrow,
                     loc ->
                     {
                         if(SellingBin.SELLING_BIN_REGISTRY.get(loc) == null)
@@ -35,20 +34,20 @@ public abstract class AbstractProcessor
 
     public abstract MapCodec<? extends AbstractProcessor> codec();
 
-    public abstract DeferredHolder<AbstractProcessor, AbstractProcessor> getRegistryHolder();
+    public abstract Identifier getIdentifier();
 
     abstract public boolean showDescriptionOnEmi();
 
-    abstract public List<Component> getDescription();
+    abstract public List<Text> getDescription();
 
-    public DeferredHolder<AbstractProcessor, AbstractProcessor> getRegistryHolderOrThrow()
+    public Identifier getRegistryHolderOrThrow()
     {
-        var holder = getRegistryHolder();
-        if (holder == null)
+        var Identifier = getIdentifier();
+        if (Identifier == null)
         {
-            throw new IllegalStateException("Selling Bin Processor " + this + " does not have a registry holder!");
+            throw new IllegalStateException("Selling Bin Processor " + this + " does not have an identifier!");
         }
-        return holder;
+        return Identifier;
     }
 
     public MapCodec<? extends AbstractProcessor> getCodecOrThrow()
@@ -62,7 +61,7 @@ public abstract class AbstractProcessor
     }
 
 
-    abstract public int addValue(int baseValue, int currentValue, ItemStack itemStack, BlockEntity blockEntity, Player player);
+    abstract public int addValue(int baseValue, int currentValue, ItemStack itemStack, BlockEntity blockEntity, PlayerEntity player);
 
     public boolean shouldCancelShrink(ItemStack itemStack)
     {
@@ -92,7 +91,7 @@ public abstract class AbstractProcessor
         return new SBDataMaps.ItemValue(baseValue, List.of(this));
     }
 
-    public boolean canSell(ItemStack itemStack, @Nullable BlockEntity blockEntity, @Nullable Player player)
+    public boolean canSell(ItemStack itemStack, @Nullable BlockEntity blockEntity, @Nullable PlayerEntity player)
     {
         return true;
     }

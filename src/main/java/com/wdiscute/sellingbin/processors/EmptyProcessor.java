@@ -1,11 +1,11 @@
 package com.wdiscute.sellingbin.processors;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import java.util.List;
 
@@ -21,8 +21,9 @@ public class EmptyProcessor extends AbstractProcessor
         return CODEC;
     }
 
+
     @Override
-    public DeferredHolder<AbstractProcessor, AbstractProcessor> getRegistryHolder()
+    public Identifier getIdentifier()
     {
         return SBProcessors.EMPTY_PROCESSOR;
     }
@@ -34,13 +35,13 @@ public class EmptyProcessor extends AbstractProcessor
     }
 
     @Override
-    public List<Component> getDescription()
+    public List<Text> getDescription()
     {
         return List.of();
     }
 
     @Override
-    public int addValue(int baseValue, int currentValue, ItemStack itemStack, BlockEntity blockEntity, Player player)
+    public int addValue(int baseValue, int currentValue, ItemStack itemStack, BlockEntity blockEntity, PlayerEntity player)
     {
         return 0;
     }

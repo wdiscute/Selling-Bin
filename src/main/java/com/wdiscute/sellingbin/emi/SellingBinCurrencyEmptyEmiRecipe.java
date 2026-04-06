@@ -6,10 +6,8 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
@@ -28,7 +26,7 @@ public class SellingBinCurrencyEmptyEmiRecipe implements EmiRecipe
     }
 
     @Override
-    public @Nullable ResourceLocation getId()
+    public @Nullable Identifier getId()
     {
         return SellingBin.rl("/currency/empty");
     }
@@ -61,6 +59,6 @@ public class SellingBinCurrencyEmptyEmiRecipe implements EmiRecipe
     public void addWidgets(WidgetHolder widgets)
     {
         for (int i = 0; i < 10; i++)
-            widgets.addText(Component.translatable("gui.selling_bin.currency.empty." + i), 5, 1 + i * 10, 0x000000, false);
+            widgets.addText(Text.translatable("gui.selling_bin.currency.empty." + i), 5, 1 + i * 10, 0x000000, false);
     }
 }

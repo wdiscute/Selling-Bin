@@ -2,39 +2,40 @@ package com.wdiscute.sellingbin.datagen;
 
 import com.wdiscute.sellingbin.registry.SBBlocks;
 import com.wdiscute.sellingbin.registry.SBItemPredicate;
-import net.minecraft.advancements.critereon.ItemPredicate.Builder;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.PackOutput;
-import net.minecraft.data.recipes.*;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.level.block.Blocks;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
+import net.minecraft.block.Blocks;
+import net.minecraft.data.server.recipe.RecipeExporter;
+import net.minecraft.data.server.recipe.RecipeProvider;
+import net.minecraft.data.server.recipe.ShapedRecipeJsonBuilder;
+import net.minecraft.predicate.item.ItemPredicate;
+import net.minecraft.recipe.book.RecipeCategory;
+import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.registry.tag.ItemTags;
 
 import java.util.concurrent.CompletableFuture;
 
-public class DGSBRecipeProvider extends RecipeProvider
+public class DGSBRecipeProvider extends FabricRecipeProvider
 {
-    public DGSBRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries)
+    public DGSBRecipeProvider(FabricDataOutput output, CompletableFuture<RegistryWrapper.WrapperLookup> registriesFuture)
     {
-        super(output, registries);
+        super(output, registriesFuture);
     }
 
     @Override
-    protected void buildRecipes(RecipeOutput output)
+    public void generate(RecipeExporter output)
     {
-        //rod
-        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, SBBlocks.SELLING_BIN)
-                .define('B', Blocks.BARREL)
-                .define('S', ItemTags.WOODEN_SLABS)
-                .define('C', ItemTags.WOOL_CARPETS)
+        //selling bin
+        ShapedRecipeJsonBuilder.create(RecipeCategory.REDSTONE, SBBlocks.SELLING_BIN)
+                .input('B', Blocks.BARREL)
+                .input('S', ItemTags.WOODEN_SLABS)
+                .input('C', ItemTags.WOOL_CARPETS)
                 .pattern("CCC")
                 .pattern("SBS")
                 .pattern("SSS")
-                .unlockedBy("selling_bin_sellable",
-                        inventoryTrigger(Builder.item().withSubPredicate(SBItemPredicate.SELLING_BIN_SELLABLE.get(), new SBItemPredicate.SellingBinSellablePredicate())))
-                .save(output);
+                .criterion("selling_bin_sellable",
+                        conditionsFromPredicates(ItemPredicate.Builder.create().items()
+                                .subPredicate(SBItemPredicate.SELLING_BIN_SELLABLE, new SBItemPredicate.SellingBinSellablePredicate())))
+                .offerTo(output);
     }
-
-
-
-
 }

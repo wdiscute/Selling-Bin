@@ -8,14 +8,14 @@ import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
+import net.minecraft.client.MinecraftClient;
+import net.minecraft.client.gui.DrawContext;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.registry.Registries;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
 
 import java.util.List;
 
@@ -26,7 +26,7 @@ public class SellingBinCurrencyJeiRecipe extends AbstractRecipeCategory<SellingB
     {
         super(
                 Recipe.TYPE,
-                Component.translatable("emi.category.selling_bin.selling_bin_currencies"),
+                Text.translatable("emi.category.selling_bin.selling_bin_currencies"),
                 guiHelper.createDrawableItemLike(SBBlocks.SELLING_BIN),
                 SellingBinJeiPlugin.currencies.isEmpty() ? 350 : 120,
                 SellingBinJeiPlugin.currencies.isEmpty() ? 100 : 20
@@ -39,7 +39,7 @@ public class SellingBinCurrencyJeiRecipe extends AbstractRecipeCategory<SellingB
         if (SellingBinJeiPlugin.currencies.isEmpty()) return;
 
         builder.addInputSlot(5, 2)
-                .addItemStacks(SellingBinJeiPlugin.sellables.isEmpty() ? List.of(Items.BARRIER.getDefaultInstance()) : SellingBinJeiPlugin.sellables);
+                .addItemStacks(SellingBinJeiPlugin.sellables.isEmpty() ? List.of(Items.BARRIER.getDefaultStack()) : SellingBinJeiPlugin.sellables);
 
         builder.addOutputSlot(45, 2)
                 .addItemStack(new ItemStack(recipe.item));
@@ -47,30 +47,29 @@ public class SellingBinCurrencyJeiRecipe extends AbstractRecipeCategory<SellingB
     }
 
     @Override
-    public void draw(Recipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY)
+    public void draw(Recipe recipe, IRecipeSlotsView recipeSlotsView, DrawContext guiGraphics, double mouseX, double mouseY)
     {
         if (SellingBinJeiPlugin.currencies.isEmpty())
         {
             for (int i = 0; i < 10; i++)
-                guiGraphics.drawString(Minecraft.getInstance().font, Component.translatable("gui.selling_bin.currency.empty." + i), 5, 1 + i * 10, 0x000000, false);
+                guiGraphics.drawText(MinecraftClient.getInstance().textRenderer, Text.translatable("gui.selling_bin.currency.empty." + i), 5, 1 + i * 10, 0x000000, false);
             return;
         }
 
-        guiGraphics.blit(SellingBinJeiPlugin.ARROW, 25, 2, 16, 16, 192, 16, 16, 16, 256, 256);
+        guiGraphics.drawTexture(SellingBinJeiPlugin.ARROW, 25, 2, 16, 16, 192, 16, 16, 16, 256, 256);
 
-        guiGraphics.blit(SellingBinJeiPlugin.SLOT_BACKGROUND, 4, 1, 18, 18, 0, 0, 18, 18, 18, 18);
-        guiGraphics.blit(SellingBinJeiPlugin.SLOT_BACKGROUND, 44, 1, 18, 18, 0, 0, 18, 18, 18, 18);
+        guiGraphics.drawTexture(SellingBinJeiPlugin.SLOT_BACKGROUND, 4, 1, 18, 18, 0, 0, 18, 18, 18, 18);
+        guiGraphics.drawTexture(SellingBinJeiPlugin.SLOT_BACKGROUND, 44, 1, 18, 18, 0, 0, 18, 18, 18, 18);
 
-        guiGraphics.drawString(Minecraft.getInstance().font, Component.literal(recipe.itemValue + " ").append(Component.translatable("gui.selling_bin.value")),
+        guiGraphics.drawText(MinecraftClient.getInstance().textRenderer, Text.literal(recipe.itemValue + " ").append(Text.translatable("gui.selling_bin.value")),
                 67, 7, 0x000000, false);
     }
 
     @Override
-    public ResourceLocation getRegistryName(Recipe recipe)
+    public Identifier getRegistryName(Recipe recipe)
     {
-        return BuiltInRegistries.ITEM.getKey(recipe.item());
+        return Registries.ITEM.getId(recipe.item());
     }
-
 
     public record Recipe(Item item, Integer itemValue)
     {

@@ -1,24 +1,17 @@
 package com.wdiscute.sellingbin.processors;
 
 import com.wdiscute.sellingbin.SellingBin;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModList;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.neoforged.neoforge.registries.DeferredRegister;
-
-import java.util.function.Supplier;
+import net.minecraft.registry.Registry;
+import net.minecraft.util.Identifier;
 
 public class SBProcessors
 {
-    public static final DeferredRegister<AbstractProcessor> SELLING_BIN_PROCESSORS =
-            DeferredRegister.create(SellingBin.SELLING_BIN_REGISTRY, SellingBin.MOD_ID);
-
-    public static final DeferredHolder<AbstractProcessor, AbstractProcessor> EMPTY_PROCESSOR = register("empty_processor", EmptyProcessor::new);
-    public static final DeferredHolder<AbstractProcessor, AbstractProcessor> DURABILITY = register("durability_processor", DurabilityProcessor::new);
-    public static final DeferredHolder<AbstractProcessor, AbstractProcessor> FOOD_PROCESSOR = register("food_processor", FoodProcessor::new);
-    public static DeferredHolder<AbstractProcessor, AbstractProcessor> ENCHANTMENTS_PROCESSOR = register("enchantments_processor", EnchantmentProcessor::new);
-    public static DeferredHolder<AbstractProcessor, AbstractProcessor> QUALITY_FOODS_PROCESSOR;
-    public static DeferredHolder<AbstractProcessor, AbstractProcessor> WINE_AGE_PROCESSOR;
+    public static final Identifier EMPTY_PROCESSOR = register("empty_processor", new EmptyProcessor());
+    public static final Identifier DURABILITY = register("durability_processor", new DurabilityProcessor());
+    public static final Identifier FOOD_PROCESSOR = register("food_processor", new FoodProcessor());
+    public static Identifier ENCHANTMENTS_PROCESSOR = register("enchantments_processor", new EnchantmentProcessor());
+    public static Identifier QUALITY_FOODS_PROCESSOR;
+    public static Identifier WINE_AGE_PROCESSOR;
 
     public static void registerOptionals()
     {
@@ -29,9 +22,10 @@ public class SBProcessors
             WINE_AGE_PROCESSOR = register("wine_age_processor", WineAgeProcessor::new);
     }
 
-    public static DeferredHolder<AbstractProcessor, AbstractProcessor> register(String name, Supplier<AbstractProcessor> sup)
+    public static Identifier register(String name, AbstractProcessor abstractProcessor)
     {
-        return SELLING_BIN_PROCESSORS.register(name, sup);
+        Registry.register(SellingBin.SELLING_BIN_REGISTRY, name, abstractProcessor);
+        return SELLING_BIN_PROCESSORS.register(name, abstractProcessor);
     }
 
     public static void register(IEventBus eventBus)

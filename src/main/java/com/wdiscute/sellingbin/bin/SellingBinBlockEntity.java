@@ -2,35 +2,40 @@ package com.wdiscute.sellingbin.bin;
 
 import com.wdiscute.sellingbin.registry.SBBlockEntities;
 import com.wdiscute.sellingbin.registry.SBDataMaps;
-import net.minecraft.core.*;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
-import net.minecraft.world.Container;
-import net.minecraft.world.ContainerHelper;
-import net.minecraft.world.MenuProvider;
-import net.minecraft.world.WorldlyContainer;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.HorizontalDirectionalBlock;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.HorizontalFacingBlock;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.entity.player.PlayerInventory;
+import net.minecraft.inventory.Inventories;
+import net.minecraft.inventory.Inventory;
+import net.minecraft.inventory.SidedInventory;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NbtCompound;
+import net.minecraft.network.listener.ClientPlayPacketListener;
+import net.minecraft.network.packet.Packet;
+import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
+import net.minecraft.registry.RegistryWrapper;
+import net.minecraft.screen.NamedScreenHandlerFactory;
+import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.world.ServerWorld;
+import net.minecraft.sound.SoundCategory;
+import net.minecraft.sound.SoundEvent;
+import net.minecraft.sound.SoundEvents;
+import net.minecraft.text.Text;
+import net.minecraft.util.collection.DefaultedList;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.Direction;
+import net.minecraft.util.math.Vec3i;
 import net.nikdo53.tinymultiblocklib.blockentities.AbstractMultiBlockEntity;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
-import javax.annotation.Nullable;
 import java.util.List;
 
-public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements WorldlyContainer, MenuProvider, TickableBlockEntity
+public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements SidedInventory, NamedScreenHandlerFactory, TickableBlockEntity
 {
 
-    private NonNullList<ItemStack> itemStacks;
+    private DefaultedList<ItemStack> itemStacks;
     public int storedProgress;
     public boolean instaSell = false;
     public boolean sound = true;
@@ -41,7 +46,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     public SellingBinBlockEntity(BlockPos pos, BlockState blockState)
     {
         super(SBBlockEntities.SELLING_BIN.get(), pos, blockState);
-        this.itemStacks = NonNullList.withSize(2, ItemStack.EMPTY);
+        this.itemStacks = DefaultedList.ofSize(2, ItemStack.EMPTY);
         this.currencies = Currency.getCurrencies();
         this.currenciesReversed = currencies.reversed();
     }
@@ -51,70 +56,72 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     void playSound(SoundEvent soundEvent)
     {
         if(!sound) return;
-        BlockState state = level.getBlockState(getBlockPos());
-        Vec3i vec3i = state.getValue(HorizontalDirectionalBlock.FACING).getNormal();
-        double d0 = (double) this.worldPosition.getX() + 0.5 + (double) vec3i.getX() / 2.0;
-        double d1 = (double) this.worldPosition.getY() + 0.5 + (double) vec3i.getY() / 2.0;
-        double d2 = (double) this.worldPosition.getZ() + 0.5 + (double) vec3i.getZ() / 2.0;
-        this.level.playSound(null, d0, d1, d2, soundEvent, SoundSource.BLOCKS, 0.5F, this.level.random.nextFloat() * 0.1F + 0.9F);
+        BlockState state = world.getBlockState(getPos());
+        Vec3i vec3i = state.get(HorizontalFacingBlock.FACING).getVector();
+        double d0 = (double) this.getPos().getX() + 0.5 + (double) vec3i.getX() / 2.0;
+        double d1 = (double) this.getPos().getY() + 0.5 + (double) vec3i.getY() / 2.0;
+        double d2 = (double) this.getPos().getZ() + 0.5 + (double) vec3i.getZ() / 2.0;
+        this.world.playSound(null, d0, d1, d2, soundEvent, SoundCategory.BLOCKS, 0.5F, this.world.random.nextFloat() * 0.1F + 0.9F);
+    }
+
+
+    @Override
+    public void onOpen(PlayerEntity player)
+    {
+        if (!world.isClient && sound) playSound(SoundEvents.BLOCK_BARREL_OPEN);
+        SidedInventory.super.onOpen(player);
     }
 
     @Override
-    public void startOpen(Player player)
+    public void onClose(PlayerEntity player)
     {
-        if (!level.isClientSide && sound) playSound(SoundEvents.BARREL_OPEN);
-        WorldlyContainer.super.startOpen(player);
+        if (!world.isClient && sound) playSound(SoundEvents.BLOCK_BARREL_CLOSE);
+        SidedInventory.super.onClose(player);
     }
 
-    @Override
-    public void stopOpen(Player player)
-    {
-        if (!level.isClientSide && sound) playSound(SoundEvents.BARREL_CLOSE);
-        WorldlyContainer.super.stopOpen(player);
-    }
 
     public void sell(boolean all)
     {
-        int value = Currency.calculateValueFromSingleStack(getItem(SellingBinMenu.ITEM_SLOT), this);
-        SBDataMaps.ItemValue itemValue = SBDataMaps.getOrDefault(getItem(SellingBinMenu.ITEM_SLOT), SBDataMaps.SELLING_BIN_VALUE, SBDataMaps.ItemValue.EMPTY);
+        int value = Currency.calculateValueFromSingleStack(getStack(SellingBinMenu.ITEM_SLOT), this);
+        SBDataMaps.ItemValue itemValue = SBDataMaps.getOrDefault(getStack(SellingBinMenu.ITEM_SLOT), SBDataMaps.SELLING_BIN_VALUE, SBDataMaps.ItemValue.EMPTY);
         if (value <= 0) return;
 
         boolean sold = false;
 
-        while (getItem(SellingBinMenu.ITEM_SLOT).getCount() > 0)
+        while (getStack(SellingBinMenu.ITEM_SLOT).getCount() > 0)
         {
-            itemValue.processors().forEach(o -> o.onSellStart(getItem(SellingBinMenu.ITEM_SLOT)));
+            itemValue.processors().forEach(o -> o.onSellStart(getStack(SellingBinMenu.ITEM_SLOT)));
             storedProgress += value;
-            if (itemValue.processors().stream().noneMatch(o -> o.shouldCancelShrink(getItem(SellingBinMenu.ITEM_SLOT))))
-                getItem(SellingBinMenu.ITEM_SLOT).shrink(1);
+            if (itemValue.processors().stream().noneMatch(o -> o.shouldCancelShrink(getStack(SellingBinMenu.ITEM_SLOT))))
+                getStack(SellingBinMenu.ITEM_SLOT).decrement(1);
 
             sold = true;
-            itemValue.processors().forEach(o -> o.onSellComplete(getItem(SellingBinMenu.ITEM_SLOT)));
+            itemValue.processors().forEach(o -> o.onSellComplete(getStack(SellingBinMenu.ITEM_SLOT)));
             if (!all)
             {
                 update();
-                if (!level.isClientSide && sound)
-                    level.playSound(null, getBlockPos(), SoundEvents.NOTE_BLOCK_BELL.value(), SoundSource.BLOCKS, 0.2f, 1.3f);
+                if (!world.isClient && sound)
+                    world.playSound(null, getPos(), SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), SoundCategory.BLOCKS, 0.2f, 1.3f);
                 return;
             }
         }
 
         if (sold)
-            if (!level.isClientSide && sound)
-                level.playSound(null, getBlockPos(), SoundEvents.NOTE_BLOCK_BELL.value(), SoundSource.BLOCKS, 0.2f, 1.3f);
+            if (!world.isClient && sound)
+                world.playSound(null, getPos(), SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), SoundCategory.BLOCKS, 0.2f, 1.3f);
 
         update();
     }
 
     public int getProgressAvailable()
     {
-        return storedProgress + SBDataMaps.getOrDefault(getItem(SellingBinMenu.RESULT_SLOT), SBDataMaps.SELLING_BIN_CURRENCIES, 0) * getItem(SellingBinMenu.RESULT_SLOT).getCount();
+        return storedProgress + SBDataMaps.getOrDefault(getStack(SellingBinMenu.RESULT_SLOT), SBDataMaps.SELLING_BIN_CURRENCIES, 0) * getStack(SellingBinMenu.RESULT_SLOT).getCount();
     }
 
     //updates result slot to the highest possible currency
     public void update()
     {
-        ItemStack is = getItem(SellingBinMenu.RESULT_SLOT);
+        ItemStack is = getStack(SellingBinMenu.RESULT_SLOT);
 
         int progressAvailable = getProgressAvailable();
 
@@ -124,13 +131,13 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
             {
                 if (progressAvailable > c.value())
                 {
-                    if (!is.is(c.item())) is = new ItemStack(c.item());
+                    if (!is.isOf(c.item())) is = new ItemStack(c.item());
 
-                    int count = Math.clamp(progressAvailable / c.value(), 0, c.item().getMaxStackSize(new ItemStack(c.item())));
+                    int count = Math.clamp(progressAvailable / c.value(), 0, c.item().getMaxCount());
 
                     is.setCount(count);
 
-                    setItem(SellingBinMenu.RESULT_SLOT, is);
+                    setStack(SellingBinMenu.RESULT_SLOT, is);
 
                     storedProgress = progressAvailable - c.value() * count;
 
@@ -140,13 +147,13 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
         else
         {
             //else run the math for the selected currency
-            if (!is.is(currencySelected.item())) is = new ItemStack(currencySelected.item());
+            if (!is.isOf(currencySelected.item())) is = new ItemStack(currencySelected.item());
 
-            int count = Math.clamp(progressAvailable / currencySelected.value(), 0, currencySelected.item().getMaxStackSize(new ItemStack(currencySelected.item())));
+            int count = Math.clamp(progressAvailable / currencySelected.value(), 0, currencySelected.item().getMaxCount());
 
             is.setCount(count);
 
-            setItem(SellingBinMenu.RESULT_SLOT, is);
+            setStack(SellingBinMenu.RESULT_SLOT, is);
 
             storedProgress = progressAvailable - currencySelected.value() * count;
         }
@@ -155,19 +162,20 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
         updateToClient();
     }
 
-    @Nullable
-    public AbstractContainerMenu createMenu(int containerId, Inventory playerInventory, Player player)
+    @Override
+    public @Nullable ScreenHandler createMenu(int syncId, PlayerInventory playerInventory, PlayerEntity player)
     {
         if (!player.isSpectator())
-            return new SellingBinMenu(containerId, playerInventory, this, this);
+            return new SellingBinMenu(syncId, playerInventory, this, this);
         else
             return null;
     }
 
+
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries)
+    protected void writeNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registries)
     {
-        super.saveAdditional(tag, registries);
+        super.writeNbt(tag, registries);
 
         if (!isCenter()) return;
 
@@ -191,13 +199,13 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
         tag.putInt("stored_progress", storedProgress);
 
         //save items (from ShulkerBoxBlockEntity)
-        ContainerHelper.saveAllItems(tag, this.itemStacks, false, registries);
+        Inventories.writeNbt(tag, this.itemStacks, false, registries);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries)
+    protected void readNbt(NbtCompound tag, RegistryWrapper.WrapperLookup registries)
     {
-        super.loadAdditional(tag, registries);
+        super.readNbt(tag, registries);
         if (!isCenter()) return;
 
         //insta sell
@@ -216,35 +224,37 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
         if (tag.contains("stored_progress")) storedProgress = tag.getInt("stored_progress");
 
         //retrieve items (from ShulkerBoxBlockEntity)
-        this.itemStacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
+        this.itemStacks = DefaultedList.ofSize(this.size(), ItemStack.EMPTY);
         if (tag.contains("Items", 9))
         {
-            ContainerHelper.loadAllItems(tag, this.itemStacks, registries);
+            Inventories.readNbt(tag, this.itemStacks, registries);
         }
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries)
+    public @NotNull NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registries)
     {
-        CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, registries);
+        NbtCompound tag = new NbtCompound();
+        readNbt(tag, registries);
         return tag;
     }
 
+
     @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket()
+    public Packet<ClientPlayPacketListener> toUpdatePacket()
     {
-        return ClientboundBlockEntityDataPacket.create(this);
+        return BlockEntityUpdateS2CPacket.create(this);
     }
 
+
     //container methods copied from ShulkerBoxBlockEntity and it's extends
-    protected NonNullList<ItemStack> getItems()
+    protected DefaultedList<ItemStack> getItems()
     {
         return this.itemStacks;
     }
 
     @Override
-    public int getContainerSize()
+    public int size()
     {
         return 2;
     }
@@ -264,68 +274,71 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     }
 
     @Override
-    public ItemStack getItem(int slot)
+    public ItemStack getStack(int slot)
     {
         return this.getItems().get(slot);
     }
 
+
     @Override
-    public ItemStack removeItem(int slot, int amount)
+    public ItemStack removeStack(int slot, int amount)
     {
-        ItemStack itemstack = ContainerHelper.removeItem(this.getItems(), slot, amount);
+        ItemStack itemstack = Inventories.splitStack(this.getItems(), slot, amount);
         if (!itemstack.isEmpty())
         {
-            this.setChanged();
+            this.markDirty();
         }
 
         return itemstack;
     }
 
     @Override
-    public ItemStack removeItemNoUpdate(int slot)
+    public ItemStack removeStack(int slot)
     {
-        return ContainerHelper.takeItem(this.getItems(), slot);
+        return Inventories.removeStack(this.getItems(), slot);
     }
 
     @Override
-    public void setItem(int slot, ItemStack stack)
+    public void setStack(int slot, ItemStack stack)
     {
         this.getItems().set(slot, stack);
-        stack.limitSize(this.getMaxStackSize(stack));
-        this.setChanged();
+        stack.capCount(getMaxCount(stack));
+        this.markDirty();
     }
 
+
     @Override
-    public boolean stillValid(Player player)
+    public boolean canPlayerUse(PlayerEntity player)
     {
-        return Container.stillValidBlockEntity(this, player);
+        return Inventory.canPlayerUse(this, player);
     }
 
     @Override
-    public void clearContent()
+    public void clear()
     {
         this.getItems().clear();
     }
 
+
     @Override
-    public Component getDisplayName()
+    public Text getDisplayName()
     {
-        return Component.empty();
+        return Text.empty();
     }
 
     public void updateToClient()
     {
-        setChanged();
-        if (level instanceof ServerLevel serverLevel)
+        markDirty();
+        if (world instanceof ServerWorld serverLevel)
         {
-            serverLevel.sendBlockUpdated(getBlockPos(), this.getBlockState(), this.getBlockState(), 3);
+            serverLevel.updateListeners(getPos(), this.getCachedState(), this.getCachedState(), 3);
         }
     }
 
     @Override
-    public int[] getSlotsForFace(Direction direction)
+    public int[] getAvailableSlots(Direction direction)
     {
-        BlockState blockState = level.getBlockState(getBlockPos());
+        BlockState blockState = world.getBlockState(getPos());
         //if (!blockState.is(ModBlocks.SELLING_BIN)) return new int[0];
         //if (!blockState.getValue(AbstractMultiBlock.CENTER)) return new int[0];
 
@@ -334,14 +347,14 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     }
 
     @Override
-    public boolean canPlaceItemThroughFace(int i, ItemStack itemStack, @org.jetbrains.annotations.Nullable Direction direction)
+    public boolean canInsert(int slot, ItemStack itemStack, @Nullable Direction direction)
     {
         int value = Currency.calculateValueFromSingleStack(itemStack, this);
         return value > 0 && direction != Direction.DOWN;
     }
 
     @Override
-    public boolean canTakeItemThroughFace(int i, ItemStack itemStack, Direction direction)
+    public boolean canExtract(int slot, ItemStack stack, Direction direction)
     {
         return direction == Direction.DOWN;
     }

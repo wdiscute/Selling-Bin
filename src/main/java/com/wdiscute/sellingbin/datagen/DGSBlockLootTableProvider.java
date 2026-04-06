@@ -1,42 +1,39 @@
 package com.wdiscute.sellingbin.datagen;
 
 import com.wdiscute.sellingbin.registry.SBBlocks;
-import net.minecraft.advancements.critereon.StatePropertiesPredicate;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.data.loot.BlockLootSubProvider;
-import net.minecraft.world.flag.FeatureFlags;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.storage.loot.LootPool;
-import net.minecraft.world.level.storage.loot.LootTable;
-import net.minecraft.world.level.storage.loot.entries.LootItem;
-import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
-import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
+import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricBlockLootTableProvider;
+import net.minecraft.loot.LootPool;
+import net.minecraft.loot.LootTable;
+import net.minecraft.loot.condition.BlockStatePropertyLootCondition;
+import net.minecraft.loot.entry.ItemEntry;
+import net.minecraft.loot.provider.number.ConstantLootNumberProvider;
+import net.minecraft.predicate.StatePredicate;
+import net.minecraft.registry.RegistryWrapper;
 import net.nikdo53.tinymultiblocklib.block.AbstractMultiBlock;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 
-public class DGSBlockLootTableProvider extends BlockLootSubProvider
+public class DGSBlockLootTableProvider extends FabricBlockLootTableProvider
 {
-    protected DGSBlockLootTableProvider(HolderLookup.Provider registries)
+    public DGSBlockLootTableProvider(FabricDataOutput dataOutput, CompletableFuture<RegistryWrapper.WrapperLookup> registryLookup)
     {
-        super(Set.of(), FeatureFlags.REGISTRY.allFlags(), registries);
+        super(dataOutput, registryLookup);
     }
 
     @Override
-    protected void generate()
+    public void generate()
     {
-        //selling bin because datagen sucks
-        LootTable.Builder builder = LootTable.lootTable().withPool(this.applyExplosionCondition(SBBlocks.SELLING_BIN.get(), LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(SBBlocks.SELLING_BIN.get()).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(SBBlocks.SELLING_BIN.get()).setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(AbstractMultiBlock.CENTER, true))))));
-        add(SBBlocks.SELLING_BIN.get(), builder);
-    }
+        addDrop(SBBlocks.SELLING_BIN,
+                LootTable.builder().pool(this.addSurvivesExplosionCondition(SBBlocks.SELLING_BIN,
+                        LootPool.builder().rolls(ConstantLootNumberProvider.create(1.0F))
+                                .with(ItemEntry.builder(SBBlocks.SELLING_BIN)
+                                        .conditionally(BlockStatePropertyLootCondition.builder(SBBlocks.SELLING_BIN)
+                                                .properties(StatePredicate.Builder.create()
+                                                        .exactMatch(AbstractMultiBlock.CENTER, true)
+                                                )))))
 
-    @Override
-    protected Iterable<Block> getKnownBlocks()
-    {
-        List<Block> list = new ArrayList<>();
-        list.add(SBBlocks.SELLING_BIN.get());
-        return list::iterator;
+
+        );
     }
 }

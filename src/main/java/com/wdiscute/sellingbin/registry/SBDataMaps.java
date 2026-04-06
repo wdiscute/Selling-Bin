@@ -2,30 +2,36 @@ package com.wdiscute.sellingbin.registry;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import com.wdiscute.sellingbin.SellingBin;
 import com.wdiscute.sellingbin.processors.AbstractProcessor;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.neoforged.neoforge.registries.datamaps.DataMapType;
+import net.minecraft.item.Item;
+import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
+import net.minecraft.registry.RegistryKey;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public interface SBDataMaps
 {
-    DataMapType<Item, ItemValue> SELLING_BIN_VALUE = DataMapType.builder(
-            SellingBin.rl("selling_bin_value"), Registries.ITEM, ItemValue.CODEC).synced(ItemValue.CODEC, true).build();
+    DataMap<ItemValue> SELLING_BIN_VALUE = new DataMap<>(Items.EMERALD.asItem(), ItemValue.EMPTY);
+    DataMap<Integer> SELLING_BIN_CURRENCIES = new DataMap<>(Items.EMERALD.asItem(), 0);
 
-    DataMapType<Item, Integer> SELLING_BIN_CURRENCIES = DataMapType.builder(
-            SellingBin.rl("selling_bin_currencies"), Registries.ITEM, Codec.INT).synced(Codec.INT, true).build();
-
-
-    static <T> T getOrDefault(ItemStack stack, DataMapType<Item, T> dataMap, T d)
+    static <T> T getOrDefault(ItemStack stack, DataMap<T> dataMap, T d)
     {
-        T data = stack.getItemHolder().getData(dataMap);
-        if(data == null) return d;
-        return data;
+        //T data = stack.getRegistryEntry().getData(dataMap);
+        //if(data == null) return d;
+        //return data;
+        return d;
     }
+
+     static <T> Map<RegistryKey<Item>, T> getAllItems(DataMap<T> sellingBinCurrencies)
+    {
+        Map<RegistryKey<Item>, T> wad = new HashMap<>();
+        return wad;
+    }
+
+    record DataMap<T>(Item item, T data){}
 
     record ItemValue(int baseValue, List<AbstractProcessor> processors)
     {
