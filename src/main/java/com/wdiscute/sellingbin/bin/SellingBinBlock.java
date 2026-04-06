@@ -1,8 +1,8 @@
 package com.wdiscute.sellingbin.bin;
 
 
-
 import com.wdiscute.sellingbin.registry.SBBlockEntities;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.*;
 import net.minecraft.block.entity.BlockEntity;
 import net.minecraft.block.entity.BlockEntityTicker;
@@ -11,6 +11,7 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -126,7 +127,7 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
                     container.setStack(0, handStack.copy());
                     player.setStackInHand(hand, ItemStack.EMPTY);
 
-                    if(!level.isClient) playSound(level, pos, state, SoundEvents.ENTITY_ITEM_PICKUP);
+                    if (!level.isClient) playSound(level, pos, state, SoundEvents.ENTITY_ITEM_PICKUP);
                     return ItemActionResult.SUCCESS;
                 }
                 else
@@ -135,11 +136,11 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
                     fitInsideCount -= inside.getCount();
 
                     int amountTransferring = Math.min(handStack.getCount(), fitInsideCount);
-                    if(inside.isStackable() && ItemStack.areEqual(handStack, inside) && fitInsideCount > 0)
+                    if (inside.isStackable() && ItemStack.areEqual(handStack, inside) && fitInsideCount > 0)
                     {
                         handStack.decrement(amountTransferring);
                         inside.increment(amountTransferring);
-                        if(!level.isClient) playSound(level, pos, state, SoundEvents.ENTITY_ITEM_PICKUP);
+                        if (!level.isClient) playSound(level, pos, state, SoundEvents.ENTITY_ITEM_PICKUP);
                         return ItemActionResult.SUCCESS;
                     }
                 }
@@ -158,10 +159,18 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
         BlockPos center = IMultiBlock.getCenter(level, pos);
         if (level.getBlockEntity(center) instanceof SellingBinBlockEntity sbbe && !level.isClient)
         {
-            player.openHandledScreen(new SimpleNamedScreenHandlerFactory(sbbe, Text.empty()));
-            //player.openMenu(sbbe, center);
+            NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(level, sbbe.getPos());
+            if (screenHandlerFactory != null)
+                player.openHandledScreen(screenHandlerFactory);
         }
         return ActionResult.SUCCESS;
+    }
+
+    @Nullable
+    protected NamedScreenHandlerFactory createScreenHandlerFactory(BlockState state, World world, BlockPos pos)
+    {
+        BlockEntity blockEntity = world.getBlockEntity(pos);
+        return blockEntity instanceof NamedScreenHandlerFactory ? (NamedScreenHandlerFactory) blockEntity : null;
     }
 
 

@@ -16,8 +16,6 @@ import net.minecraft.text.MutableText;
 import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 
-import java.util.List;
-
 @Environment(EnvType.CLIENT)
 public class SBClientEvents implements ClientModInitializer
 {

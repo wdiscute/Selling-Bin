@@ -2,6 +2,7 @@ package com.wdiscute.sellingbin.bin;
 
 import com.wdiscute.sellingbin.registry.SBBlockEntities;
 import com.wdiscute.sellingbin.registry.SBDataMaps;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.entity.player.PlayerEntity;
@@ -17,6 +18,7 @@ import net.minecraft.network.packet.s2c.play.BlockEntityUpdateS2CPacket;
 import net.minecraft.registry.RegistryWrapper;
 import net.minecraft.screen.NamedScreenHandlerFactory;
 import net.minecraft.screen.ScreenHandler;
+import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.server.world.ServerWorld;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
@@ -32,7 +34,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
-public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements SidedInventory, NamedScreenHandlerFactory, TickableBlockEntity
+public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements SidedInventory, ExtendedScreenHandlerFactory<BlockPos>, TickableBlockEntity
 {
 
     private DefaultedList<ItemStack> itemStacks;
@@ -396,5 +398,11 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
     public void toggleSound()
     {
         sound = !sound;
+    }
+
+    @Override
+    public BlockPos getScreenOpeningData(ServerPlayerEntity player)
+    {
+        return pos;
     }
 }

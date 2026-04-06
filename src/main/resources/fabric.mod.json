@@ -16,10 +16,13 @@
 	"environment": "*",
 	"entrypoints": {
 		"main": [
-			"com.wdiscute.Selling_bin"
+			"com.wdiscute.sellingbin.SellingBin"
+		],
+		"client": [
+			"com.wdiscute.sellingbin.event.SBClientEvents"
 		],
 		"fabric-datagen": [
-			"com.wdiscute.SBDataGenerators"
+			"com.wdiscute.sellingbin.datagen.SBDataGenerators"
 		]
 	},
 	"depends": {
