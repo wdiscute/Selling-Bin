@@ -28,6 +28,7 @@ import net.minecraft.util.collection.DefaultedList;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Direction;
 import net.minecraft.util.math.Vec3i;
+import net.minecraft.world.World;
 import net.nikdo53.tinymultiblocklib.blockentities.AbstractMultiBlockEntity;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -49,15 +50,11 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
     {
         super(SBBlockEntities.SELLING_BIN, pos, blockState);
         this.itemStacks = DefaultedList.ofSize(2, ItemStack.EMPTY);
-        this.currencies = Currency.getCurrencies();
-        this.currenciesReversed = currencies.reversed();
     }
-
-
 
     void playSound(SoundEvent soundEvent)
     {
-        if(!sound) return;
+        if (!sound) return;
         BlockState state = world.getBlockState(getPos());
         Vec3i vec3i = state.get(HorizontalFacingBlock.FACING).getVector();
         double d0 = (double) this.getPos().getX() + 0.5 + (double) vec3i.getX() / 2.0;
@@ -85,7 +82,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
     public void sell(boolean all)
     {
         int value = Currency.calculateValueFromSingleStack(getStack(SellingBinMenu.ITEM_SLOT), this);
-        SBDataMaps.ItemValue itemValue = SBDataMaps.getOrDefault(getStack(SellingBinMenu.ITEM_SLOT), SBDataMaps.SELLING_BIN_VALUE, SBDataMaps.ItemValue.EMPTY);
+        SBDataMaps.ItemValue itemValue = SBDataMaps.getItemValueOrDefault(getStack(SellingBinMenu.ITEM_SLOT), world, SBDataMaps.ItemValue.EMPTY);
         if (value <= 0) return;
 
         boolean sold = false;
@@ -117,13 +114,15 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
 
     public int getProgressAvailable()
     {
-        return storedProgress + SBDataMaps.getOrDefault(getStack(SellingBinMenu.RESULT_SLOT), SBDataMaps.SELLING_BIN_CURRENCIES, 0) * getStack(SellingBinMenu.RESULT_SLOT).getCount();
+        return storedProgress + SBDataMaps.getCurrencyOrDefault(getStack(SellingBinMenu.RESULT_SLOT), world, 0) * getStack(SellingBinMenu.RESULT_SLOT).getCount();
     }
 
     //updates result slot to the highest possible currency
     public void update()
     {
         ItemStack is = getStack(SellingBinMenu.RESULT_SLOT);
+
+        loadCurrencies(world);
 
         int progressAvailable = getProgressAvailable();
 
@@ -237,7 +236,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
     public @NotNull NbtCompound toInitialChunkDataNbt(RegistryWrapper.WrapperLookup registries)
     {
         NbtCompound tag = new NbtCompound();
-        readNbt(tag, registries);
+        writeNbt(tag, registries);
         return tag;
     }
 
@@ -364,8 +363,11 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
     @Override
     public void tick()
     {
-        update();
-        if (instaSell) sell(true);
+        if (instaSell)
+        {
+            update();
+            sell(true);
+        }
     }
 
     public void cycleCurrency()
@@ -404,5 +406,12 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
     public BlockPos getScreenOpeningData(ServerPlayerEntity player)
     {
         return pos;
+    }
+
+    public void loadCurrencies(World level)
+    {
+        if(currencies != null) return;
+        currencies = Currency.getCurrencies(level);
+        currenciesReversed = currencies.reversed();
     }
 }

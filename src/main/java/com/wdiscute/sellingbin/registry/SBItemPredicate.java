@@ -24,7 +24,9 @@ public interface SBItemPredicate
         @Override
         public boolean test(ItemStack stack)
         {
-            return SBDataMaps.getOrDefault(stack, SBDataMaps.SELLING_BIN_VALUE, SBDataMaps.ItemValue.EMPTY).baseValue() > 0;
+            return false;
+            //todo fix this, not doable because we dont have access to the world for registry access from here?
+            //return SBDataMaps.getItemValueOrDefault(stack, SBDataMaps.SELLING_BIN_VALUE, SBDataMaps.ItemValue.EMPTY).baseValue() > 0;
         }
     }
 

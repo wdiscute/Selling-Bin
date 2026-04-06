@@ -42,18 +42,17 @@ public class SellingBinJeiPlugin implements IModPlugin
         listSellables.clear();
 
         //add all currencies
-        SBDataMaps.getAllItems(SBDataMaps.SELLING_BIN_CURRENCIES).forEach((rk, value) ->
+        SBDataMaps.getAllCurrencies(MinecraftClient.getInstance().world).forEach((item, value) ->
         {
             if (value != 0)
             {
-                Item item = Registries.ITEM.get(rk);
                 currencies.add(new ItemStack(item));
                 listCurrencies.add(new SellingBinCurrencyJeiRecipe.Recipe(item, value));
             }
         });
 
         //add all item with selling bin value
-        SBDataMaps.getAllItems(SBDataMaps.SELLING_BIN_VALUE).forEach((rk, itemValue) ->
+        SBDataMaps.getAllSellableItems(MinecraftClient.getInstance().world).forEach((item, itemValue) ->
         {
             if (!itemValue.equals(SBDataMaps.ItemValue.EMPTY))
             {
@@ -65,7 +64,6 @@ public class SellingBinJeiPlugin implements IModPlugin
                     if (processor.showDescriptionOnEmi())
                         comps.addAll(processor.getDescription());
                 }
-                Item item = Registries.ITEM.get(rk);
                 sellables.add(new ItemStack(item));
                 listSellables.add(new SellingBinSellingJeiRecipe.Recipe(
                         item,

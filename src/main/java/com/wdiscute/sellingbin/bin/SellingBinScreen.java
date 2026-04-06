@@ -130,15 +130,15 @@ public class SellingBinScreen extends HandledScreen<SellingBinMenu>
         Currency currency = handler.be.currencySelected;
         if (currency.isNone()) currency = handler.be.currencies.getFirst();
         int arrow = (int) ((((float) progressAvailable) / ((float) currency.value())) * 16);
-        guiGraphics.drawGuiTexture(TEXTURE, uiX + 80, uiY + 37, 192, 16, Math.clamp(arrow, 0, 16), 16, 256, 256);
+        guiGraphics.drawTexture(TEXTURE, uiX + 80, uiY + 37, 192, 16, Math.clamp(arrow, 0, 16), 16, 256, 256);
 
         //insta sell pressed
         if (handler.be.instaSell)
-            guiGraphics.drawGuiTexture(TEXTURE, uiX + 80, uiY + 11, 192, 128, 42, 13, 256, 256);
+            guiGraphics.drawTexture(TEXTURE, uiX + 80, uiY + 11, 192, 128, 42, 13, 256, 256);
 
         //sell button pressed down
         if (mousePressed)
-            guiGraphics.drawGuiTexture(TEXTURE, uiX + 80, uiY + 11, 192, 128, 42, 13, 256, 256);
+            guiGraphics.drawTexture(TEXTURE, uiX + 80, uiY + 11, 192, 128, 42, 13, 256, 256);
 
         //sell / sell all
         MutableText sellComp;
@@ -153,24 +153,24 @@ public class SellingBinScreen extends HandledScreen<SellingBinMenu>
         //sell outline when hovering
         if (x > 80 && x < 121 && y > 10 && y < 24 && !handler.be.instaSell)
         {
-            guiGraphics.drawGuiTexture(TEXTURE, uiX + 79, uiY + 10, 192, 80, 48, 16, 256, 256);
+            guiGraphics.drawTexture(TEXTURE, uiX + 79, uiY + 10, 192, 80, 48, 16, 256, 256);
             renderCenteredFatString(guiGraphics, this.textRenderer, sellComp, uiX + 101, uiY + 14, 0x87583a);
         }
 
         //insta sell outline when hovering
         if (x > 56 && x < 70 && y > 10 && y < 24)
-            guiGraphics.drawGuiTexture(TEXTURE, uiX + 56, uiY + 10, 192, 96, 16, 16, 256, 256);
+            guiGraphics.drawTexture(TEXTURE, uiX + 56, uiY + 10, 192, 96, 16, 16, 256, 256);
 
 
         //insta sell checkmark
         if (handler.be.instaSell)
-            guiGraphics.drawGuiTexture(TEXTURE, uiX + 56, uiY + 9, 208, 16, 16, 16, 256, 256);
+            guiGraphics.drawTexture(TEXTURE, uiX + 56, uiY + 9, 208, 16, 16, 16, 256, 256);
 
         //auto sell tooltip
         if (x > 58 && x < 69 && y > 12 && y < 23)
         {
             if (handler.be.instaSell)
-                guiGraphics.drawGuiTexture(TEXTURE, uiX + 55, uiY + 10, 192, 112, 18, 16, 256, 256);
+                guiGraphics.drawTexture(TEXTURE, uiX + 55, uiY + 10, 192, 112, 18, 16, 256, 256);
 
             guiGraphics.drawTooltip(this.textRenderer, Text.translatable("gui.selling_bin.selling_bin.auto_sell"), mouseX, mouseY);
         }
@@ -182,7 +182,7 @@ public class SellingBinScreen extends HandledScreen<SellingBinMenu>
         //render currency selected
         ItemStack currencyStack = new ItemStack(handler.be.currencySelected.item());
         if (currencyStack.isEmpty())
-            guiGraphics.drawGuiTexture(TEXTURE, uiX + 128, uiY + 42, 192, 144, 10, 10, 256, 256);
+            guiGraphics.drawTexture(TEXTURE, uiX + 128, uiY + 42, 192, 144, 10, 10, 256, 256);
         else
             renderItem(currencyStack, uiX + 124, uiY + 38, 0.5f);
 
@@ -216,7 +216,6 @@ public class SellingBinScreen extends HandledScreen<SellingBinMenu>
     protected void drawBackground(DrawContext guiGraphics, float delta, int mouseX, int mouseY)
     {
         guiGraphics.drawTexture(TEXTURE, uiX, uiY, 0, 0, this.backgroundWidth, this.backgroundHeight);
-
     }
 
     public SellingBinScreen(SellingBinMenu menu, PlayerInventory playerInventory, Text title)

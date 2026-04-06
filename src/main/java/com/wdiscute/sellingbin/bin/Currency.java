@@ -10,7 +10,10 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
+import net.minecraft.world.World;
+import net.minecraft.world.WorldAccess;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
@@ -25,12 +28,12 @@ public record Currency(Item item, int value)
 
     public boolean isNone(){return this.equals(NONE);}
 
-    public static List<Currency> getCurrencies()
+    public static List<Currency> getCurrencies(WorldAccess worldAccess)
     {
         //add all currencies from datamap
-        Map<RegistryKey<Item>, Integer> dataMap = SBDataMaps.getAllItems(SBDataMaps.SELLING_BIN_CURRENCIES);
+        Map<Item, Integer> dataMap = SBDataMaps.getAllCurrencies(worldAccess);
         List<Currency> currenciesUnfiltered = new ArrayList<>();
-        dataMap.forEach((i, v) -> currenciesUnfiltered.add(new Currency(Registries.ITEM.get(i), v)));
+        dataMap.forEach((i, v) -> currenciesUnfiltered.add(new Currency(i, v)));
 
         //remove entries with negative value
         List<Currency> currencies = new ArrayList<>(currenciesUnfiltered.stream().filter(o -> o.value() > 0).toList());
@@ -46,7 +49,9 @@ public record Currency(Item item, int value)
     //this does not take into account stack count!
     public static int calculateValueFromSingleStack(ItemStack is, BlockEntity blockEntity, @Nullable PlayerEntity player)
     {
-        SBDataMaps.ItemValue itemValue = SBDataMaps.getOrDefault(is, SBDataMaps.SELLING_BIN_VALUE, SBDataMaps.ItemValue.EMPTY);
+        World world = player != null ? player.getWorld() : blockEntity.getWorld();
+
+        SBDataMaps.ItemValue itemValue = SBDataMaps.getItemValueOrDefault(is, world, SBDataMaps.ItemValue.EMPTY);
 
         //if one of the processors returns false on canSell()
         if(itemValue.processors().stream().anyMatch(o -> !o.canSell(is, blockEntity, player))) return 0;
@@ -71,15 +76,10 @@ public record Currency(Item item, int value)
         return calculateValueFromSingleStack(is, null, player);
     }
 
-    public static int calculateValueFromSingleStack(ItemStack is)
-    {
-        return calculateValueFromSingleStack(is, null, null);
-    }
-
     //returns formatted string of highest possible currency for the value
-    public static String getStringFromValue(int value)
+    public static String getStringFromValue(int value, WorldAccess worldAccess)
     {
-        List<Currency> currencies = Currency.getCurrencies().reversed();
+        List<Currency> currencies = Currency.getCurrencies(worldAccess).reversed();
 
         boolean found = false;
 

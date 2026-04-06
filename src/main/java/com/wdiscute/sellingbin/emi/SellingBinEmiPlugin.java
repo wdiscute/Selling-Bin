@@ -10,10 +10,12 @@ import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.item.Item;
 import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,12 +57,11 @@ public class SellingBinEmiPlugin implements EmiPlugin
 
 
         //add all currencies
-        Map<RegistryKey<Item>, Integer> currencies = SBDataMaps.getAllItems(SBDataMaps.SELLING_BIN_CURRENCIES);
-        currencies.forEach((rk, value) ->
+        Map<Item, Integer> currencies = SBDataMaps.getAllCurrencies(MinecraftClient.getInstance().world);
+        currencies.forEach((item, value) ->
         {
             if (value != 0)
             {
-                Item item = Registries.ITEM.get(rk);
                 SellingBinEmiPlugin.currencies.add(EmiIngredient.of(Ingredient.ofItems(item)));
                 registry.addRecipe(new SellingBinCurrencyEmiRecipe(item, value));
             }
@@ -71,13 +72,11 @@ public class SellingBinEmiPlugin implements EmiPlugin
 
 
         //add all item with selling bin value
-        Map<RegistryKey<Item>, SBDataMaps.ItemValue> sellables = SBDataMaps.getAllItems(SBDataMaps.SELLING_BIN_VALUE);
-        sellables.forEach((rk, itemValue) ->
+        Map<Item, SBDataMaps.ItemValue> sellables = SBDataMaps.getAllSellableItems(MinecraftClient.getInstance().world);
+        sellables.forEach((item, itemValue) ->
         {
             if (!itemValue.equals(SBDataMaps.ItemValue.EMPTY))
             {
-
-                Item item = Registries.ITEM.get(rk);
                 sellable.add(EmiIngredient.of(Ingredient.ofItems(item)));
                 registry.addRecipe(new SellingBinSellingEmiRecipe(item, itemValue));
             }

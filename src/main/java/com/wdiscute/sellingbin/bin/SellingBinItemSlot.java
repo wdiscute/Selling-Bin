@@ -1,6 +1,7 @@
 package com.wdiscute.sellingbin.bin;
 
 
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.inventory.Inventory;
 import net.minecraft.item.ItemStack;
 import net.minecraft.screen.slot.Slot;
@@ -20,7 +21,7 @@ public class SellingBinItemSlot extends Slot
     @Override
     public boolean canInsert(ItemStack stack)
     {
-        int value = Currency.calculateValueFromSingleStack(stack);
+        int value = Currency.calculateValueFromSingleStack(stack, menu.be);
         return value > 0;
     }
 }
