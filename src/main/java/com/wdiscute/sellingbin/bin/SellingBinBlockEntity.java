@@ -45,7 +45,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
 
     public SellingBinBlockEntity(BlockPos pos, BlockState blockState)
     {
-        super(SBBlockEntities.SELLING_BIN.get(), pos, blockState);
+        super(SBBlockEntities.SELLING_BIN, pos, blockState);
         this.itemStacks = DefaultedList.ofSize(2, ItemStack.EMPTY);
         this.currencies = Currency.getCurrencies();
         this.currenciesReversed = currencies.reversed();

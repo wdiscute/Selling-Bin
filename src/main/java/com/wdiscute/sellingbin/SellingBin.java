@@ -23,13 +23,14 @@ public class SellingBin implements ModInitializer
     public static final Logger LOGGER = LogUtils.getLogger();
 
     //resource keys
-    public static final ResourceKey<Registry<AbstractProcessor>> SELLING_BIN =
-            ResourceKey.createRegistryKey(SellingBin.rl("selling_bin"));
+    public static final RegistryKey<Registry<AbstractProcessor>> SELLING_BIN =
+            RegistryKey.ofRegistry(Identifier.of(MOD_ID, "selling_bin"));
 
     //registry
-    public static final Registry<AbstractProcessor> SELLING_BIN_REGISTRY = new RegistryBuilder<>(SELLING_BIN)
-            .sync(true)
-            .create();
+    public static final Registry<AbstractProcessor> SELLING_BIN_REGISTRY = FabricRegistryBuilder.createSimple(SELLING_BIN)
+            .attribute(RegistryAttribute.SYNCED)
+            .buildAndRegister();
+
 
     public static Identifier rl(String s)
     {
@@ -46,22 +47,13 @@ public class SellingBin implements ModInitializer
     {
         SBBlocks.init();
         SBMenuTypes.init();
-        //SBBlockEntities.register(modEventBus);
-        //SBMenuTypes.register(modEventBus);
-        //SBProcessors.register(modEventBus);
-        //SBCriterionTriggers.register(modEventBus);
-        //SBItemPredicate.register(modEventBus);
+        SBBlockEntities.init();
+        SBMenuTypes.init();
+        SBProcessors.init();
+        SBItemPredicate.init();
 
         //modContainer.registerConfig(ModConfig.Type.CLIENT, SBConfig.SPEC);
         //modContainer.registerConfig(ModConfig.Type.SERVER, SBConfig.SPEC_SERVER);
-
-
-
-
-        RegistryKey<Registry<AbstractProcessor>> registryKey = RegistryKey.ofRegistry(Identifier.of(MOD_ID, "selling_bin"));
-        Registry<AbstractProcessor> registry = FabricRegistryBuilder.createSimple(registryKey)
-                .attribute(RegistryAttribute.SYNCED)
-                .buildAndRegister();
     }
 
 //    public static class Client

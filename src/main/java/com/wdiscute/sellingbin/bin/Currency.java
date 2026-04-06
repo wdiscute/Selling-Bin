@@ -28,7 +28,7 @@ public record Currency(Item item, int value)
     public static List<Currency> getCurrencies()
     {
         //add all currencies from datamap
-        Map<RegistryKey<Item>, Integer> dataMap = Registries.ITEM.getDataMap(SBDataMaps.SELLING_BIN_CURRENCIES);
+        Map<RegistryKey<Item>, Integer> dataMap = SBDataMaps.getAllItems(SBDataMaps.SELLING_BIN_CURRENCIES);
         List<Currency> currenciesUnfiltered = new ArrayList<>();
         dataMap.forEach((i, v) -> currenciesUnfiltered.add(new Currency(Registries.ITEM.get(i), v)));
 
@@ -58,7 +58,7 @@ public record Currency(Item item, int value)
             value += p.addValue(itemValue.baseValue(), value, is, blockEntity, player);
         }
 
-        return (int) (value * SBConfig.SELLING_BIN_MULTIPLIER.get());
+        return (int) (value * SBConfig.SELLING_BIN_MULTIPLIER);
     }
 
     public static int calculateValueFromSingleStack(ItemStack is, BlockEntity blockEntity)
@@ -132,9 +132,9 @@ public record Currency(Item item, int value)
             String s = "";
 
             if (numOfCurrency == 1)
-                s = s + df.format(numOfCurrency) + " " + c.item().getDescription().getString(100);
+                s = s + df.format(numOfCurrency) + " " + c.item().getName().getString();
             else
-                s = s + df.format(numOfCurrency) + " " + getPluralTranslation(c.item()).getString(100);
+                s = s + df.format(numOfCurrency) + " " + getPluralTranslation(c.item()).getString();
 
             comps.add(Text.literal(s));
         }

@@ -19,12 +19,9 @@
 			"com.wdiscute.Selling_bin"
 		],
 		"fabric-datagen": [
-			"com.wdiscute.Selling_binDataGenerator"
+			"com.wdiscute.SBDataGenerators"
 		]
 	},
-	"mixins": [
-		"selling_bin.mixins.json"
-	],
 	"depends": {
 		"fabricloader": ">=0.18.6",
 		"minecraft": "~1.21.1",

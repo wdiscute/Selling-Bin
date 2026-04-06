@@ -22,12 +22,9 @@ repositories {
 		name = "TerraformersMC"
 		url = "https://maven.terraformersmc.com/"
 	}
-}
 
-fabricApi {
-	configureDataGeneration {
-		client = true
-	}
+
+
 }
 
 dependencies {
@@ -36,19 +33,30 @@ dependencies {
 	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
 	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	//EMI
-	modImplementation "dev.emi:emi-fabric:${emi_version}:api"
-
-	//JEI
-	modImplementation("mezz.jei:jei-1.21.1-fabric-api:${jei_version}")
-
-
 	//tiny multiblock lib
 	modImplementation(include("maven.modrinth:tiny-multiblock-lib:fabric-1.21.1-${tiny_multiblock_lib_version}"))
+
+	//EMI
+	modCompileOnly  "dev.emi:emi-fabric:${emi_version}:api"
+
+	//JEI
+	modCompileOnly ("mezz.jei:jei-1.21.1-fabric-api:${jei_version}")
+
+	//let's do winery
+	modCompileOnly  "maven.modrinth:lets-do-vinery:BV45cdzS"
+
+	//Architectury API
+	modCompileOnly  "maven.modrinth:architectury-api:Wto0RchG"
 
 	// Fabric API. This is technically optional, but you probably want it anyway.
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
+}
+
+fabricApi {
+	configureDataGeneration {
+		client = true
+	}
 }
 
 processResources {

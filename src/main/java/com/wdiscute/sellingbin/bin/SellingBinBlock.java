@@ -11,11 +11,13 @@ import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.inventory.SidedInventory;
 import net.minecraft.item.ItemPlacementContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.screen.SimpleNamedScreenHandlerFactory;
 import net.minecraft.sound.SoundCategory;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.sound.SoundEvents;
 import net.minecraft.state.StateManager;
 import net.minecraft.state.property.DirectionProperty;
+import net.minecraft.text.Text;
 import net.minecraft.util.ActionResult;
 import net.minecraft.util.Hand;
 import net.minecraft.util.ItemActionResult;
@@ -32,6 +34,7 @@ import net.nikdo53.tinymultiblocklib.block.IPreviewableMultiblock;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 
 public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableMultiblock, InventoryProvider
 {
@@ -155,7 +158,8 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
         BlockPos center = IMultiBlock.getCenter(level, pos);
         if (level.getBlockEntity(center) instanceof SellingBinBlockEntity sbbe && !level.isClient)
         {
-            player.openHandledScreen(sbbe, center);
+            player.openHandledScreen(new SimpleNamedScreenHandlerFactory(sbbe, Text.empty()));
+            //player.openMenu(sbbe, center);
         }
         return ActionResult.SUCCESS;
     }
@@ -164,7 +168,7 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
     @Override
     public @Nullable BlockEntity createBlockEntity(BlockPos pos, BlockState state)
     {
-        return SBBlockEntities.SELLING_BIN.get().create(blockPos, blockState);
+        return new SellingBinBlockEntity(pos, state);
     }
 
     @Override
@@ -182,7 +186,7 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
 
         if (levelAccessor.getBlockEntity(blockPos) instanceof SellingBinBlockEntity notCenter)
         {
-            if (levelAccessor.getBlockEntity(blockPos.offset(notCenter.getOffset().multiply(-1))) instanceof SellingBinBlockEntity center)
+            if (levelAccessor.getBlockEntity(blockPos.add(notCenter.getOffset().multiply(-1))) instanceof SellingBinBlockEntity center)
             {
                 return center;
             }

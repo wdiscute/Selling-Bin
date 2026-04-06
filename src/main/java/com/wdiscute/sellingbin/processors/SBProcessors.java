@@ -1,8 +1,10 @@
 package com.wdiscute.sellingbin.processors;
 
 import com.wdiscute.sellingbin.SellingBin;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.registry.Registry;
 import net.minecraft.util.Identifier;
+import net.minecraft.util.ModStatus;
 
 public class SBProcessors
 {
@@ -15,23 +17,22 @@ public class SBProcessors
 
     public static void registerOptionals()
     {
-        if (ModList.get().isLoaded("quality_food"))
-            QUALITY_FOODS_PROCESSOR = register("quality_foods_processor", QualityFoodsProcessor::new);
+        if (FabricLoader.getInstance().isModLoaded("quality_food"))
+            QUALITY_FOODS_PROCESSOR = register("quality_foods_processor", new QualityFoodsProcessor());
 
-        if (ModList.get().isLoaded("vinery"))
-            WINE_AGE_PROCESSOR = register("wine_age_processor", WineAgeProcessor::new);
+        if (FabricLoader.getInstance().isModLoaded("vinery"))
+            WINE_AGE_PROCESSOR = register("wine_age_processor", new WineAgeProcessor());
     }
 
     public static Identifier register(String name, AbstractProcessor abstractProcessor)
     {
         Registry.register(SellingBin.SELLING_BIN_REGISTRY, name, abstractProcessor);
-        return SELLING_BIN_PROCESSORS.register(name, abstractProcessor);
+        return SellingBin.rl(name);
     }
 
-    public static void register(IEventBus eventBus)
+    public static void init()
     {
         registerOptionals();
-        SELLING_BIN_PROCESSORS.register(eventBus);
     }
 
 }

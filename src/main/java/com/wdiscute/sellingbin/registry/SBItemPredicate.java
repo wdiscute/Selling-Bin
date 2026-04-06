@@ -27,4 +27,9 @@ public interface SBItemPredicate
             return SBDataMaps.getOrDefault(stack, SBDataMaps.SELLING_BIN_VALUE, SBDataMaps.ItemValue.EMPTY).baseValue() > 0;
         }
     }
+
+    static void init()
+    {
+
+    }
 }

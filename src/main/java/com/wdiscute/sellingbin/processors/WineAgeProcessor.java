@@ -3,12 +3,13 @@ package com.wdiscute.sellingbin.processors;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import dev.architectury.event.events.common.TickEvent;
+import net.minecraft.block.entity.BlockEntity;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.text.Text;
+import net.minecraft.util.Identifier;
+import net.minecraft.world.World;
 import net.satisfy.vinery.core.components.WineYearComponent;
 import net.satisfy.vinery.core.registry.DataComponentRegistry;
 import net.satisfy.vinery.core.util.WineYears;
@@ -48,7 +49,7 @@ public class WineAgeProcessor extends AbstractProcessor
     }
 
     @Override
-    public DeferredHolder<AbstractProcessor, AbstractProcessor> getIdentifier()
+    public Identifier getIdentifier()
     {
         return SBProcessors.WINE_AGE_PROCESSOR;
     }
@@ -60,19 +61,19 @@ public class WineAgeProcessor extends AbstractProcessor
     }
 
     @Override
-    public List<Component> getDescription()
+    public List<Text> getDescription()
     {
-        return List.of(Component.translatable("gui.selling_bin.processor.wine_age_processor"));
+        return List.of(Text.translatable("gui.selling_bin.processor.wine_age_processor"));
     }
 
     @Override
-    public int addValue(int baseValue, int currentValue, ItemStack itemStack, BlockEntity blockEntity, Player player)
+    public int addValue(int baseValue, int currentValue, ItemStack itemStack, BlockEntity blockEntity, PlayerEntity player)
     {
-        Level level = null;
-        if(player != null) level = player.level();
-        if(blockEntity != null) level = blockEntity.getLevel();
+        World level = null;
+        if(player != null) level = player.getWorld();
+        if(blockEntity != null) level = blockEntity.getWorld();
 
-        WineYearComponent age = itemStack.get(DataComponentRegistry.WINE_YEAR);
+        WineYearComponent age = itemStack.get(DataComponentRegistry.WINE_YEAR.get());
 
         if (age == null)
         {
