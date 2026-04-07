@@ -1,7 +1,13 @@
 package com.wdiscute.sellingbin.bin;
 
+import com.wdiscute.sellingbin.compat.NumismaticsCompat;
 import com.wdiscute.sellingbin.registry.SBBlockEntities;
 import com.wdiscute.sellingbin.registry.SBDataMaps;
+import dev.ithundxr.createnumismatics.Numismatics;
+import dev.ithundxr.createnumismatics.content.backend.BankAccount;
+import dev.ithundxr.createnumismatics.content.backend.Coin;
+import dev.ithundxr.createnumismatics.content.bank.CardItem;
+import dev.ithundxr.createnumismatics.registry.NumismaticsItems;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -22,12 +28,14 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.neoforged.fml.ModList;
 import net.nikdo53.tinymultiblocklib.blockentities.AbstractMultiBlockEntity;
 
 import javax.annotation.Nullable;
+import java.util.Arrays;
 import java.util.List;
 
-public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements WorldlyContainer, MenuProvider, TickableBlockEntity
+public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements WorldlyContainer, MenuProvider
 {
 
     private NonNullList<ItemStack> itemStacks;
@@ -47,10 +55,9 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     }
 
 
-
     void playSound(SoundEvent soundEvent)
     {
-        if(!sound) return;
+        if (!sound) return;
         BlockState state = level.getBlockState(getBlockPos());
         Vec3i vec3i = state.getValue(HorizontalDirectionalBlock.FACING).getNormal();
         double d0 = (double) this.worldPosition.getX() + 0.5 + (double) vec3i.getX() / 2.0;
@@ -92,7 +99,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
             itemValue.processors().forEach(o -> o.onSellComplete(getItem(SellingBinMenu.ITEM_SLOT)));
             if (!all)
             {
-                update();
+                forceUpdate();
                 if (!level.isClientSide && sound)
                     level.playSound(null, getBlockPos(), SoundEvents.NOTE_BLOCK_BELL.value(), SoundSource.BLOCKS, 0.2f, 1.3f);
                 return;
@@ -103,7 +110,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
             if (!level.isClientSide && sound)
                 level.playSound(null, getBlockPos(), SoundEvents.NOTE_BLOCK_BELL.value(), SoundSource.BLOCKS, 0.2f, 1.3f);
 
-        update();
+        forceUpdate();
     }
 
     public int getProgressAvailable()
@@ -111,10 +118,34 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
         return storedProgress + SBDataMaps.getOrDefault(getItem(SellingBinMenu.RESULT_SLOT), SBDataMaps.SELLING_BIN_CURRENCIES, 0) * getItem(SellingBinMenu.RESULT_SLOT).getCount();
     }
 
+    public void forceUpdate()
+    {
+        currencyCached = null;
+        extraUpdate = true;
+        update();
+    }
+
     //updates result slot to the highest possible currency
+    boolean extraUpdate = false;
+    Currency currencyCached = null;
+    int cachedOutputCount = 0;
     public void update()
     {
-        ItemStack is = getItem(SellingBinMenu.RESULT_SLOT);
+        if(level.isClientSide) return;
+
+        ItemStack result = getItem(SellingBinMenu.RESULT_SLOT);
+        ItemStack card = getItem(SellingBinMenu.CARD_SLOT);
+
+        //prevent unnecessary updates for better performance
+        boolean shouldRun = false;
+        if(currencySelected != currencyCached) shouldRun = true;
+        if(extraUpdate) shouldRun = true;
+        if(cachedOutputCount != result.getCount()) shouldRun = true;
+
+        if(!shouldRun) return;
+        currencyCached = currencySelected;
+        cachedOutputCount = result.getCount();
+        extraUpdate = false;
 
         int progressAvailable = getProgressAvailable();
 
@@ -124,13 +155,13 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
             {
                 if (progressAvailable > c.value())
                 {
-                    if (!is.is(c.item())) is = new ItemStack(c.item());
+                    if (!result.is(c.item())) result = new ItemStack(c.item());
 
                     int count = Math.clamp(progressAvailable / c.value(), 0, c.item().getMaxStackSize(new ItemStack(c.item())));
 
-                    is.setCount(count);
+                    result.setCount(count);
 
-                    setItem(SellingBinMenu.RESULT_SLOT, is);
+                    setItem(SellingBinMenu.RESULT_SLOT, result);
 
                     storedProgress = progressAvailable - c.value() * count;
 
@@ -140,17 +171,25 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
         else
         {
             //else run the math for the selected currency
-            if (!is.is(currencySelected.item())) is = new ItemStack(currencySelected.item());
+            if (!result.is(currencySelected.item())) result = new ItemStack(currencySelected.item());
 
             int count = Math.clamp(progressAvailable / currencySelected.value(), 0, currencySelected.item().getMaxStackSize(new ItemStack(currencySelected.item())));
 
-            is.setCount(count);
+            result.setCount(count);
 
-            setItem(SellingBinMenu.RESULT_SLOT, is);
+            setItem(SellingBinMenu.RESULT_SLOT, result);
 
             storedProgress = progressAvailable - currencySelected.value() * count;
         }
 
+        if (ModList.get().isLoaded("numismatics"))
+        {
+            if(NumismaticsCompat.deposit(result, card))
+            {
+                setItem(SellingBinMenu.RESULT_SLOT, ItemStack.EMPTY);
+                update();
+            }
+        }
 
         updateToClient();
     }
@@ -246,7 +285,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     @Override
     public int getContainerSize()
     {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -346,9 +385,9 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
         return direction == Direction.DOWN;
     }
 
-    @Override
     public void tick()
     {
+
         update();
         if (instaSell) sell(true);
     }

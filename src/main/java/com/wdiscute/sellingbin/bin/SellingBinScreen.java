@@ -22,6 +22,7 @@ import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
+import net.neoforged.fml.ModList;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,10 +31,12 @@ import java.util.Optional;
 public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
 {
     private static final ResourceLocation TEXTURE = SellingBin.rl("textures/gui/selling_bin/selling_bin_background.png");
+    private static final ResourceLocation CARD = SellingBin.rl("textures/gui/selling_bin/card_slot.png");
 
     private int uiX = 0;
     private int uiY = 0;
     int imageHeight = 176;
+    private static boolean numismatics = false;
 
     private boolean mousePressed;
 
@@ -140,9 +143,9 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
         //sell / sell all
         MutableComponent sellComp;
         if (Screen.hasShiftDown())
-            sellComp = Component.translatable("gui.selling_bin.selling_bin.sell_all");
+            sellComp = Component.translatable("gui.selling_bin.sell_all");
         else
-            sellComp = Component.translatable("gui.selling_bin.selling_bin.sell");
+            sellComp = Component.translatable("gui.selling_bin.sell");
 
         //sell text
         renderCenteredString(guiGraphics, this.font, sellComp, uiX + 101, uiY + 14, 0x87583a, false);
@@ -169,12 +172,12 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
             if (menu.be.instaSell)
                 guiGraphics.blit(TEXTURE, uiX + 55, uiY + 10, 192, 112, 18, 16, 256, 256);
 
-            guiGraphics.renderTooltip(this.font, Component.translatable("gui.selling_bin.selling_bin.auto_sell"), mouseX, mouseY);
+            guiGraphics.renderTooltip(this.font, Component.translatable("gui.selling_bin.auto_sell"), mouseX, mouseY);
         }
 
         //sound tooltip
         if (x > 140 && x < 151 && y > 40 && y < 51)
-            guiGraphics.renderTooltip(this.font, Component.translatable("gui.selling_bin.selling_bin.sell_sound"), mouseX, mouseY);
+            guiGraphics.renderTooltip(this.font, Component.translatable("gui.selling_bin.sell_sound"), mouseX, mouseY);
 
         //render currency selected
         ItemStack currencyStack = new ItemStack(menu.be.currencySelected.item());
@@ -193,9 +196,9 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
         if (x > 126 && x < 137 && y > 40 && y < 51)
         {
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable("gui.selling_bin.selling_bin.currency_selected"));
+            components.add(Component.translatable("gui.selling_bin.currency_selected"));
             if (menu.be.currencySelected.isNone())
-                components.add(Component.translatable("gui.selling_bin.selling_bin.highest"));
+                components.add(Component.translatable("gui.selling_bin.highest"));
             else
             {
                 MutableComponent mutableComponent = Component.empty();
@@ -207,17 +210,34 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
             }
             guiGraphics.renderTooltip(this.font, components, Optional.empty(), mouseX, mouseY);
         }
+
+        //numismatic card compat
+        if (numismatics)
+        {
+            int nix = uiX + 29;
+            int niy = uiY + 37;
+
+            if (hoveredSlot != null && !hoveredSlot.hasItem() && mouseX > nix && mouseX < nix + 18 && mouseY > niy && mouseY < niy + 18)
+                guiGraphics.renderTooltip(font, Component.translatable("gui.selling_bin.card_slot"), mouseX, mouseY);
+
+        }
+
     }
 
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY)
     {
+        int nix = uiX + 29;
+        int niy = uiY + 37;
         guiGraphics.blit(TEXTURE, uiX, uiY, 0, 0, this.imageWidth, this.imageHeight);
+        if (numismatics)
+            guiGraphics.blit(CARD, nix, niy, 18, 18, 0, 0, 18, 18, 18, 18);
     }
 
     public SellingBinScreen(SellingBinMenu menu, Inventory playerInventory, Component title)
     {
         super(menu, playerInventory, title);
         ++this.imageHeight;
+        numismatics = ModList.get().isLoaded("numismatics");
     }
 
     private void renderItem(ItemStack stack, int x, int y, float scale)

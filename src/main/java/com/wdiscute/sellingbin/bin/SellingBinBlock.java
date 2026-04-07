@@ -47,7 +47,11 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType)
     {
         if (!state.getValue(AbstractMultiBlock.CENTER)) return null;
-        return TickableBlockEntity.getTicketHelper(level);
+        return level.isClientSide() ? null : (level0, pos0, state0, blockEntity) ->
+        {
+            if(blockEntity instanceof SellingBinBlockEntity sellingBinBlockEntity && sellingBinBlockEntity.instaSell)
+                sellingBinBlockEntity.tick();
+        };
     }
 
     @Override

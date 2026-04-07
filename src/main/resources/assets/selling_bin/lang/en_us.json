@@ -41,17 +41,17 @@
   "gui.selling_bin.value" : "value",
   "gui.selling_bin.base_price" : "Price:",
   "gui.selling_bin.processors" : "Processors:",
+  "gui.selling_bin.sell" : "Sell",
+  "gui.selling_bin.sell_all" : "Sell All",
+  "gui.selling_bin.auto_sell" : "Auto-Sell",
+  "gui.selling_bin.sell_sound" : "Sell Sound",
+  "gui.selling_bin.currency_selected" : "Currency:",
+  "gui.selling_bin.currencies" : "Currencies:",
+  "gui.selling_bin.highest" : "Highest Possible",
+  "gui.selling_bin.card_slot" : "Numismatic Bank Card",
+
 
   "block.selling_bin.selling_bin" : "Selling Bin",
-
-  "gui.selling_bin.selling_bin.sell" : "Sell",
-  "gui.selling_bin.selling_bin.sell_all" : "Sell All",
-  "gui.selling_bin.selling_bin.auto_sell" : "Auto-Sell",
-  "gui.selling_bin.selling_bin.sell_sound" : "Sell Sound",
-  "gui.selling_bin.selling_bin.currency_selected" : "Currency:",
-  "gui.selling_bin.selling_bin.currencies" : "Currencies:",
-  "gui.selling_bin.selling_bin.highest" : "Highest Possible",
-
 
   "item.minecraft.emerald.plural" : "Emeralds",
   "block.minecraft.emerald_block.plural" : "Emerald Blocks"

@@ -10,6 +10,7 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.neoforged.fml.ModList;
 
 public class SellingBinMenu extends AbstractContainerMenu
 {
@@ -17,10 +18,11 @@ public class SellingBinMenu extends AbstractContainerMenu
     public final SellingBinBlockEntity be;
     public static final int ITEM_SLOT = 0;
     public static final int RESULT_SLOT = 1;
+    public static final int CARD_SLOT = 2;
 
     public SellingBinMenu(int containerId, Inventory inv, FriendlyByteBuf extraData)
     {
-        this(containerId, inv, new SimpleContainer(2), inv.player.level().getBlockEntity(extraData.readBlockPos()));
+        this(containerId, inv, new SimpleContainer(3), inv.player.level().getBlockEntity(extraData.readBlockPos()));
     }
 
     @Override
@@ -65,7 +67,7 @@ public class SellingBinMenu extends AbstractContainerMenu
     public SellingBinMenu(int containerId, Inventory playerInventory, Container container, BlockEntity blockEntity)
     {
         super(SBMenuTypes.SELLING_BIN_MENU.get(), containerId);
-        checkContainerSize(container, 2);
+        checkContainerSize(container, 3);
         this.be = (SellingBinBlockEntity) blockEntity;
         this.container = container;
         container.startOpen(playerInventory.player);
@@ -74,6 +76,9 @@ public class SellingBinMenu extends AbstractContainerMenu
 
         this.addSlot(new SellingBinResultSlot(this, container, RESULT_SLOT, 104, 33, blockEntity != null));
 
+        if(ModList.get().isLoaded("numismatics"))
+            this.addSlot(new SellingBinCardSlot(this, container, CARD_SLOT, 30, 33, blockEntity != null));
+
 
         for (int i1 = 0; i1 < 3; ++i1)
             for (int k1 = 0; k1 < 9; ++k1)
@@ -81,6 +86,8 @@ public class SellingBinMenu extends AbstractContainerMenu
 
         for (int j1 = 0; j1 < 9; ++j1)
             this.addSlot(new Slot(playerInventory, j1, 8 + j1 * 18, 141));
+
+
 
     }
 
