@@ -10,10 +10,8 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
-import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
-import net.minecraft.world.World;
-import net.minecraft.world.WorldAccess;
+import net.nikdo53.datamapsfabric.extensions.IRegistryDataMapExtension;
 import org.jetbrains.annotations.Nullable;
 
 import java.text.DecimalFormat;
@@ -28,12 +26,12 @@ public record Currency(Item item, int value)
 
     public boolean isNone(){return this.equals(NONE);}
 
-    public static List<Currency> getCurrencies(WorldAccess worldAccess)
+    public static List<Currency> getCurrencies()
     {
         //add all currencies from datamap
-        Map<Item, Integer> dataMap = SBDataMaps.getAllCurrencies(worldAccess);
+        Map<RegistryKey<Item>, Integer> dataMap = ((IRegistryDataMapExtension) Registries.ITEM).getDataMap(SBDataMaps.SELLING_BIN_CURRENCIES);
         List<Currency> currenciesUnfiltered = new ArrayList<>();
-        dataMap.forEach((i, v) -> currenciesUnfiltered.add(new Currency(i, v)));
+        dataMap.forEach((i, v) -> currenciesUnfiltered.add(new Currency(Registries.ITEM.get(i), v)));
 
         //remove entries with negative value
         List<Currency> currencies = new ArrayList<>(currenciesUnfiltered.stream().filter(o -> o.value() > 0).toList());
@@ -49,9 +47,7 @@ public record Currency(Item item, int value)
     //this does not take into account stack count!
     public static int calculateValueFromSingleStack(ItemStack is, BlockEntity blockEntity, @Nullable PlayerEntity player)
     {
-        World world = player != null ? player.getWorld() : blockEntity.getWorld();
-
-        SBDataMaps.ItemValue itemValue = SBDataMaps.getItemValueOrDefault(is, world, SBDataMaps.ItemValue.EMPTY);
+        SBDataMaps.ItemValue itemValue = SBDataMaps.getOrDefault(is, SBDataMaps.SELLING_BIN_VALUE, SBDataMaps.ItemValue.EMPTY);
 
         //if one of the processors returns false on canSell()
         if(itemValue.processors().stream().anyMatch(o -> !o.canSell(is, blockEntity, player))) return 0;
@@ -77,9 +73,9 @@ public record Currency(Item item, int value)
     }
 
     //returns formatted string of highest possible currency for the value
-    public static String getStringFromValue(int value, WorldAccess worldAccess)
+    public static String getStringFromValue(int value)
     {
-        List<Currency> currencies = Currency.getCurrencies(worldAccess).reversed();
+        List<Currency> currencies = Currency.getCurrencies().reversed();
 
         boolean found = false;
 

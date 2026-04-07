@@ -15,11 +15,15 @@ import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraft.registry.Registries;
+import net.minecraft.registry.RegistryKey;
+import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
+import net.nikdo53.datamapsfabric.extensions.IRegistryDataMapExtension;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @JeiPlugin
 public class SellingBinJeiPlugin implements IModPlugin
@@ -42,8 +46,10 @@ public class SellingBinJeiPlugin implements IModPlugin
         listSellables.clear();
 
         //add all currencies
-        SBDataMaps.getAllCurrencies(MinecraftClient.getInstance().world).forEach((item, value) ->
+        Map<RegistryKey<Item>, Integer> currenciesMap = ((IRegistryDataMapExtension) Registries.ITEM).getDataMap(SBDataMaps.SELLING_BIN_CURRENCIES);
+        currenciesMap.forEach((rk, value) ->
         {
+            Item item = Registries.ITEM.get(rk);
             if (value != 0)
             {
                 currencies.add(new ItemStack(item));
@@ -52,8 +58,10 @@ public class SellingBinJeiPlugin implements IModPlugin
         });
 
         //add all item with selling bin value
-        SBDataMaps.getAllSellableItems(MinecraftClient.getInstance().world).forEach((item, itemValue) ->
+        Map<RegistryKey<Item>, SBDataMaps.ItemValue> sellableMap = ((IRegistryDataMapExtension) Registries.ITEM).getDataMap(SBDataMaps.SELLING_BIN_CURRENCIES);
+        sellableMap.forEach((rk, itemValue) ->
         {
+            Item item = Registries.ITEM.get(rk);
             if (!itemValue.equals(SBDataMaps.ItemValue.EMPTY))
             {
                 List<Text> comps = new ArrayList<>();
@@ -97,7 +105,6 @@ public class SellingBinJeiPlugin implements IModPlugin
 
         if (sellables.isEmpty())
             registration.addRecipes(SellingBinSellingJeiRecipe.Recipe.TYPE, List.of(new SellingBinSellingJeiRecipe.Recipe(Items.BARRIER, SBDataMaps.ItemValue.EMPTY, 0, List.of())));
-
 
     }
 

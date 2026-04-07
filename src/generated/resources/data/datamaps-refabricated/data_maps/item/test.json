@@ -1,0 +1,31 @@
+{
+  "values": {
+    "#minecraft:axes": "an axe",
+    "minecraft:lapis_lazuli": {
+      "fabric:load_conditions": [
+        {
+          "condition": "fabric:all_mods_loaded",
+          "values": [
+            "some_mod_yeah"
+          ]
+        }
+      ],
+      "neoforge:value": "lapiuz lazul"
+    },
+    "minecraft:wooden_sword": {
+      "fabric:load_conditions": [
+        {
+          "condition": "fabric:not",
+          "value": {
+            "condition": "fabric:any_mods_loaded",
+            "values": [
+              "optifine",
+              "some_other_mod"
+            ]
+          }
+        }
+      ],
+      "neoforge:value": "NO triple t 😡"
+    }
+  }
+}

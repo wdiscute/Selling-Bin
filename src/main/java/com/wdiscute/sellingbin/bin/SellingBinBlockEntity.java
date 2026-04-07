@@ -50,6 +50,8 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
     {
         super(SBBlockEntities.SELLING_BIN, pos, blockState);
         this.itemStacks = DefaultedList.ofSize(2, ItemStack.EMPTY);
+        currencies = Currency.getCurrencies();
+        currenciesReversed = currencies.reversed();
     }
 
     void playSound(SoundEvent soundEvent)
@@ -82,7 +84,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
     public void sell(boolean all)
     {
         int value = Currency.calculateValueFromSingleStack(getStack(SellingBinMenu.ITEM_SLOT), this);
-        SBDataMaps.ItemValue itemValue = SBDataMaps.getItemValueOrDefault(getStack(SellingBinMenu.ITEM_SLOT), world, SBDataMaps.ItemValue.EMPTY);
+        SBDataMaps.ItemValue itemValue = SBDataMaps.getOrDefault(getStack(SellingBinMenu.ITEM_SLOT), SBDataMaps.SELLING_BIN_VALUE, SBDataMaps.ItemValue.EMPTY);
         if (value <= 0) return;
 
         boolean sold = false;
@@ -114,15 +116,13 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
 
     public int getProgressAvailable()
     {
-        return storedProgress + SBDataMaps.getCurrencyOrDefault(getStack(SellingBinMenu.RESULT_SLOT), world, 0) * getStack(SellingBinMenu.RESULT_SLOT).getCount();
+        return storedProgress + SBDataMaps.getOrDefault(getStack(SellingBinMenu.RESULT_SLOT), SBDataMaps.SELLING_BIN_CURRENCIES, 0) * getStack(SellingBinMenu.RESULT_SLOT).getCount();
     }
 
     //updates result slot to the highest possible currency
     public void update()
     {
         ItemStack is = getStack(SellingBinMenu.RESULT_SLOT);
-
-        loadCurrencies(world);
 
         int progressAvailable = getProgressAvailable();
 
@@ -406,12 +406,5 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
     public BlockPos getScreenOpeningData(ServerPlayerEntity player)
     {
         return pos;
-    }
-
-    public void loadCurrencies(World level)
-    {
-        if(currencies != null) return;
-        currencies = Currency.getCurrencies(level);
-        currenciesReversed = currencies.reversed();
     }
 }

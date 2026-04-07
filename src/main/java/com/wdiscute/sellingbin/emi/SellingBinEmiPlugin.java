@@ -16,6 +16,8 @@ import net.minecraft.recipe.Ingredient;
 import net.minecraft.registry.Registries;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.registry.entry.RegistryEntry;
+import net.nikdo53.datamapsfabric.datamaps.DataMapType;
+import net.nikdo53.datamapsfabric.extensions.IRegistryDataMapExtension;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -57,13 +59,13 @@ public class SellingBinEmiPlugin implements EmiPlugin
 
 
         //add all currencies
-        Map<Item, Integer> currencies = SBDataMaps.getAllCurrencies(MinecraftClient.getInstance().world);
+        Map<RegistryKey<Item>, Integer> currencies = ((IRegistryDataMapExtension) Registries.ITEM).getDataMap(SBDataMaps.SELLING_BIN_CURRENCIES);
         currencies.forEach((item, value) ->
         {
             if (value != 0)
             {
-                SellingBinEmiPlugin.currencies.add(EmiIngredient.of(Ingredient.ofItems(item)));
-                registry.addRecipe(new SellingBinCurrencyEmiRecipe(item, value));
+                SellingBinEmiPlugin.currencies.add(EmiIngredient.of(Ingredient.ofItems(Registries.ITEM.get(item))));
+                registry.addRecipe(new SellingBinCurrencyEmiRecipe(Registries.ITEM.get(item), value));
             }
         });
 
@@ -72,13 +74,13 @@ public class SellingBinEmiPlugin implements EmiPlugin
 
 
         //add all item with selling bin value
-        Map<Item, SBDataMaps.ItemValue> sellables = SBDataMaps.getAllSellableItems(MinecraftClient.getInstance().world);
+        Map<RegistryKey<Item>, SBDataMaps.ItemValue> sellables = ((IRegistryDataMapExtension) Registries.ITEM).getDataMap(SBDataMaps.SELLING_BIN_VALUE);
         sellables.forEach((item, itemValue) ->
         {
             if (!itemValue.equals(SBDataMaps.ItemValue.EMPTY))
             {
-                sellable.add(EmiIngredient.of(Ingredient.ofItems(item)));
-                registry.addRecipe(new SellingBinSellingEmiRecipe(item, itemValue));
+                sellable.add(EmiIngredient.of(Ingredient.ofItems(Registries.ITEM.get(item))));
+                registry.addRecipe(new SellingBinSellingEmiRecipe(Registries.ITEM.get(item), itemValue));
             }
 
         });

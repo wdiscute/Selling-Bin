@@ -5,12 +5,14 @@ import com.wdiscute.sellingbin.processors.AbstractProcessor;
 import com.wdiscute.sellingbin.processors.SBProcessors;
 import com.wdiscute.sellingbin.registry.*;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
+import net.nikdo53.datamapsfabric.datamaps.RegisterDataMapTypesEvent;
+import net.nikdo53.datamapsfabric.event.FabricEvents;
+import net.nikdo53.datamapsfabric.test.TestDataMaps;
 import org.slf4j.Logger;
 
 import java.util.Random;
@@ -24,12 +26,6 @@ public class SellingBin implements ModInitializer
     //resource keys
     public static final RegistryKey<Registry<AbstractProcessor>> SELLING_BIN =
             RegistryKey.ofRegistry(Identifier.of(MOD_ID, "selling_bin"));
-
-    public static final RegistryKey<Registry<SBDataMaps.SellingBinValueDataMap>> SELLABLES =
-            RegistryKey.ofRegistry(Identifier.of(MOD_ID, "sellables"));
-
-    public static final RegistryKey<Registry<SBDataMaps.SellingBinCurrencyDataMap>> CURRENCIES =
-            RegistryKey.ofRegistry(Identifier.of(MOD_ID, "currencies"));
 
     //registry
     public static final Registry<AbstractProcessor> SELLING_BIN_REGISTRY = FabricRegistryBuilder.createSimple(SELLING_BIN)
@@ -56,22 +52,18 @@ public class SellingBin implements ModInitializer
         SBMenuTypes.init();
         SBProcessors.init();
         SBItemPredicate.init();
+        SBDataMaps.init();
 
-
-        DynamicRegistries.registerSynced(
-                SELLABLES,
-                SBDataMaps.SellingBinValueDataMap.CODEC,
-                SBDataMaps.SellingBinValueDataMap.CODEC
-                );
-
-        DynamicRegistries.registerSynced(
-                CURRENCIES,
-                SBDataMaps.SellingBinCurrencyDataMap.CODEC,
-                SBDataMaps.SellingBinCurrencyDataMap.CODEC
-                );
+        RegisterDataMapTypesEvent.EVENT.register(SellingBin::onRegisterDataMapTypes);
 
         //modContainer.registerConfig(ModConfig.Type.CLIENT, SBConfig.SPEC);
         //modContainer.registerConfig(ModConfig.Type.SERVER, SBConfig.SPEC_SERVER);
+    }
+
+    private static void onRegisterDataMapTypes(RegisterDataMapTypesEvent event)
+    {
+        event.register(SBDataMaps.SELLING_BIN_CURRENCIES);
+        event.register(SBDataMaps.SELLING_BIN_VALUE);
     }
 
 //    public static class Client

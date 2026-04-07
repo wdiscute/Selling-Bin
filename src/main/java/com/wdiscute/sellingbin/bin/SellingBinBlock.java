@@ -157,11 +157,10 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
     protected ActionResult onUse(BlockState state, World level, BlockPos pos, PlayerEntity player, BlockHitResult hit)
     {
         BlockPos center = IMultiBlock.getCenter(level, pos);
-        if (level.getBlockEntity(center) instanceof SellingBinBlockEntity sbbe)
+        if (level.getBlockEntity(center) instanceof SellingBinBlockEntity sbbe && !level.isClient)
         {
-            sbbe.loadCurrencies(level);
             NamedScreenHandlerFactory screenHandlerFactory = state.createScreenHandlerFactory(level, sbbe.getPos());
-            if (screenHandlerFactory != null && !level.isClient)
+            if (screenHandlerFactory != null)
                 player.openHandledScreen(screenHandlerFactory);
         }
         return ActionResult.SUCCESS;

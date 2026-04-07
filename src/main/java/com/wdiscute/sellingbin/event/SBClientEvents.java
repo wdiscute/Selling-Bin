@@ -34,9 +34,9 @@ public class SBClientEvents implements ClientModInitializer
                 {
                     ClientWorld world = MinecraftClient.getInstance().world;
                     if(world == null) return;
-                    MutableText literal = Text.literal(Currency.getStringFromValue(value, world));
+                    MutableText literal = Text.literal(Currency.getStringFromValue(value));
                     if (stack.getCount() > 1)
-                        literal.append(Text.literal(" (" + Currency.getStringFromValue(value * stack.getCount(), world) + ")"));
+                        literal.append(Text.literal(" (" + Currency.getStringFromValue(value * stack.getCount()) + ")"));
                     comp.add(1, literal.formatted(Formatting.DARK_GRAY));
                 }
             }
