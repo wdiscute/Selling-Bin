@@ -270,7 +270,6 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
         return ClientboundBlockEntityDataPacket.create(this);
     }
 
-    //container methods copied from ShulkerBoxBlockEntity and it's extends
     protected NonNullList<ItemStack> getItems()
     {
         return this.itemStacks;

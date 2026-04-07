@@ -64,18 +64,18 @@ dependencies {
 
     //EMI
     compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
-    //runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
+    runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
 
     //JEI
     compileOnly("mezz.jei:jei-${mc_version}-neoforge-api:${jei_version}")
-    runtimeOnly("mezz.jei:jei-${mc_version}-neoforge:${jei_version}")
+    //runtimeOnly("mezz.jei:jei-${mc_version}-neoforge:${jei_version}")
 
     //quality foods compat
     compileOnly("maven.modrinth:quality-food:vLFBpk1n")
-    runtimeOnly("maven.modrinth:quality-food:vLFBpk1n")
+    //runtimeOnly("maven.modrinth:quality-food:vLFBpk1n")
 
     //pipez
-    runtimeOnly "maven.modrinth:pipez:z20ZR1YE"
+    //runtimeOnly "maven.modrinth:pipez:z20ZR1YE"
 
     //let's do winery
     compileOnly "maven.modrinth:lets-do-vinery:ZywXpLC6"
@@ -103,7 +103,7 @@ dependencies {
 
     //Lightman's Currency
     compileOnly "maven.modrinth:lightmans-currency:DCVYBw7Y"
-    runtimeOnly "maven.modrinth:lightmans-currency:DCVYBw7Y"
+    //runtimeOnly "maven.modrinth:lightmans-currency:DCVYBw7Y"
 
 
 }

@@ -78,6 +78,8 @@ public class SellingBinMenu extends AbstractContainerMenu
 
         if(ModList.get().isLoaded("numismatics"))
             this.addSlot(new SellingBinCardSlot(this, container, CARD_SLOT, 30, 33, blockEntity != null));
+        else
+            this.addSlot(new SellingBinBlockedSlot(container, CARD_SLOT));
 
 
         for (int i1 = 0; i1 < 3; ++i1)

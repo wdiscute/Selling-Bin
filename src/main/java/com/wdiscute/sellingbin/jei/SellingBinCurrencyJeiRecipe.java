@@ -28,15 +28,15 @@ public class SellingBinCurrencyJeiRecipe extends AbstractRecipeCategory<SellingB
                 Recipe.TYPE,
                 Component.translatable("emi.category.selling_bin.selling_bin_currencies"),
                 guiHelper.createDrawableItemLike(SBBlocks.SELLING_BIN),
-                SellingBinJeiPlugin.currencies.isEmpty() ? 350 : 120,
-                SellingBinJeiPlugin.currencies.isEmpty() ? 100 : 20
+                SellingBinJeiPlugin.currencies.isEmpty() || SellingBinJeiPlugin.currencies.get(0).isEmpty() ? 350 : 120,
+                SellingBinJeiPlugin.currencies.isEmpty() || SellingBinJeiPlugin.currencies.get(0).isEmpty() ? 100 : 20
         );
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, Recipe recipe, IFocusGroup focuses)
     {
-        if (SellingBinJeiPlugin.currencies.isEmpty()) return;
+        if (SellingBinJeiPlugin.currencies.isEmpty() || SellingBinJeiPlugin.currencies.get(0).isEmpty()) return;
 
         builder.addInputSlot(5, 2)
                 .addItemStacks(SellingBinJeiPlugin.sellables.isEmpty() ? List.of(Items.BARRIER.getDefaultInstance()) : SellingBinJeiPlugin.sellables);
@@ -49,7 +49,7 @@ public class SellingBinCurrencyJeiRecipe extends AbstractRecipeCategory<SellingB
     @Override
     public void draw(Recipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY)
     {
-        if (SellingBinJeiPlugin.currencies.isEmpty())
+        if (SellingBinJeiPlugin.currencies.isEmpty() || SellingBinJeiPlugin.currencies.get(0).isEmpty())
         {
             for (int i = 0; i < 10; i++)
                 guiGraphics.drawString(Minecraft.getInstance().font, Component.translatable("gui.selling_bin.currency.empty." + i), 5, 1 + i * 10, 0x000000, false);
@@ -74,6 +74,6 @@ public class SellingBinCurrencyJeiRecipe extends AbstractRecipeCategory<SellingB
 
     public record Recipe(Item item, Integer itemValue)
     {
-        public static final RecipeType<Recipe> TYPE = new RecipeType<>(SellingBin.rl("selling_bin_currency"), Recipe.class);
+        public static final RecipeType<Recipe> TYPE = new RecipeType<>(SellingBin.rl("zselling_bin_currency"), Recipe.class);
     }
 }

@@ -59,11 +59,12 @@ public class SellingBinEmiPlugin implements EmiPlugin
         //add all currencies
         Currency.getCurrencies().forEach((currency) ->
         {
-                SellingBinEmiPlugin.currencies.add(EmiIngredient.of(Ingredient.of(currency.item())));
-                registry.addRecipe(new SellingBinCurrencyEmiRecipe(currency));
+            if (currency.equals(Currency.EMPTY)) return;
+            currencies.add(EmiIngredient.of(Ingredient.of(currency.item())));
+            registry.addRecipe(new SellingBinCurrencyEmiRecipe(currency));
         });
 
-        if(currencies.isEmpty())
+        if (currencies.isEmpty() || currencies.get(0).isEmpty())
             registry.addRecipe(new SellingBinCurrencyEmptyEmiRecipe());
 
 
@@ -81,7 +82,7 @@ public class SellingBinEmiPlugin implements EmiPlugin
 
         });
 
-        if(sellables.isEmpty())
+        if (sellable.isEmpty())
             registry.addRecipe(new SellingBinSellingEmptyEmiRecipe());
 
 

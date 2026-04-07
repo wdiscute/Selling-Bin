@@ -43,13 +43,13 @@ public class SellingBinSellingJeiRecipe extends AbstractRecipeCategory<SellingBi
                 .addItemStack(recipe.item().getDefaultInstance());
 
         builder.addOutputSlot(45, 2)
-                .addItemStacks(SellingBinJeiPlugin.currencies.isEmpty() ? List.of(Items.BARRIER.getDefaultInstance()) : SellingBinJeiPlugin.currencies);
+                .addItemStacks(SellingBinJeiPlugin.currencies.isEmpty() || SellingBinJeiPlugin.currencies.get(0).isEmpty() ? List.of(Items.BARRIER.getDefaultInstance()) : SellingBinJeiPlugin.currencies);
     }
 
     @Override
     public void draw(Recipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics guiGraphics, double mouseX, double mouseY)
     {
-        if (SellingBinJeiPlugin.sellables.isEmpty())
+        if (SellingBinJeiPlugin.sellables.isEmpty() || SellingBinJeiPlugin.sellables.get(0).isEmpty())
         {
             for (int i = 0; i < 10; i++)
                 guiGraphics.drawString(Minecraft.getInstance().font, Component.translatable("gui.selling_bin.selling.empty." + i), 5, 1 + i * 10, 0x000000, false);
