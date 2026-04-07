@@ -70,29 +70,36 @@ dependencies {
     compileOnly("mezz.jei:jei-${mc_version}-neoforge-api:${jei_version}")
     //runtimeOnly("mezz.jei:jei-${mc_version}-neoforge:${jei_version}")
 
-
     //quality foods compat
     compileOnly("maven.modrinth:quality-food:vLFBpk1n")
-    //runtimeOnly("maven.modrinth:quality-food:vLFBpk1n")
+    runtimeOnly("maven.modrinth:quality-food:vLFBpk1n")
 
     //pipez
     runtimeOnly "maven.modrinth:pipez:z20ZR1YE"
 
     //let's do winery
     compileOnly "maven.modrinth:lets-do-vinery:ZywXpLC6"
-    runtimeOnly "maven.modrinth:lets-do-vinery:ZywXpLC6"
+    //runtimeOnly "maven.modrinth:lets-do-vinery:ZywXpLC6"
 
     //let's do brewery
     compileOnly "maven.modrinth:lets-do-brewery-farmcharm-compat:vzXZ4Pak"
-    runtimeOnly "maven.modrinth:lets-do-brewery-farmcharm-compat:vzXZ4Pak"
+    //runtimeOnly "maven.modrinth:lets-do-brewery-farmcharm-compat:vzXZ4Pak"
 
     //Let's Do Farm & Charm
     //compileOnly "maven.modrinth:lets-do-farm-charm:muipCbfC"
-    runtimeOnly "maven.modrinth:lets-do-farm-charm:muipCbfC"
+    //runtimeOnly "maven.modrinth:lets-do-farm-charm:muipCbfC"
 
     //Architectury API
     compileOnly "maven.modrinth:architectury-api:ZxYGwlk0"
-    runtimeOnly "maven.modrinth:architectury-api:ZxYGwlk0"
+    //runtimeOnly "maven.modrinth:architectury-api:ZxYGwlk0"
+
+    //Create: Numismatics
+    compileOnly "maven.modrinth:numismatics:KMFhYqZ9"
+    runtimeOnly "maven.modrinth:numismatics:KMFhYqZ9"
+
+    //Create
+    compileOnly "maven.modrinth:create:n7NADxiG"
+    runtimeOnly "maven.modrinth:create:n7NADxiG"
 
 }
 

@@ -3,6 +3,8 @@ package com.wdiscute.sellingbin.datagen;
 import com.wdiscute.sellingbin.SellingBin;
 import com.wdiscute.sellingbin.processors.*;
 import com.wdiscute.sellingbin.registry.SBDataMaps;
+import dev.ithundxr.createnumismatics.content.backend.Coin;
+import dev.ithundxr.createnumismatics.registry.NumismaticsItems;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.registries.Registries;
@@ -15,7 +17,6 @@ import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.Enchantments;
 import net.neoforged.neoforge.common.Tags;
 import net.neoforged.neoforge.common.data.DataMapProvider;
-import net.satisfy.vinery.core.registry.ObjectRegistry;
 
 import java.util.HashMap;
 import java.util.List;
@@ -164,6 +165,17 @@ public class DGSBDataMapsProvider extends DataMapProvider
         {
             currencies.add(Items.EMERALD.builtInRegistryHolder(), 100, false);
             currencies.add(Items.EMERALD_BLOCK.builtInRegistryHolder(), 900, false);
+        }
+
+        //Create: Numismatics
+        if (true)
+        {
+            currencies.add(SellingBin.rl("numismatics", "spur"), 10, false);
+            currencies.add(SellingBin.rl("numismatics", "bevel"), 80, false);
+            currencies.add(SellingBin.rl("numismatics", "sprocket"), 160, false);
+            currencies.add(SellingBin.rl("numismatics", "cog"), 640, false);
+            currencies.add(SellingBin.rl("numismatics", "crown"), 5120, false);
+            currencies.add(SellingBin.rl("numismatics", "sun"), 40960, false);
         }
 
     }

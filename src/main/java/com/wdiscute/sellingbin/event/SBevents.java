@@ -128,7 +128,14 @@ public class SBevents
                 Pack.Position.TOP
         );
 
-
+        event.addPackFinders(
+                SellingBin.rl("built_in_datapacks/selling_bin_currency_numismatics_coins"),
+                PackType.SERVER_DATA,
+                Component.literal("Selling Bin - Numismatics"),
+                packSource,
+                false,
+                Pack.Position.TOP
+        );
     }
 
 
