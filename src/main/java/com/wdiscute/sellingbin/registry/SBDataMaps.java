@@ -15,6 +15,7 @@ import net.minecraft.registry.entry.RegistryEntry;
 import net.minecraft.registry.entry.RegistryEntryList;
 import net.minecraft.world.WorldAccess;
 import net.nikdo53.datamapsfabric.datamaps.DataMapType;
+import net.nikdo53.datamapsfabric.datamaps.DataMapsManager;
 import net.nikdo53.datamapsfabric.extensions.IDataMapHolderExtension;
 
 import java.util.HashMap;
@@ -23,11 +24,11 @@ import java.util.Map;
 
 public interface SBDataMaps
 {
-    DataMapType<Item, ItemValue> SELLING_BIN_VALUE = DataMapType.builder(
-            SellingBin.rl("selling_bin_value"), RegistryKeys.ITEM, ItemValue.CODEC).synced(ItemValue.CODEC, true).build();
+    DataMapType<Item, ItemValue> SELLING_BIN_VALUE = DataMapsManager.register(DataMapType.builder(
+            SellingBin.rl("selling_bin_value"), RegistryKeys.ITEM, ItemValue.CODEC).synced(ItemValue.CODEC, true).build());
 
-    DataMapType<Item, Integer> SELLING_BIN_CURRENCIES = DataMapType.builder(
-            SellingBin.rl("selling_bin_currencies"), RegistryKeys.ITEM, Codec.INT).synced(Codec.INT, true).build();
+    DataMapType<Item, Integer> SELLING_BIN_CURRENCIES = DataMapsManager.register(DataMapType.builder(
+            SellingBin.rl("selling_bin_currencies"), RegistryKeys.ITEM, Codec.INT).synced(Codec.INT, true).build());
 
 
     static <T> T getOrDefault(ItemStack stack, DataMapType<Item, T> dataMap, T d)

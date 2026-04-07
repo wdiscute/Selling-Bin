@@ -30,6 +30,13 @@ public record Currency(Item item, int value)
     {
         //add all currencies from datamap
         Map<RegistryKey<Item>, Integer> dataMap = ((IRegistryDataMapExtension) Registries.ITEM).getDataMap(SBDataMaps.SELLING_BIN_CURRENCIES);
+
+        Map<?, Map> dataMaps = ((IRegistryDataMapExtension) Registries.ITEM).getDataMaps();
+
+        System.out.println(dataMaps.size());
+
+        dataMaps.forEach((k, i) -> System.out.println("   -" + i.entrySet().stream().findFirst()));
+
         List<Currency> currenciesUnfiltered = new ArrayList<>();
         dataMap.forEach((i, v) -> currenciesUnfiltered.add(new Currency(Registries.ITEM.get(i), v)));
 

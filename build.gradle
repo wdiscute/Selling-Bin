@@ -35,7 +35,7 @@ dependencies {
 	modImplementation(include("maven.modrinth:tiny-multiblock-lib:fabric-1.21.1-${tiny_multiblock_lib_version}"))
 
 	//datamaps refabricated
-	modImplementation(files(".compat/datamaps-refabricated-1.0.0.jar"))
+	modImplementation(files(".compat/datamaps-refabricated-1.0.1.jar"))
 
 	//EMI
 	modCompileOnly  "dev.emi:emi-fabric:${emi_version}:api"

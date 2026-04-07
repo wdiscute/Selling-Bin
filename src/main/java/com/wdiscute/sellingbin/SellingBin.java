@@ -10,9 +10,6 @@ import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
 import net.minecraft.util.Identifier;
-import net.nikdo53.datamapsfabric.datamaps.RegisterDataMapTypesEvent;
-import net.nikdo53.datamapsfabric.event.FabricEvents;
-import net.nikdo53.datamapsfabric.test.TestDataMaps;
 import org.slf4j.Logger;
 
 import java.util.Random;
@@ -54,16 +51,8 @@ public class SellingBin implements ModInitializer
         SBItemPredicate.init();
         SBDataMaps.init();
 
-        RegisterDataMapTypesEvent.EVENT.register(SellingBin::onRegisterDataMapTypes);
-
         //modContainer.registerConfig(ModConfig.Type.CLIENT, SBConfig.SPEC);
         //modContainer.registerConfig(ModConfig.Type.SERVER, SBConfig.SPEC_SERVER);
-    }
-
-    private static void onRegisterDataMapTypes(RegisterDataMapTypesEvent event)
-    {
-        event.register(SBDataMaps.SELLING_BIN_CURRENCIES);
-        event.register(SBDataMaps.SELLING_BIN_VALUE);
     }
 
 //    public static class Client
