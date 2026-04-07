@@ -3,11 +3,6 @@ package com.wdiscute.sellingbin.bin;
 import com.wdiscute.sellingbin.compat.NumismaticsCompat;
 import com.wdiscute.sellingbin.registry.SBBlockEntities;
 import com.wdiscute.sellingbin.registry.SBDataMaps;
-import dev.ithundxr.createnumismatics.Numismatics;
-import dev.ithundxr.createnumismatics.content.backend.BankAccount;
-import dev.ithundxr.createnumismatics.content.backend.Coin;
-import dev.ithundxr.createnumismatics.content.bank.CardItem;
-import dev.ithundxr.createnumismatics.registry.NumismaticsItems;
 import net.minecraft.core.*;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
@@ -32,7 +27,6 @@ import net.neoforged.fml.ModList;
 import net.nikdo53.tinymultiblocklib.blockentities.AbstractMultiBlockEntity;
 
 import javax.annotation.Nullable;
-import java.util.Arrays;
 import java.util.List;
 
 public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements WorldlyContainer, MenuProvider
@@ -187,7 +181,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
             if(NumismaticsCompat.deposit(result, card))
             {
                 setItem(SellingBinMenu.RESULT_SLOT, ItemStack.EMPTY);
-                update();
+                forceUpdate();
             }
         }
 

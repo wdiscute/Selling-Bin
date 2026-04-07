@@ -136,6 +136,15 @@ public class SBevents
                 false,
                 Pack.Position.TOP
         );
+
+        event.addPackFinders(
+                SellingBin.rl("built_in_datapacks/selling_bin_currency_lightmanscurrency_compat"),
+                PackType.SERVER_DATA,
+                Component.literal("Selling Bin - Lightmans's Currency"),
+                packSource,
+                false,
+                Pack.Position.TOP
+        );
     }
 
 

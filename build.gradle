@@ -95,11 +95,16 @@ dependencies {
 
     //Create: Numismatics
     compileOnly "maven.modrinth:numismatics:KMFhYqZ9"
-    runtimeOnly "maven.modrinth:numismatics:KMFhYqZ9"
+    //runtimeOnly "maven.modrinth:numismatics:KMFhYqZ9"
 
     //Create
     compileOnly "maven.modrinth:create:n7NADxiG"
-    runtimeOnly "maven.modrinth:create:n7NADxiG"
+    //runtimeOnly "maven.modrinth:create:n7NADxiG"
+
+    //Lightman's Currency
+    compileOnly "maven.modrinth:lightmans-currency:DCVYBw7Y"
+    runtimeOnly "maven.modrinth:lightmans-currency:DCVYBw7Y"
+
 
 }
 

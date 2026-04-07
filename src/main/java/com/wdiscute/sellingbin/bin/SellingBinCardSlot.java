@@ -23,6 +23,13 @@ public class SellingBinCardSlot extends Slot
     }
 
     @Override
+    public void setChanged()
+    {
+        super.setChanged();
+        menu.be.forceUpdate();
+    }
+
+    @Override
     public boolean mayPlace(ItemStack stack)
     {
         return stack.is(TagKey.create(Registries.ITEM, SellingBin.rl("numismatics", "cards")));

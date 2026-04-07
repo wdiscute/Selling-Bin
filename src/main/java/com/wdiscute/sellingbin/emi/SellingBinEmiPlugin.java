@@ -1,6 +1,7 @@
 package com.wdiscute.sellingbin.emi;
 
 import com.wdiscute.sellingbin.SellingBin;
+import com.wdiscute.sellingbin.bin.Currency;
 import com.wdiscute.sellingbin.registry.SBBlocks;
 import com.wdiscute.sellingbin.registry.SBDataMaps;
 import dev.emi.emi.api.EmiEntrypoint;
@@ -56,15 +57,10 @@ public class SellingBinEmiPlugin implements EmiPlugin
 
 
         //add all currencies
-        Map<ResourceKey<Item>, Integer> currencies = BuiltInRegistries.ITEM.getDataMap(SBDataMaps.SELLING_BIN_CURRENCIES);
-        currencies.forEach((rk, value) ->
+        Currency.getCurrencies().forEach((currency) ->
         {
-            if (value != 0)
-            {
-                Item item = BuiltInRegistries.ITEM.get(rk);
-                SellingBinEmiPlugin.currencies.add(EmiIngredient.of(Ingredient.of(item)));
-                registry.addRecipe(new SellingBinCurrencyEmiRecipe(item, value));
-            }
+                SellingBinEmiPlugin.currencies.add(EmiIngredient.of(Ingredient.of(currency.item())));
+                registry.addRecipe(new SellingBinCurrencyEmiRecipe(currency));
         });
 
         if(currencies.isEmpty())

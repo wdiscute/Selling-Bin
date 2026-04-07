@@ -168,7 +168,7 @@ public class DGSBDataMapsProvider extends DataMapProvider
         }
 
         //Create: Numismatics
-        if (true)
+        if (false)
         {
             currencies.add(SellingBin.rl("numismatics", "spur"), 10, false);
             currencies.add(SellingBin.rl("numismatics", "bevel"), 80, false);
@@ -176,6 +176,16 @@ public class DGSBDataMapsProvider extends DataMapProvider
             currencies.add(SellingBin.rl("numismatics", "cog"), 640, false);
             currencies.add(SellingBin.rl("numismatics", "crown"), 5120, false);
             currencies.add(SellingBin.rl("numismatics", "sun"), 40960, false);
+        }
+
+        //Lightman's Currency
+        if (false)
+        {
+            currencies.add(SellingBin.rl("lightmanscurrency", "coin_iron"), 1, false);
+            currencies.add(SellingBin.rl("lightmanscurrency", "coin_gold"), 10, false);
+            currencies.add(SellingBin.rl("lightmanscurrency", "coin_emerald"), 100, false);
+            currencies.add(SellingBin.rl("lightmanscurrency", "coin_diamond"), 1000, false);
+            currencies.add(SellingBin.rl("lightmanscurrency", "coin_netherite"), 10000, false);
         }
 
     }

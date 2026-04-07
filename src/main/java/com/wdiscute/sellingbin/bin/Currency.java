@@ -122,7 +122,7 @@ public record Currency(Item item, int value)
         List<Component> comps = new ArrayList<>();
 
         if(addCurrenciesText)
-            comps.add(Component.translatable("gui.selling_bin.selling_bin.currencies"));
+            comps.add(Component.translatable("gui.selling_bin.currencies"));
 
         for (Currency c : currencies)
         {

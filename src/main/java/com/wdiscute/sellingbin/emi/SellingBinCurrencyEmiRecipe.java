@@ -1,6 +1,7 @@
 package com.wdiscute.sellingbin.emi;
 
 import com.wdiscute.sellingbin.SellingBin;
+import com.wdiscute.sellingbin.bin.Currency;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.render.EmiTexture;
@@ -26,11 +27,11 @@ public class SellingBinCurrencyEmiRecipe implements EmiRecipe
     private final List<EmiStack> output;
     private final int value;
 
-    public SellingBinCurrencyEmiRecipe(Item item, int value)
+    public SellingBinCurrencyEmiRecipe(Currency currency)
     {
-        this.output = List.of(EmiStack.of(item));
-        this.id = BuiltInRegistries.ITEM.getKey(item);
-        this.value = value;
+        this.output = List.of(EmiStack.of(currency.item()));
+        this.id = BuiltInRegistries.ITEM.getKey(currency.item());
+        this.value = currency.value();
     }
 
     @Override

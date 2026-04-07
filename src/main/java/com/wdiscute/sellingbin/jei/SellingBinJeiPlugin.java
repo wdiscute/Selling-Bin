@@ -42,14 +42,10 @@ public class SellingBinJeiPlugin implements IModPlugin
         listSellables.clear();
 
         //add all currencies
-        BuiltInRegistries.ITEM.getDataMap(SBDataMaps.SELLING_BIN_CURRENCIES).forEach((rk, value) ->
+        Currency.getCurrencies().forEach((currency) ->
         {
-            if (value != 0)
-            {
-                Item item = BuiltInRegistries.ITEM.get(rk);
-                currencies.add(new ItemStack(item));
-                listCurrencies.add(new SellingBinCurrencyJeiRecipe.Recipe(item, value));
-            }
+            currencies.add(new ItemStack(currency.item()));
+            listCurrencies.add(new SellingBinCurrencyJeiRecipe.Recipe(currency.item(), currency.value()));
         });
 
         //add all item with selling bin value
