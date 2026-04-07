@@ -47,14 +47,10 @@ public class SellingBin
 
     public SellingBin(IEventBus modEventBus, ModContainer modContainer)
     {
-        SBCreativeModeTabs.register(modEventBus);
-
-        SBItems.register(modEventBus);
         SBBlocks.register(modEventBus);
         SBBlockEntities.register(modEventBus);
         SBMenuTypes.register(modEventBus);
         SBProcessors.register(modEventBus);
-        SBCriterionTriggers.register(modEventBus);
         SBItemPredicate.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.CLIENT, SBConfig.SPEC);

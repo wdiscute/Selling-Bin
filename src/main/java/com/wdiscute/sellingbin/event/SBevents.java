@@ -22,7 +22,7 @@ import net.neoforged.neoforge.registries.NewRegistryEvent;
 import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
 
 @EventBusSubscriber(modid = SellingBin.MOD_ID)
-public class SBvents
+public class SBevents
 {
     @SubscribeEvent
     public static void addRegistry(NewRegistryEvent event)
@@ -105,6 +105,24 @@ public class SBvents
                 SellingBin.rl("built_in_datapacks/selling_bin_quality_foods_compat"),
                 PackType.SERVER_DATA,
                 Component.literal("Selling Bin - Quality Food"),
+                packSource,
+                false,
+                Pack.Position.TOP
+        );
+
+        event.addPackFinders(
+                SellingBin.rl("built_in_datapacks/selling_bin_vinery_compat"),
+                PackType.SERVER_DATA,
+                Component.literal("Selling Bin - Vinery Wine"),
+                packSource,
+                false,
+                Pack.Position.TOP
+        );
+
+        event.addPackFinders(
+                SellingBin.rl("built_in_datapacks/selling_bin_brewery_compat"),
+                PackType.SERVER_DATA,
+                Component.literal("Selling Bin - Brewery Beer"),
                 packSource,
                 false,
                 Pack.Position.TOP

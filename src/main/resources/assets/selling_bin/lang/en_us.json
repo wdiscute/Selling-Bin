@@ -35,6 +35,7 @@
   "gui.selling_bin.processor.enchantments" : "- Price is increased based on the enchantments.",
   "gui.selling_bin.processor.quality_foods_processor" : "- Price is increased based on the Quality.",
   "gui.selling_bin.processor.wine_age_processor" : "- Price is increased based on the wine's age.",
+  "gui.selling_bin.processor.beer_quality_processor" : "- Price is increased based on the beers's quality.",
 
 
   "gui.selling_bin.value" : "value",

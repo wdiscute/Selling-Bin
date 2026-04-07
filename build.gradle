@@ -61,6 +61,7 @@ repositories
 dependencies {
     //tiny multiblock lib
     jarJar(implementation("maven.modrinth:tiny-multiblock-lib:neo-1.21.1-${tiny_multiblock_lib_version}"))
+
     //EMI
     compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
     runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
@@ -80,6 +81,14 @@ dependencies {
     //let's do winery
     compileOnly "maven.modrinth:lets-do-vinery:ZywXpLC6"
     runtimeOnly "maven.modrinth:lets-do-vinery:ZywXpLC6"
+
+    //let's do brewery
+    compileOnly "maven.modrinth:lets-do-brewery-farmcharm-compat:vzXZ4Pak"
+    runtimeOnly "maven.modrinth:lets-do-brewery-farmcharm-compat:vzXZ4Pak"
+
+    //Let's Do Farm & Charm
+    //compileOnly "maven.modrinth:lets-do-farm-charm:muipCbfC"
+    runtimeOnly "maven.modrinth:lets-do-farm-charm:muipCbfC"
 
     //Architectury API
     compileOnly "maven.modrinth:architectury-api:ZxYGwlk0"

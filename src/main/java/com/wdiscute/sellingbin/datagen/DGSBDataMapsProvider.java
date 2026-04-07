@@ -87,6 +87,19 @@ public class DGSBDataMapsProvider extends DataMapProvider
                     new WineAgeProcessor(ages).create(200), false);
         }
 
+        //Let's do Brewery
+        if (false)
+        {
+            Map<String, Float> ages = new HashMap<>();
+
+            ages.put("1", 1.5f);
+            ages.put("2", 3f);
+            ages.put("3", 5f);
+
+            bin.add(ItemTags.create(SellingBin.rl("brewery", "beer")),
+                    new BeerQualityProcessor(ages).create(200), false);
+        }
+
 
         //enchanted books built-in datapack
         if (false)

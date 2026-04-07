@@ -12,7 +12,7 @@
         "items": [
           {
             "predicates": {
-              "selling_bin:item_ability": {}
+              "selling_bin:sellable_item": {}
             }
           }
         ]

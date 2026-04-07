@@ -13,6 +13,7 @@ import java.util.function.Supplier;
 
 public interface SBBlocks
 {
+    DeferredRegister.Items ITEMS = DeferredRegister.createItems(SellingBin.MOD_ID);
     DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(SellingBin.MOD_ID);
 
     DeferredBlock<Block> SELLING_BIN = registerBlock("selling_bin", SellingBinBlock::new);
@@ -20,12 +21,13 @@ public interface SBBlocks
     private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block)
     {
         DeferredBlock<T> toReturn = BLOCKS.register(name, block);
-        SBItems.ITEMS.register(name, () -> new BlockItem(toReturn.get(), new Item.Properties()));
+        ITEMS.register(name, () -> new BlockItem(toReturn.get(), new Item.Properties()));
         return toReturn;
     }
 
     static void register(IEventBus eventBus)
     {
         BLOCKS.register(eventBus);
+        ITEMS.register(eventBus);
     }
 }

@@ -21,7 +21,7 @@ public class DGSBRecipeProvider extends RecipeProvider
     @Override
     protected void buildRecipes(RecipeOutput output)
     {
-        //rod
+        //selling bin
         ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, SBBlocks.SELLING_BIN)
                 .define('B', Blocks.BARREL)
                 .define('S', ItemTags.WOODEN_SLABS)
