@@ -70,7 +70,7 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
         if (x > 80 && x < 121 && y > 10 && y < 24 && !menu.be.instaSell)
         {
             mousePressed = true;
-            if (menu.be.getItem(0).isEmpty())
+            if (menu.getSlot(0).getItem().isEmpty())
                 Minecraft.getInstance().player.playSound(SoundEvents.DISPENSER_FAIL, 0.7f, SellingBin.r.nextFloat() / 8 + 1f);
 
             if (Screen.hasShiftDown())

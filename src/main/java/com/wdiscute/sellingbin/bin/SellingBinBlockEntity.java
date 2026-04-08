@@ -43,7 +43,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     public SellingBinBlockEntity(BlockPos pos, BlockState blockState)
     {
         super(SBBlockEntities.SELLING_BIN.get(), pos, blockState);
-        this.itemStacks = NonNullList.withSize(2, ItemStack.EMPTY);
+        this.itemStacks = NonNullList.withSize(3, ItemStack.EMPTY);
         this.currencies = Currency.getCurrencies();
         this.currenciesReversed = currencies.reversed();
     }
@@ -126,6 +126,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     public void update()
     {
         if(level.isClientSide) return;
+        updateToClient();
 
         ItemStack result = getItem(SellingBinMenu.RESULT_SLOT);
         ItemStack card = getItem(SellingBinMenu.CARD_SLOT);
