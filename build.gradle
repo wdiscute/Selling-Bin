@@ -12,6 +12,8 @@ repositories {
 		url = "https://api.modrinth.com/maven"
 	}
 
+	mavenLocal()
+
 	//jei
 	maven {
 		url = "https://maven.blamejared.com/"
@@ -21,6 +23,10 @@ repositories {
 	maven {
 		name = "TerraformersMC"
 		url = "https://maven.terraformersmc.com/"
+	}
+
+	flatDir {
+		dirs ".compat"
 	}
 }
 
@@ -35,7 +41,7 @@ dependencies {
 	modImplementation(include("maven.modrinth:tiny-multiblock-lib:fabric-1.21.1-${tiny_multiblock_lib_version}"))
 
 	//datamaps refabricated
-	modImplementation(include(files(".compat/datamaps-refabricated-1.0.4.jar")))
+	modImplementation(include("local:datamaps-refabricated-1.0.4"))
 
 	//EMI
 	modCompileOnly  "dev.emi:emi-fabric:${emi_version}:api"
