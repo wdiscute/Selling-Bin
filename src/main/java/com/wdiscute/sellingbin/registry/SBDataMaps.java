@@ -34,8 +34,6 @@ public interface SBDataMaps
     static <T> T getOrDefault(ItemStack stack, DataMapType<Item, T> dataMap, T d)
     {
         T data = (T) ((IDataMapHolderExtension) stack.getRegistryEntry()).getData(dataMap);
-        if (data != null)
-            System.out.println(data);
         if (data == null) return d;
         return data;
     }

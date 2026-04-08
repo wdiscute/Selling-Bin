@@ -1,8 +1,10 @@
 package com.wdiscute.sellingbin.bin;
 
+import com.wdiscute.sellingbin.compat.NumismaticsCompat;
 import com.wdiscute.sellingbin.registry.SBBlockEntities;
 import com.wdiscute.sellingbin.registry.SBDataMaps;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.block.BlockState;
 import net.minecraft.block.HorizontalFacingBlock;
 import net.minecraft.entity.player.PlayerEntity;
@@ -49,7 +51,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
     public SellingBinBlockEntity(BlockPos pos, BlockState blockState)
     {
         super(SBBlockEntities.SELLING_BIN, pos, blockState);
-        this.itemStacks = DefaultedList.ofSize(2, ItemStack.EMPTY);
+        this.itemStacks = DefaultedList.ofSize(3, ItemStack.EMPTY);
         currencies = Currency.getCurrencies();
         currenciesReversed = currencies.reversed();
     }
@@ -100,7 +102,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
             itemValue.processors().forEach(o -> o.onSellComplete(getStack(SellingBinMenu.ITEM_SLOT)));
             if (!all)
             {
-                update();
+                forceUpdate();
                 if (!world.isClient && sound)
                     world.playSound(null, getPos(), SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), SoundCategory.BLOCKS, 0.2f, 1.3f);
                 return;
@@ -111,7 +113,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
             if (!world.isClient && sound)
                 world.playSound(null, getPos(), SoundEvents.BLOCK_NOTE_BLOCK_BELL.value(), SoundCategory.BLOCKS, 0.2f, 1.3f);
 
-        update();
+        forceUpdate();
     }
 
     public int getProgressAvailable()
@@ -119,10 +121,35 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
         return storedProgress + SBDataMaps.getOrDefault(getStack(SellingBinMenu.RESULT_SLOT), SBDataMaps.SELLING_BIN_CURRENCIES, 0) * getStack(SellingBinMenu.RESULT_SLOT).getCount();
     }
 
+    public void forceUpdate()
+    {
+        currencyCached = null;
+        extraUpdate = true;
+        update();
+    }
+
     //updates result slot to the highest possible currency
+    boolean extraUpdate = false;
+    Currency currencyCached = null;
+    int cachedOutputCount = 0;
     public void update()
     {
-        ItemStack is = getStack(SellingBinMenu.RESULT_SLOT);
+        if(world.isClient) return;
+        updateToClient();
+
+        ItemStack result = getStack(SellingBinMenu.RESULT_SLOT);
+        ItemStack card = getStack(SellingBinMenu.CARD_SLOT);
+
+        //prevent unnecessary updates for better performance
+        boolean shouldRun = false;
+        if(currencySelected != currencyCached) shouldRun = true;
+        if(extraUpdate) shouldRun = true;
+        if(cachedOutputCount != result.getCount()) shouldRun = true;
+
+        if(!shouldRun) return;
+        currencyCached = currencySelected;
+        cachedOutputCount = result.getCount();
+        extraUpdate = false;
 
         int progressAvailable = getProgressAvailable();
 
@@ -132,13 +159,13 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
             {
                 if (progressAvailable > c.value())
                 {
-                    if (!is.isOf(c.item())) is = new ItemStack(c.item());
+                    if (!result.isOf(c.item())) result = new ItemStack(c.item());
 
                     int count = Math.clamp(progressAvailable / c.value(), 0, c.item().getMaxCount());
 
-                    is.setCount(count);
+                    result.setCount(count);
 
-                    setStack(SellingBinMenu.RESULT_SLOT, is);
+                    setStack(SellingBinMenu.RESULT_SLOT, result);
 
                     storedProgress = progressAvailable - c.value() * count;
 
@@ -148,17 +175,25 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
         else
         {
             //else run the math for the selected currency
-            if (!is.isOf(currencySelected.item())) is = new ItemStack(currencySelected.item());
+            if (!result.isOf(currencySelected.item())) result = new ItemStack(currencySelected.item());
 
             int count = Math.clamp(progressAvailable / currencySelected.value(), 0, currencySelected.item().getMaxCount());
 
-            is.setCount(count);
+            result.setCount(count);
 
-            setStack(SellingBinMenu.RESULT_SLOT, is);
+            setStack(SellingBinMenu.RESULT_SLOT, result);
 
             storedProgress = progressAvailable - currencySelected.value() * count;
         }
 
+        if (FabricLoader.getInstance().isModLoaded("numismatics"))
+        {
+            if(NumismaticsCompat.deposit(result, card))
+            {
+                setStack(SellingBinMenu.RESULT_SLOT, ItemStack.EMPTY);
+                forceUpdate();
+            }
+        }
 
         updateToClient();
     }
@@ -257,7 +292,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
     @Override
     public int size()
     {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -363,11 +398,9 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
     @Override
     public void tick()
     {
-        if (instaSell)
-        {
-            update();
-            sell(true);
-        }
+
+        update();
+        if (instaSell) sell(true);
     }
 
     public void cycleCurrency()

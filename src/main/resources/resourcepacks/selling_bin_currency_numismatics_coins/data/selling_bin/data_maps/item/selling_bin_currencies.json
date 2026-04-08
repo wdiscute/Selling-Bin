@@ -1,0 +1,10 @@
+{
+  "values": {
+    "numismatics:bevel": 80,
+    "numismatics:cog": 640,
+    "numismatics:crown": 5120,
+    "numismatics:sprocket": 160,
+    "numismatics:spur": 10,
+    "numismatics:sun": 40960
+  }
+}

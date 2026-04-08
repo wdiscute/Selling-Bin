@@ -14,6 +14,7 @@ public class SBProcessors
     public static Identifier ENCHANTMENTS_PROCESSOR = register("enchantments_processor", new EnchantmentProcessor());
     public static Identifier QUALITY_FOODS_PROCESSOR;
     public static Identifier WINE_AGE_PROCESSOR;
+    public static Identifier BEER_QUALITY_PROCESSOR;
 
     public static void registerOptionals()
     {
@@ -22,6 +23,9 @@ public class SBProcessors
 
         if (FabricLoader.getInstance().isModLoaded("vinery"))
             WINE_AGE_PROCESSOR = register("wine_age_processor", new WineAgeProcessor());
+
+        if (FabricLoader.getInstance().isModLoaded("brewery"))
+            BEER_QUALITY_PROCESSOR = register("beer_quality_processor", new BeerQualityProcessor());
     }
 
     public static Identifier register(String name, AbstractProcessor abstractProcessor)

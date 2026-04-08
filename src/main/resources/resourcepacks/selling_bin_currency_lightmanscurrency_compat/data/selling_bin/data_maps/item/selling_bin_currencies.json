@@ -1,0 +1,9 @@
+{
+  "values": {
+    "lightmanscurrency:coin_diamond": 1000,
+    "lightmanscurrency:coin_emerald": 100,
+    "lightmanscurrency:coin_gold": 10,
+    "lightmanscurrency:coin_iron": 1,
+    "lightmanscurrency:coin_netherite": 10000
+  }
+}

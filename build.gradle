@@ -35,7 +35,7 @@ dependencies {
 	modImplementation(include("maven.modrinth:tiny-multiblock-lib:fabric-1.21.1-${tiny_multiblock_lib_version}"))
 
 	//datamaps refabricated
-	modImplementation(files(".compat/datamaps-refabricated-1.0.1.jar"))
+	modImplementation(include(files(".compat/datamaps-refabricated-1.0.4.jar")))
 
 	//EMI
 	modCompileOnly  "dev.emi:emi-fabric:${emi_version}:api"
@@ -46,6 +46,12 @@ dependencies {
 
 	//let's do winery
 	modCompileOnly  "maven.modrinth:lets-do-vinery:BV45cdzS"
+
+	//let's do brewery
+	modCompileOnly  "maven.modrinth:lets-do-brewery-farmcharm-compat:8YKO4bsZ"
+
+	//Create: Numismatics - not ported yet
+	//modCompileOnly  "maven.modrinth:numismatics:SJpLT0Bq"
 
 	//Architectury API
 	modCompileOnly  "maven.modrinth:architectury-api:Wto0RchG"

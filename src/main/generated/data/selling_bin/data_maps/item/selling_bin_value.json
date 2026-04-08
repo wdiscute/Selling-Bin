@@ -1,0 +1,32 @@
+{
+  "values": {
+    "#c:foods": {
+      "base_value": 10,
+      "processors": [
+        {
+          "type": "selling_bin:food_processor"
+        }
+      ]
+    },
+    "minecraft:cake": {
+      "base_value": 200,
+      "processors": []
+    },
+    "minecraft:enchanted_golden_apple": {
+      "base_value": 3700,
+      "processors": []
+    },
+    "minecraft:golden_apple": {
+      "base_value": 200,
+      "processors": []
+    },
+    "minecraft:honey_bottle": {
+      "base_value": 150,
+      "processors": []
+    },
+    "minecraft:ominous_bottle": {
+      "base_value": 0,
+      "processors": []
+    }
+  }
+}

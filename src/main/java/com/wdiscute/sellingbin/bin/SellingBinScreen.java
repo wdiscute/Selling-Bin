@@ -2,6 +2,7 @@ package com.wdiscute.sellingbin.bin;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.wdiscute.sellingbin.SellingBin;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.font.Font;
 import net.minecraft.client.font.TextRenderer;
@@ -32,10 +33,12 @@ import java.util.Optional;
 public class SellingBinScreen extends HandledScreen<SellingBinMenu>
 {
     private static final Identifier TEXTURE = SellingBin.rl("textures/gui/selling_bin/selling_bin_background.png");
+    private static final Identifier CARD = SellingBin.rl("textures/gui/selling_bin/card_slot.png");
 
     private int uiX = 0;
     private int uiY = 0;
     int backgroundHeight = 176;
+    private static boolean numismatics = false;
 
     private boolean mousePressed;
 
@@ -69,7 +72,7 @@ public class SellingBinScreen extends HandledScreen<SellingBinMenu>
         if (x > 80 && x < 121 && y > 10 && y < 24 && !handler.be.instaSell)
         {
             mousePressed = true;
-            if (handler.be.getStack(0).isEmpty())
+            if (handler.getSlot(0).getStack().isEmpty())
                 MinecraftClient.getInstance().player.playSound(SoundEvents.BLOCK_DISPENSER_FAIL, 0.7f, SellingBin.r.nextFloat() / 8 + 1f);
 
             if (Screen.hasShiftDown())
@@ -143,9 +146,9 @@ public class SellingBinScreen extends HandledScreen<SellingBinMenu>
         //sell / sell all
         MutableText sellComp;
         if (Screen.hasShiftDown())
-            sellComp = Text.translatable("gui.selling_bin.selling_bin.sell_all");
+            sellComp = Text.translatable("gui.selling_bin.sell_all");
         else
-            sellComp = Text.translatable("gui.selling_bin.selling_bin.sell");
+            sellComp = Text.translatable("gui.selling_bin.sell");
 
         //sell text
         renderCenteredString(guiGraphics, this.textRenderer, sellComp, uiX + 101, uiY + 14, 0x87583a, false);
@@ -172,12 +175,12 @@ public class SellingBinScreen extends HandledScreen<SellingBinMenu>
             if (handler.be.instaSell)
                 guiGraphics.drawTexture(TEXTURE, uiX + 55, uiY + 10, 192, 112, 18, 16, 256, 256);
 
-            guiGraphics.drawTooltip(this.textRenderer, Text.translatable("gui.selling_bin.selling_bin.auto_sell"), mouseX, mouseY);
+            guiGraphics.drawTooltip(this.textRenderer, Text.translatable("gui.selling_bin.auto_sell"), mouseX, mouseY);
         }
 
         //sound tooltip
         if (x > 140 && x < 151 && y > 40 && y < 51)
-            guiGraphics.drawTooltip(this.textRenderer, Text.translatable("gui.selling_bin.selling_bin.sell_sound"), mouseX, mouseY);
+            guiGraphics.drawTooltip(this.textRenderer, Text.translatable("gui.selling_bin.sell_sound"), mouseX, mouseY);
 
         //render currency selected
         ItemStack currencyStack = new ItemStack(handler.be.currencySelected.item());
@@ -196,9 +199,9 @@ public class SellingBinScreen extends HandledScreen<SellingBinMenu>
         if (x > 126 && x < 137 && y > 40 && y < 51)
         {
             List<Text> components = new ArrayList<>();
-            components.add(Text.translatable("gui.selling_bin.selling_bin.currency_selected"));
+            components.add(Text.translatable("gui.selling_bin.currency_selected"));
             if (handler.be.currencySelected.isNone())
-                components.add(Text.translatable("gui.selling_bin.selling_bin.highest"));
+                components.add(Text.translatable("gui.selling_bin.highest"));
             else
             {
                 MutableText mutableComponent = Text.empty();
@@ -210,18 +213,34 @@ public class SellingBinScreen extends HandledScreen<SellingBinMenu>
             }
             guiGraphics.drawTooltip(this.textRenderer, components, Optional.empty(), mouseX, mouseY);
         }
+
+        //numismatic card compat
+        if (numismatics)
+        {
+            int nix = uiX + 29;
+            int niy = uiY + 37;
+
+            if (focusedSlot != null && !focusedSlot.hasStack() && mouseX > nix && mouseX < nix + 18 && mouseY > niy && mouseY < niy + 18)
+                guiGraphics.drawTooltip(textRenderer, Text.translatable("gui.selling_bin.card_slot"), mouseX, mouseY);
+
+        }
     }
 
     @Override
     protected void drawBackground(DrawContext guiGraphics, float delta, int mouseX, int mouseY)
     {
+        int nix = uiX + 29;
+        int niy = uiY + 37;
         guiGraphics.drawTexture(TEXTURE, uiX, uiY, 0, 0, this.backgroundWidth, this.backgroundHeight);
+        if (numismatics)
+            guiGraphics.drawTexture(CARD, nix, niy, 18, 18, 0, 0, 18, 18, 18, 18);
     }
 
     public SellingBinScreen(SellingBinMenu menu, PlayerInventory playerInventory, Text title)
     {
         super(menu, playerInventory, title);
         ++this.backgroundHeight;
+        numismatics = FabricLoader.getInstance().isModLoaded("numismatics");
     }
 
     private void renderItem(ItemStack stack, int x, int y, float scale)

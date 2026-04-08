@@ -18,7 +18,14 @@ public class SellingBinResultSlot extends Slot
     }
 
     @Override
-    public boolean canTakeItems(PlayerEntity player)
+    public void markDirty()
+    {
+        super.markDirty();
+        menu.be.forceUpdate();
+    }
+
+    @Override
+    public boolean canTakeItems(PlayerEntity playerEntity)
     {
         if(isServer) menu.be.update();
         return true;

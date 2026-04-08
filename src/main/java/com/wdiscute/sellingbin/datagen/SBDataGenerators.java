@@ -10,7 +10,7 @@ public class SBDataGenerators implements DataGeneratorEntrypoint
     public void onInitializeDataGenerator(FabricDataGenerator fabricDataGenerator)
     {
         FabricDataGenerator.Pack pack = fabricDataGenerator.createPack();
-
+        pack.addProvider(DGSBDatamaps::new);
         pack.addProvider(DGSBRecipeProvider::new);
         pack.addProvider(DGSBlockLootTableProvider::new);
     }
