@@ -30,7 +30,7 @@ public class SBProcessors
 
     public static Identifier register(String name, AbstractProcessor abstractProcessor)
     {
-        Registry.register(SellingBin.SELLING_BIN_REGISTRY, name, abstractProcessor);
+        Registry.register(SellingBin.SELLING_BIN_REGISTRY, SellingBin.rl(name), abstractProcessor);
         return SellingBin.rl(name);
     }
 

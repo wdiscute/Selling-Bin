@@ -60,7 +60,7 @@ public record Currency(Item item, int value)
             value += p.addValue(itemValue.baseValue(), value, is, blockEntity, player);
         }
 
-        return (int) (value * SBConfig.SELLING_BIN_MULTIPLIER);
+        return (int) (value * SBConfig.config.multiplier);
     }
 
     public static int calculateValueFromSingleStack(ItemStack is, BlockEntity blockEntity)

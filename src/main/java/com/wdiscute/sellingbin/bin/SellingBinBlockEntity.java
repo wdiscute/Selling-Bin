@@ -45,7 +45,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements S
     public boolean instaSell = false;
     public boolean sound = true;
     public Currency currencySelected = Currency.NONE;
-    public List<Currency> currencies;
+    public static List<Currency> currencies;
     public List<Currency> currenciesReversed;
 
     public SellingBinBlockEntity(BlockPos pos, BlockState blockState)

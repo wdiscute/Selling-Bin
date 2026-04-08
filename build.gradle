@@ -1,88 +1,104 @@
 plugins {
-	id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
-	id 'maven-publish'
+    id 'net.fabricmc.fabric-loom-remap' version "${loom_version}"
+    id 'maven-publish'
 }
 
 version = project.mod_version
 group = project.maven_group
 
 repositories {
-	//modrinth
-	maven {
-		url = "https://api.modrinth.com/maven"
-	}
+    //modrinth
+    maven {
+        url = "https://api.modrinth.com/maven"
+    }
 
-	mavenLocal()
+    mavenLocal()
 
-	//jei
-	maven {
-		url = "https://maven.blamejared.com/"
-	}
+    //jei
+    maven {
+        url = "https://maven.blamejared.com/"
+    }
 
-	//emi
-	maven {
-		name = "TerraformersMC"
-		url = "https://maven.terraformersmc.com/"
-	}
+    //emi
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
+    }
 
-	flatDir {
-		dirs ".compat"
-	}
+    //cloth config
+    maven {
+        url = "https://maven.shedaniel.me/"
+    }
+
+    maven {
+        url = "https://maven.terraformersmc.com/releases/"
+    }
+
+
+    flatDir {
+        dirs ".compat"
+    }
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-	mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    // To change the versions see the gradle.properties file
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings "net.fabricmc:yarn:${project.yarn_mappings}:v2"
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 
-	//tiny multiblock lib
-	//modImplementation(include(files(".compat/tiny-multiblock-lib-fabric-1.21.1-3.1.jar")))
-	modImplementation(include("maven.modrinth:tiny-multiblock-lib:fabric-1.21.1-${tiny_multiblock_lib_version}"))
+    //tiny multiblock lib
+    //modImplementation(include(files(".compat/tiny-multiblock-lib-fabric-1.21.1-3.1.jar")))
+    modImplementation(include("maven.modrinth:tiny-multiblock-lib:fabric-1.21.1-${tiny_multiblock_lib_version}"))
 
-	//datamaps refabricated
-	modImplementation(include("local:datamaps-refabricated-1.0.4"))
+    //datamaps refabricated
+    modImplementation(include("local:datamaps-refabricated-1.0.4"))
 
-	//EMI
-	modCompileOnly  "dev.emi:emi-fabric:${emi_version}:api"
-	//modRuntimeOnly "dev.emi:emi-fabric:${emi_version}:api"
+    //cloth config
+    modApi("me.shedaniel.cloth:cloth-config-fabric:15.0.140") {
+        exclude(group: "net.fabricmc.fabric-api")
+    }
 
-	//JEI
-	modCompileOnly ("mezz.jei:jei-1.21.1-fabric-api:${jei_version}")
+    //EMI
+    modCompileOnly "dev.emi:emi-fabric:${emi_version}:api"
+    //modRuntimeOnly "dev.emi:emi-fabric:${emi_version}:api"
 
-	//let's do winery
-	modCompileOnly  "maven.modrinth:lets-do-vinery:BV45cdzS"
+    //JEI
+    modCompileOnly("mezz.jei:jei-1.21.1-fabric-api:${jei_version}")
+    modRuntimeOnly("mezz.jei:jei-1.21.1-fabric-api:${jei_version}")
 
-	//let's do brewery
-	modCompileOnly  "maven.modrinth:lets-do-brewery-farmcharm-compat:8YKO4bsZ"
+    //let's do winery
+    modCompileOnly "maven.modrinth:lets-do-vinery:BV45cdzS"
 
-	//Create: Numismatics - not ported yet
-	//modCompileOnly  "maven.modrinth:numismatics:SJpLT0Bq"
+    //let's do brewery
+    modCompileOnly "maven.modrinth:lets-do-brewery-farmcharm-compat:8YKO4bsZ"
 
-	//Architectury API
-	modCompileOnly  "maven.modrinth:architectury-api:Wto0RchG"
+    //Create: Numismatics - not ported yet
+    //modCompileOnly  "maven.modrinth:numismatics:SJpLT0Bq"
 
-	// Fabric API. This is technically optional, but you probably want it anyway.
-	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
+    //Architectury API
+    modCompileOnly "maven.modrinth:architectury-api:Wto0RchG"
+
+    // Fabric API. This is technically optional, but you probably want it anyway.
+    modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_api_version}"
 
 }
 
 fabricApi {
-	configureDataGeneration {
-		client = true
-	}
+    configureDataGeneration {
+        client = true
+    }
 }
 
 processResources {
-	inputs.property "version", project.version
+    inputs.property "version", project.version
 
-	filesMatching("fabric.mod.json") {
-		expand "version": inputs.properties.version
-	}
+    filesMatching("fabric.mod.json") {
+        expand "version": inputs.properties.version
+    }
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
+    it.options.release = 21
 }
 
 
@@ -91,36 +107,36 @@ tasks.withType(JavaCompile).configureEach {
 //}
 
 java {
-	// Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
-	// if it is present.
-	// If you remove this line, sources will not be generated.
-	withSourcesJar()
+    // Loom will automatically attach sourcesJar to a RemapSourcesJar task and to the "build" task
+    // if it is present.
+    // If you remove this line, sources will not be generated.
+    withSourcesJar()
 
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+    sourceCompatibility = JavaVersion.VERSION_21
+    targetCompatibility = JavaVersion.VERSION_21
 }
 
 jar {
-	inputs.property "projectName", project.name
+    inputs.property "projectName", project.name
 
-	from("LICENSE") {
-		rename { "${it}_${project.name}"}
-	}
+    from("LICENSE") {
+        rename { "${it}_${project.name}" }
+    }
 }
 
 // configure the maven publication
 publishing {
-	publications {
-		create("mavenJava", MavenPublication) {
-			from components.java
-		}
-	}
+    publications {
+        create("mavenJava", MavenPublication) {
+            from components.java
+        }
+    }
 
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
-	}
+    // See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
+    repositories {
+        // Add repositories to publish to here.
+        // Notice: This block does NOT have the same function as the block in the top level.
+        // The repositories here will be used for publishing your artifact, not for
+        // retrieving dependencies.
+    }
 }

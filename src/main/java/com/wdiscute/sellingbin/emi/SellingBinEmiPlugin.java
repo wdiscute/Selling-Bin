@@ -23,7 +23,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-@EmiEntrypoint
 public class SellingBinEmiPlugin implements EmiPlugin
 {
     public static final EmiStack MY_WORKSTATION = EmiStack.of(SBBlocks.SELLING_BIN);

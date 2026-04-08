@@ -1,18 +1,24 @@
 package com.wdiscute.sellingbin;
 
 import com.mojang.logging.LogUtils;
+import com.wdiscute.sellingbin.bin.Currency;
+import com.wdiscute.sellingbin.bin.SellingBinBlockEntity;
 import com.wdiscute.sellingbin.processors.AbstractProcessor;
 import com.wdiscute.sellingbin.processors.SBProcessors;
 import com.wdiscute.sellingbin.registry.*;
+import me.shedaniel.autoconfig.AutoConfig;
+import me.shedaniel.autoconfig.serializer.GsonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
 import net.fabricmc.fabric.api.event.registry.RegistryAttribute;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.resource.ResourcePackActivationType;
+import net.fabricmc.fabric.api.resource.SimpleSynchronousResourceReloadListener;
 import net.fabricmc.loader.api.FabricLoader;
-import net.fabricmc.loader.api.ModContainer;
 import net.minecraft.registry.Registry;
 import net.minecraft.registry.RegistryKey;
+import net.minecraft.resource.ResourceManager;
+import net.minecraft.resource.ResourceType;
 import net.minecraft.text.Text;
 import net.minecraft.util.Identifier;
 import org.slf4j.Logger;
@@ -30,7 +36,8 @@ public class SellingBin implements ModInitializer
             RegistryKey.ofRegistry(Identifier.of(MOD_ID, "selling_bin"));
 
     //registry
-    public static final Registry<AbstractProcessor> SELLING_BIN_REGISTRY = FabricRegistryBuilder.createSimple(SELLING_BIN)
+    public static final Registry<AbstractProcessor> SELLING_BIN_REGISTRY = FabricRegistryBuilder
+            .createSimple(SELLING_BIN)
             .attribute(RegistryAttribute.SYNCED)
             .buildAndRegister();
 
@@ -39,7 +46,6 @@ public class SellingBin implements ModInitializer
     {
         return Identifier.of(SellingBin.MOD_ID, s);
     }
-
     public static Identifier rl(String ns, String path)
     {
         return Identifier.of(ns, path);
@@ -55,6 +61,11 @@ public class SellingBin implements ModInitializer
         SBProcessors.init();
         SBItemPredicate.init();
         SBDataMaps.init();
+
+        AutoConfig.register(SBConfig.class, GsonConfigSerializer::new);
+        SBConfig.config = AutoConfig.getConfigHolder(SBConfig.class).getConfig();
+
+        ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new SBReloadListener());
 
         ResourceManagerHelper.registerBuiltinResourcePack(
                 SellingBin.rl("selling_bin_currency_emeralds"),
@@ -123,4 +134,20 @@ public class SellingBin implements ModInitializer
 //            modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
 //        }
 //    }
+
+    public static class SBReloadListener implements SimpleSynchronousResourceReloadListener
+    {
+
+        @Override
+        public Identifier getFabricId()
+        {
+            return SellingBin.rl("reload_listener");
+        }
+
+        @Override
+        public void reload(ResourceManager manager)
+        {
+            SellingBinBlockEntity.currencies = Currency.getCurrencies();
+        }
+    }
 }
