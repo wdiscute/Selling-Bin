@@ -41,9 +41,7 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
 
     public SellingBinBlock()
     {
-        super(BlockBehaviour.Properties.of()
-                .noOcclusion()
-                .destroyTime(2)
+        super(BlockBehaviour.Properties.of().destroyTime(2)
         );
     }
 
