@@ -7,14 +7,14 @@ import com.wdiscute.sellingbin.registry.*;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.fml.ModContainer;
-import net.neoforged.fml.common.Mod;
-import net.neoforged.fml.config.ModConfig;
-import net.neoforged.neoforge.client.gui.ConfigurationScreen;
-import net.neoforged.neoforge.client.gui.IConfigScreenFactory;
-import net.neoforged.neoforge.registries.RegistryBuilder;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModLoadingContext;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.registries.IForgeRegistry;
 import org.slf4j.Logger;
 
 import java.util.Random;
@@ -31,38 +31,29 @@ public class SellingBin
             ResourceKey.createRegistryKey(SellingBin.rl("selling_bin"));
 
     //registry
-    public static final Registry<AbstractProcessor> SELLING_BIN_REGISTRY = new RegistryBuilder<>(SELLING_BIN)
-            .sync(true)
-            .create();
+    public static IForgeRegistry<AbstractProcessor> SELLING_BIN_REGISTRY = null;
 
     public static ResourceLocation rl(String s)
     {
-        return ResourceLocation.fromNamespaceAndPath(SellingBin.MOD_ID, s);
+        return new ResourceLocation(SellingBin.MOD_ID, s);
     }
 
     public static ResourceLocation rl(String ns, String path)
     {
-        return ResourceLocation.fromNamespaceAndPath(ns, path);
+        return new ResourceLocation(ns, path);
     }
 
-    public SellingBin(IEventBus modEventBus, ModContainer modContainer)
+    public SellingBin()
     {
+        IEventBus modEventBus = FMLJavaModLoadingContext.get().getModEventBus();
+
         SBBlocks.register(modEventBus);
         SBBlockEntities.register(modEventBus);
         SBMenuTypes.register(modEventBus);
         SBProcessors.register(modEventBus);
-        SBItemPredicate.register(modEventBus);
+       // SBItemPredicate.register(modEventBus);
 
-        modContainer.registerConfig(ModConfig.Type.CLIENT, SBConfig.SPEC);
-        modContainer.registerConfig(ModConfig.Type.SERVER, SBConfig.SPEC_SERVER);
-    }
-
-    @Mod(value = SellingBin.MOD_ID, dist = Dist.CLIENT)
-    public static class Client
-    {
-        public Client(ModContainer modContainer)
-        {
-            modContainer.registerExtensionPoint(IConfigScreenFactory.class, ConfigurationScreen::new);
-        }
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, SBConfig.SPEC);
+        ModLoadingContext.get().registerConfig(ModConfig.Type.SERVER, SBConfig.SPEC_SERVER);
     }
 }

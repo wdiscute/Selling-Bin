@@ -3,17 +3,17 @@ package com.wdiscute.sellingbin.event;
 import com.wdiscute.sellingbin.registry.SBMenuTypes;
 import com.wdiscute.sellingbin.SellingBin;
 import com.wdiscute.sellingbin.bin.SellingBinScreen;
-import net.neoforged.api.distmarker.Dist;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.client.event.*;
+import net.minecraft.client.gui.screens.MenuScreens;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-@EventBusSubscriber(modid = SellingBin.MOD_ID, value = Dist.CLIENT)
+@Mod.EventBusSubscriber(modid = SellingBin.MOD_ID, value = Dist.CLIENT, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SBClientEvents
 {
     @SubscribeEvent
-    public static void registerScreens(RegisterMenuScreensEvent event)
-    {
-        event.register(SBMenuTypes.SELLING_BIN_MENU.get(), SellingBinScreen::new);
+    public static void registerScreens(FMLClientSetupEvent event) {
+        MenuScreens.register(SBMenuTypes.SELLING_BIN_MENU.get(), SellingBinScreen::new);
     }
 }

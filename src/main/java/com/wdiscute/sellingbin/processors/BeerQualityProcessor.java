@@ -3,15 +3,14 @@ package com.wdiscute.sellingbin.processors;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.satisfy.brewery.core.item.DrinkBlockItem;
+import net.nikdo53.neobackports.io.components.CustomData;
+import net.nikdo53.neobackports.io.components.DataComponents;
+import net.nikdo53.neobackports.registry.DeferredHolder;
 
 import java.util.List;
 import java.util.Map;
@@ -69,7 +68,7 @@ public class BeerQualityProcessor extends AbstractProcessor
     public int addValue(int baseValue, int currentValue, ItemStack itemStack, BlockEntity blockEntity, Player player)
     {
         //DrinkBlockItem.addQuality(itemStack, 3);
-        CompoundTag tag = itemStack.getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY).copyTag();
+        CompoundTag tag = itemStack.getOrCreateTag();
         int quality = tag.contains("brewery.beer_quality") ? tag.getInt("brewery.beer_quality") : 0;
 
         if (qualityMultipliers.containsKey(quality + ""))

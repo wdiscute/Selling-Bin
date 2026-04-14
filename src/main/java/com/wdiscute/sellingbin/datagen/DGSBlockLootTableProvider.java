@@ -19,9 +19,9 @@ import java.util.Set;
 
 public class DGSBlockLootTableProvider extends BlockLootSubProvider
 {
-    protected DGSBlockLootTableProvider(HolderLookup.Provider registries)
+    protected DGSBlockLootTableProvider()
     {
-        super(Set.of(), FeatureFlags.REGISTRY.allFlags(), registries);
+        super(Set.of(), FeatureFlags.REGISTRY.allFlags());
     }
 
     @Override

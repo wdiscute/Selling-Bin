@@ -43,7 +43,7 @@ public class SellingBinCurrencyEmiRecipe implements EmiRecipe
     @Override
     public @Nullable ResourceLocation getId()
     {
-        return ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "/currency/" + id.getPath());
+        return new ResourceLocation(id.getNamespace(), "/currency/" + id.getPath());
     }
 
     @Override

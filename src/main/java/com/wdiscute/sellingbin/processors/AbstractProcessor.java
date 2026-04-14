@@ -10,7 +10,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.nikdo53.neobackports.registry.DeferredHolder;
 
 import javax.annotation.Nullable;
 import java.util.List;
@@ -21,14 +21,14 @@ public abstract class AbstractProcessor
             .dispatch(processor -> processor.getRegistryHolderOrThrow().getId(),
                     loc ->
                     {
-                        if(SellingBin.SELLING_BIN_REGISTRY.get(loc) == null)
+                        if(SellingBin.SELLING_BIN_REGISTRY.getValue(loc) == null)
                         {
                             LogUtils.getLogger().error("Selling Bin Processor {} is not registered! " +
                                     "Make sure it's not dependent on another mod, and that you spelt the name correctly. " +
                                     "Using empty processor instead.", loc);
-                            return EmptyProcessor.CODEC;
+                            return EmptyProcessor.CODEC.codec();
                         }
-                        return SellingBin.SELLING_BIN_REGISTRY.get(loc).getCodecOrThrow();
+                        return SellingBin.SELLING_BIN_REGISTRY.getValue(loc).getCodecOrThrow().codec();
                     });
 
     public static final Codec<List<AbstractProcessor>> ABSTRACT_PROCESSOR_CODEC_LIST = ABSTRACT_PROCESSOR_CODEC.listOf();

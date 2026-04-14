@@ -8,9 +8,8 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.registries.DeferredHolder;
-import net.satisfy.vinery.core.components.WineYearComponent;
-import net.satisfy.vinery.core.registry.DataComponentRegistry;
+import net.nikdo53.neobackports.io.components.DataComponentRegistry;
+import net.nikdo53.neobackports.registry.DeferredHolder;
 import net.satisfy.vinery.core.util.WineYears;
 
 import java.util.List;
@@ -72,14 +71,7 @@ public class WineAgeProcessor extends AbstractProcessor
         if(player != null) level = player.level();
         if(blockEntity != null) level = blockEntity.getLevel();
 
-        WineYearComponent age = itemStack.get(DataComponentRegistry.WINE_YEAR);
-
-        if (age == null)
-        {
-            return 0;
-        }
-
-        String wineAgeYears = WineYears.getWineAgeYears(itemStack, level) + "";
+        String wineAgeYears = String.valueOf(WineYears.getWineAge(itemStack, level));
 
         if (ageMultipliers.containsKey(wineAgeYears))
             return (int) (currentValue * ageMultipliers.get(wineAgeYears)) - currentValue;

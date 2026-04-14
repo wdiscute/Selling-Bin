@@ -11,23 +11,26 @@ import net.minecraft.server.packs.repository.Pack;
 import net.minecraft.server.packs.repository.PackSource;
 import net.minecraft.world.item.CreativeModeTabs;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.bus.api.SubscribeEvent;
-import net.neoforged.fml.common.EventBusSubscriber;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.capabilities.RegisterCapabilitiesEvent;
-import net.neoforged.neoforge.event.AddPackFindersEvent;
-import net.neoforged.neoforge.event.BuildCreativeModeTabContentsEvent;
-import net.neoforged.neoforge.items.wrapper.SidedInvWrapper;
-import net.neoforged.neoforge.registries.NewRegistryEvent;
-import net.neoforged.neoforge.registries.datamaps.RegisterDataMapTypesEvent;
+import net.minecraftforge.common.capabilities.RegisterCapabilitiesEvent;
+import net.minecraftforge.event.AddPackFindersEvent;
+import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.items.wrapper.SidedInvWrapper;
+import net.minecraftforge.registries.NewRegistryEvent;
+import net.nikdo53.neobackports.event.RegisterDataMapTypesEvent;
+import net.nikdo53.neobackports.registry.ForgeRegistryHelper;
 
-@EventBusSubscriber(modid = SellingBin.MOD_ID)
+@Mod.EventBusSubscriber(modid = SellingBin.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SBevents
 {
+
     @SubscribeEvent
     public static void addRegistry(NewRegistryEvent event)
     {
-        event.register(SellingBin.SELLING_BIN_REGISTRY);
+        ForgeRegistryHelper.getInstance(SellingBin.SELLING_BIN)
+                .create(event, reg -> SellingBin.SELLING_BIN_REGISTRY = reg);
+
     }
 
     @SubscribeEvent
@@ -35,18 +38,19 @@ public class SBevents
     {
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS)
         {
-            event.accept(SBBlocks.SELLING_BIN);
+            event.accept(SBBlocks.SELLING_BIN.get());
         }
         if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS)
         {
-            event.accept(SBBlocks.SELLING_BIN);
+            event.accept(SBBlocks.SELLING_BIN.get());
         }
     }
 
     @SubscribeEvent
     public static void addCapabilities(RegisterCapabilitiesEvent event)
     {
-        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, SBBlockEntities.SELLING_BIN.get(),
+        //TODO: I have no idea how this works
+/*        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, SBBlockEntities.SELLING_BIN.get(),
                 (container, side) ->
                 {
                     if(container instanceof SellingBinBlockEntity binBlockEntity)
@@ -66,7 +70,7 @@ public class SBevents
                     }
                     return null;
                 }
-        );
+        );*/
     }
 
     @SubscribeEvent

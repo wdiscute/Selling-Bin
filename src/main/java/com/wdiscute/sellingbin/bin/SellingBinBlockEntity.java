@@ -13,6 +13,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.MenuProvider;
@@ -23,10 +24,11 @@ import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.fml.ModList;
+import net.minecraftforge.fml.ModList;
 import net.nikdo53.tinymultiblocklib.blockentities.AbstractMultiBlockEntity;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements WorldlyContainer, MenuProvider
@@ -45,7 +47,12 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
         super(SBBlockEntities.SELLING_BIN.get(), pos, blockState);
         this.itemStacks = NonNullList.withSize(3, ItemStack.EMPTY);
         this.currencies = Currency.getCurrencies();
-        this.currenciesReversed = currencies.reversed();
+        this.currenciesReversed = new ArrayList<>();
+
+        for (int i = currencies.size() - 1; i >= 0; i--)
+        {
+            currenciesReversed.add(currencies.get(i));
+        }
     }
 
 
@@ -152,7 +159,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
                 {
                     if (!result.is(c.item())) result = new ItemStack(c.item());
 
-                    int count = Math.clamp(progressAvailable / c.value(), 0, c.item().getMaxStackSize(new ItemStack(c.item())));
+                    int count = Mth.clamp(progressAvailable / c.value(), 0, c.item().getMaxStackSize(new ItemStack(c.item())));
 
                     result.setCount(count);
 
@@ -168,7 +175,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
             //else run the math for the selected currency
             if (!result.is(currencySelected.item())) result = new ItemStack(currencySelected.item());
 
-            int count = Math.clamp(progressAvailable / currencySelected.value(), 0, currencySelected.item().getMaxStackSize(new ItemStack(currencySelected.item())));
+            int count = Mth.clamp(progressAvailable / currencySelected.value(), 0, currencySelected.item().getMaxStackSize(new ItemStack(currencySelected.item())));
 
             result.setCount(count);
 
@@ -199,9 +206,9 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     }
 
     @Override
-    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries)
+    protected void saveAdditional(CompoundTag tag)
     {
-        super.saveAdditional(tag, registries);
+        super.saveAdditional(tag);
 
         if (!isCenter()) return;
 
@@ -225,13 +232,13 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
         tag.putInt("stored_progress", storedProgress);
 
         //save items (from ShulkerBoxBlockEntity)
-        ContainerHelper.saveAllItems(tag, this.itemStacks, false, registries);
+        ContainerHelper.saveAllItems(tag, this.itemStacks, false);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries)
+    public void load(CompoundTag tag)
     {
-        super.loadAdditional(tag, registries);
+        super.load(tag);
         if (!isCenter()) return;
 
         //insta sell
@@ -253,15 +260,15 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
         this.itemStacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
         if (tag.contains("Items", 9))
         {
-            ContainerHelper.loadAllItems(tag, this.itemStacks, registries);
+            ContainerHelper.loadAllItems(tag, this.itemStacks);
         }
     }
 
     @Override
-    public CompoundTag getUpdateTag(HolderLookup.Provider registries)
+    public CompoundTag getUpdateTag()
     {
         CompoundTag tag = new CompoundTag();
-        saveAdditional(tag, registries);
+        saveAdditional(tag);
         return tag;
     }
 
@@ -324,7 +331,11 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     public void setItem(int slot, ItemStack stack)
     {
         this.getItems().set(slot, stack);
-        stack.limitSize(this.getMaxStackSize(stack));
+        int min = Math.min(this.getMaxStackSize(), stack.getMaxStackSize());
+        if (!stack.isEmpty() && stack.getCount() > min)
+        {
+            stack.setCount(min);
+        }
         this.setChanged();
     }
 
@@ -390,7 +401,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     {
         if (currencySelected.isNone())
         {
-            currencySelected = currencies.getFirst();
+            currencySelected = currencies.get(0);
             update();
             return;
         }

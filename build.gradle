@@ -1,132 +1,65 @@
 plugins {
+    id 'idea'
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.121'
-    id 'idea'
+    id 'net.neoforged.moddev.legacyforge' version '2.0.115'
 }
 
 tasks.named('wrapper', Wrapper).configure {
-    // Define wrapper values here so as to not have to always do so when updating gradlew.properties.
-    // Switching this to Wrapper.DistributionType.ALL will download the full gradle sources that comes with
-    // documentation attached on cursor hover of gradle classes and methods. However, this comes with increased
-    // file size for Gradle. If you do switch this to ALL, run the Gradle wrapper task twice afterwards.
-    // (Verify by checking gradle/wrapper/gradle-wrapper.properties to see if distributionUrl now points to `-all`)
     distributionType = Wrapper.DistributionType.BIN
 }
 
 version = mod_version
 group = mod_group_id
 
-java {
-    withSourcesJar()
-}
+repositories {
+    mavenLocal()
 
-repositories
-        {
-            //emi
-            maven {
-                name = "TerraformersMC"
-                url = "https://maven.terraformersmc.com/"
-            }
+    maven {
+        name = "TerraformersMC"
+        url = "https://maven.terraformersmc.com/"
+    }
 
-            //favouriteless
-            maven {
-                url = "https://maven.favouriteless.net/releases"
-            }
+    //jei
+    maven {
+        url = "https://dvs1.progwml6.com/files/maven/"
+    }
 
-            //modrinth
-            maven {
-                url = "https://api.modrinth.com/maven"
-            }
+    //jei
+    maven {
+        url = "https://modmaven.dev"
+    }
 
-            //jei
-            maven {
-                url = "https://maven.blamejared.com/"
-            }
+    //favouriteless
+    maven {
+        url = "https://maven.favouriteless.net/releases"
+    }
 
-            repositories {
-                exclusiveContent {
-                    forRepository {
-                        maven {
-                            url "https://cursemaven.com"
-                        }
-                    }
-                    filter {
-                        includeGroup "curse.maven"
-                    }
-                }
-            }
-        }
+    //curios
+    maven {
+        name = "Illusive Soulworks maven"
+        url = "https://maven.theillusivec4.top/"
+    }
 
-dependencies {
-    //tiny multiblock lib
-    jarJar(implementation("maven.modrinth:tiny-multiblock-lib:neo-1.21.1-${tiny_multiblock_lib_version}"))
+    //modrinth
+    maven {
+        url = "https://api.modrinth.com/maven"
+    }
 
-    //EMI
-    compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
-    runtimeOnly "dev.emi:emi-neoforge:${emi_version}"
-
-    //JEI
-    compileOnly("mezz.jei:jei-${mc_version}-neoforge-api:${jei_version}")
-    //runtimeOnly("mezz.jei:jei-${mc_version}-neoforge:${jei_version}")
-
-    //quality foods compat
-    compileOnly("maven.modrinth:quality-food:vLFBpk1n")
-    //runtimeOnly("maven.modrinth:quality-food:vLFBpk1n")
-
-    //pipez
-    //runtimeOnly "maven.modrinth:pipez:z20ZR1YE"
-
-    //let's do winery
-    compileOnly "maven.modrinth:lets-do-vinery:ZywXpLC6"
-    //runtimeOnly "maven.modrinth:lets-do-vinery:ZywXpLC6"
-
-    //let's do brewery
-    compileOnly "maven.modrinth:lets-do-brewery-farmcharm-compat:vzXZ4Pak"
-    //runtimeOnly "maven.modrinth:lets-do-brewery-farmcharm-compat:vzXZ4Pak"
-
-    //Let's Do Farm & Charm
-    //compileOnly "maven.modrinth:lets-do-farm-charm:muipCbfC"
-    //runtimeOnly "maven.modrinth:lets-do-farm-charm:muipCbfC"
-
-    //Architectury API
-    compileOnly "maven.modrinth:architectury-api:ZxYGwlk0"
-    //runtimeOnly "maven.modrinth:architectury-api:ZxYGwlk0"
-
-    //Create: Numismatics
-    compileOnly "maven.modrinth:numismatics:KMFhYqZ9"
-    //runtimeOnly "maven.modrinth:numismatics:KMFhYqZ9"
-
-    //Create
-    compileOnly "maven.modrinth:create:n7NADxiG"
-    //runtimeOnly "maven.modrinth:create:n7NADxiG"
-
-    //Lightman's Currency
-    compileOnly "maven.modrinth:lightmans-currency:DCVYBw7Y"
-    //runtimeOnly "maven.modrinth:lightmans-currency:DCVYBw7Y"
-
-
-}
-
-
-publishing {
-    publications {
-        mavenJava(MavenPublication) {
-            artifactId = base.archivesName.get()
-            from components.java
-        }
+    //tyson the ember
+    repositories {
+        maven { url = 'https://maven.tysontheember.dev' }
     }
 
     repositories {
-        if (System.getenv("MAVEN_USER") == null || System.getenv("MAVEN_PASS") == null) {
-            mavenLocal()
-        } else maven {
-            name = "wdReleases"
-            url = "https://maven.favouriteless.net/releases"
-
-            credentials {
-                username = System.getenv("MAVEN_USER")
-                password = System.getenv("MAVEN_PASS")
+        exclusiveContent {
+            forRepository {
+                maven {
+                    url "https://cursemaven.com"
+                }
+            }
+            filter {
+                includeGroup "curse.maven"
             }
         }
     }
@@ -136,127 +69,187 @@ base {
     archivesName = mod_id
 }
 
-java {
-    toolchain.languageVersion = JavaLanguageVersion.of(21)
-    withSourcesJar()
-}
+java.toolchain.languageVersion = JavaLanguageVersion.of(17)
 
-neoForge {
-    // Specify the version of NeoForge to use.
-    version = project.neo_version
+legacyForge {
+
+    version = project.minecraft_version + '-' + project.forge_version
 
     parchment {
         mappingsVersion = project.parchment_mappings_version
         minecraftVersion = project.parchment_minecraft_version
     }
 
-    // This line is optional. Access Transformers are automatically detected
-    // accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
+  //  accessTransformers = project.files('src/main/resources/META-INF/accesstransformer.cfg')
 
-    // Default run configurations.
-    // These can be tweaked, removed, or duplicated as needed.
+  //  validateAccessTransformers = true
+
+/*    accessTransformers {
+        publish file("src/main/resources/META-INF/accesstransformer.cfg")
+    }
+
+    interfaceInjectionData {
+        from "src/main/resources/neobackports.interfaces.json"
+        publish file("src/main/resources/neobackports.interfaces.json")
+    }*/
+
     runs {
         client {
             client()
 
-            // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
         }
 
         server {
             server()
             programArgument '--nogui'
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
         }
 
-        // This run config launches GameTestServer and runs all registered gametests, then exits.
-        // By default, the server will crash when no gametests are provided.
-        // The gametest system is also enabled by default for other run configs under the /test command.
         gameTestServer {
             type = "gameTestServer"
-            systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
+            systemProperty 'forge.enabledGameTestNamespaces', project.mod_id
         }
 
         data {
             data()
 
-            // example of overriding the workingDirectory set in configureEach above, uncomment if you want to use it
-            // gameDirectory = project.file('run-data')
-
-            // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
             programArguments.addAll '--mod', project.mod_id, '--all', '--output', file('src/generated/resources/').getAbsolutePath(), '--existing', file('src/main/resources/').getAbsolutePath()
         }
 
-        // applies to all the run configs above
         configureEach {
-            // Recommended logging data for a userdev environment
-            // The markers can be added/remove as needed separated by commas.
-            // "SCAN": For mods scan.
-            // "REGISTRIES": For firing of registry events.
-            // "REGISTRYDUMP": For getting the contents of all registries.
             systemProperty 'forge.logging.markers', 'REGISTRIES'
 
-            // Recommended logging level for the console
-            // You can set various levels here.
-            // Please read: https://stackoverflow.com/questions/2031163/when-to-use-the-different-log-levels
-            logLevel = org.slf4j.event.Level.WARN
+            logLevel = org.slf4j.event.Level.DEBUG
         }
     }
 
     mods {
-        // define mod <-> source bindings
-        // these are used to tell the game which sources are for which mod
-        // multi mod projects should define one per mod
         "${mod_id}" {
             sourceSet(sourceSets.main)
         }
     }
 }
 
-// Include resources generated by data generators.
 sourceSets.main.resources { srcDir 'src/generated/resources' }
 
-// Sets up a dependency configuration called 'localRuntime'.
-// This configuration should be used instead of 'runtimeOnly' to declare
-// a dependency that will be present for runtime testing but that is
-// "optional", meaning it will not be pulled by dependents of this mod.
 configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
 
+obfuscation {
+    createRemappingConfiguration(configurations.localRuntime)
+}
 
-// This block of code expands all declared replace properties in the specified resource targets.
-// A missing property will result in an error. Properties are expanded using ${} Groovy notation.
+
+dependencies {
+    //tiny multiblock lib
+    jarJar(modImplementation("maven.modrinth:tiny-multiblock-lib:forge-1.20.1-${tiny_multiblock_lib_version}"))
+
+    //NeoBackports
+    jarJar(modImplementation("net.nikdo53.neobackports:NeoBackports:${neobackports_version}"))
+    interfaceInjectionData("net.nikdo53.neobackports:NeoBackports:${neobackports_version}")
+    interfaceInjectionData("net.nikdo53.neobackports:NeoBackports:${neobackports_version}")
+
+    //EMI
+    modCompileOnly "dev.emi:emi-forge:${emi_version}:api"
+    modRuntimeOnly "dev.emi:emi-forge:${emi_version}"
+
+    //JEI
+    modCompileOnly("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
+    modCompileOnlyApi("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    //runtimeOnly("mezz.jei:jei-${mc_version}-neoforge:${jei_version}")
+
+    //quality foods compat
+    modCompileOnly("maven.modrinth:quality-food:2.3.0-1.20.1")
+    //runtimeOnly("maven.modrinth:quality-food:vLFBpk1n")
+
+    //pipez
+    //runtimeOnly "maven.modrinth:pipez:z20ZR1YE"
+
+    //let's do winery
+    modCompileOnly "maven.modrinth:lets-do-vinery:1.4.41-forge,1.20.1"
+    //runtimeOnly "maven.modrinth:lets-do-vinery:ZywXpLC6"
+
+    //let's do brewery
+    modCompileOnly "maven.modrinth:lets-do-brewery-farmcharm-compat:2.0.6-forge,1.20.1"
+    //runtimeOnly "maven.modrinth:lets-do-brewery-farmcharm-compat:vzXZ4Pak"
+
+    //Let's Do Farm & Charm
+    //compileOnly "maven.modrinth:lets-do-farm-charm:muipCbfC"
+    //runtimeOnly "maven.modrinth:lets-do-farm-charm:muipCbfC"
+
+    //Architectury API
+    modCompileOnly "maven.modrinth:architectury-api:9.2.14+forge"
+    //runtimeOnly "maven.modrinth:architectury-api:ZxYGwlk0"
+
+    //Create: Numismatics
+    modCompileOnly "maven.modrinth:numismatics:1.0.15+forge-mc1.20.1"
+    //runtimeOnly "maven.modrinth:numismatics:KMFhYqZ9"
+
+    //Create
+    modCompileOnly "maven.modrinth:create:mc1.20.1-6.0.8"
+    //runtimeOnly "maven.modrinth:create:n7NADxiG"
+
+    //Lightman's Currency
+    modCompileOnly "maven.modrinth:lightmans-currency:1.20.1-2.3.0.4e"
+    //runtimeOnly "maven.modrinth:lightmans-currency:DCVYBw7Y"
+
+}
+
+jar {
+    manifest.attributes([
+            "MixinConfigs": "${mod_id}.mixins.json"
+    ])
+
+    finalizedBy('reobfJar')
+}
+
+publishing {
+    publications {
+        register('mavenJava', MavenPublication) {
+            from components.java
+
+        }
+    }
+    repositories {
+        maven {
+            url "file://${project.projectDir}/repo"
+        }
+    }
+}
+
+java {
+    withJavadocJar()
+    withSourcesJar()
+}
+
+
 var generateModMetadata = tasks.register("generateModMetadata", ProcessResources) {
     var replaceProperties = [
-            minecraft_version      : minecraft_version,
-            minecraft_version_range: minecraft_version_range,
-            neo_version            : neo_version,
-            loader_version_range   : loader_version_range,
-            mod_id                 : mod_id,
-            mod_name               : mod_name,
-            mod_license            : mod_license,
-            mod_version            : mod_version,
-            mod_authors            : mod_authors,
-            neo_version_range      : neo_version_range
+            minecraft_version        : minecraft_version,
+            minecraft_version_range  : minecraft_version_range,
+            forge_version            : forge_version,
+            forge_version_range      : forge_version_range,
+            loader_version_range     : loader_version_range,
+            mod_id                   : mod_id,
+            mod_name                 : mod_name,
+            mod_license              : mod_license,
+            mod_version              : mod_version,
+            mod_authors              : mod_authors,
     ]
     inputs.properties replaceProperties
     expand replaceProperties
     from "src/main/templates"
     into "build/generated/sources/modMetadata"
 }
-// Include the output of "generateModMetadata" as an input directory for the build
-// this works with both building through Gradle and the IDE.
 sourceSets.main.resources.srcDir generateModMetadata
-// To avoid having to run "generateModMetadata" manually, make it run on every project reload
-neoForge.ideSyncTask generateModMetadata
-
+legacyForge.ideSyncTask generateModMetadata
 
 tasks.withType(JavaCompile).configureEach {
     options.encoding = 'UTF-8' // Use the UTF-8 charset for Java compilation
 }
 
-// IDEA no longer automatically downloads sources/javadoc jars for dependencies, so we need to explicitly enable the behavior.
 idea {
     module {
         downloadSources = true

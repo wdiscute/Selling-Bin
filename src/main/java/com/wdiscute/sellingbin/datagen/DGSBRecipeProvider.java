@@ -8,33 +8,32 @@ import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraftforge.common.Tags;
 
 import java.util.concurrent.CompletableFuture;
+import java.util.function.Consumer;
 
 public class DGSBRecipeProvider extends RecipeProvider
 {
-    public DGSBRecipeProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries)
+    public DGSBRecipeProvider(PackOutput output)
     {
-        super(output, registries);
+        super(output);
     }
 
     @Override
-    protected void buildRecipes(RecipeOutput output)
-    {
-        //selling bin
-        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, SBBlocks.SELLING_BIN)
-                .define('B', Blocks.BARREL)
-                .define('S', ItemTags.WOODEN_SLABS)
-                .define('C', ItemTags.WOOL_CARPETS)
-                .pattern("CCC")
-                .pattern("SBS")
-                .pattern("SSS")
-                .unlockedBy("selling_bin_sellable",
-                        inventoryTrigger(Builder.item().withSubPredicate(SBItemPredicate.SELLING_BIN_SELLABLE.get(), new SBItemPredicate.SellingBinSellablePredicate())))
-                .save(output);
+    protected void buildRecipes(Consumer<FinishedRecipe> output) {
+        {
+            //selling bin
+            ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, SBBlocks.SELLING_BIN)
+                    .define('B', Blocks.BARREL)
+                    .define('S', ItemTags.WOODEN_SLABS)
+                    .define('C', ItemTags.WOOL_CARPETS)
+                    .pattern("CCC")
+                    .pattern("SBS")
+                    .pattern("SSS")
+                    .unlockedBy("selling_bin_sellable", has(Blocks.BARREL))
+                    .save(output);
+        }
+
     }
-
-
-
-
 }

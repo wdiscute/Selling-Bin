@@ -4,6 +4,8 @@ import com.wdiscute.sellingbin.registry.SBBlockEntities;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
+import net.minecraft.network.protocol.game.ServerPacketListener;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -25,6 +27,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraftforge.network.NetworkHooks;
+import net.nikdo53.neobackports.utils.ItemInteractionResult;
 import net.nikdo53.tinymultiblocklib.block.AbstractMultiBlock;
 import net.nikdo53.tinymultiblocklib.block.IMultiBlock;
 import net.nikdo53.tinymultiblocklib.block.IPreviewableMultiblock;
@@ -55,13 +59,13 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
     }
 
     @Override
-    protected float getShadeBrightness(BlockState p_308911_, BlockGetter p_308952_, BlockPos p_308918_)
+    public float getShadeBrightness(BlockState p_308911_, BlockGetter p_308952_, BlockPos p_308918_)
     {
         return 1.0F;
     }
 
     @Override
-    protected boolean propagatesSkylightDown(BlockState p_309084_, BlockGetter p_309133_, BlockPos p_309097_)
+    public boolean propagatesSkylightDown(BlockState p_309084_, BlockGetter p_309133_, BlockPos p_309097_)
     {
         return true;
     }
@@ -115,7 +119,7 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
     }
 
     @Override
-    protected ItemInteractionResult useItemOn(ItemStack handStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
+    public ItemInteractionResult useItemOn(ItemStack handStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)
     {
         int value = Currency.calculateValueFromSingleStack(handStack, level.getBlockEntity(pos));
         if (value > 0)
@@ -140,7 +144,7 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
                     fitInsideCount -= inside.getCount();
 
                     int amountTransferring = Math.min(handStack.getCount(), fitInsideCount);
-                    if(inside.isStackable() && ItemStack.isSameItemSameComponents(handStack, inside) && fitInsideCount > 0)
+                    if(inside.isStackable() && ItemStack.isSameItemSameTags(handStack, inside) && fitInsideCount > 0)
                     {
                         handStack.shrink(amountTransferring);
                         inside.grow(amountTransferring);
@@ -157,12 +161,12 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult)
+    public InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult)
     {
         BlockPos center = IMultiBlock.getCenter(level, pos);
-        if (level.getBlockEntity(center) instanceof SellingBinBlockEntity sbbe && !level.isClientSide)
+        if (level.getBlockEntity(center) instanceof SellingBinBlockEntity sbbe && player instanceof ServerPlayer serverPlayer)
         {
-            player.openMenu(sbbe, center);
+            NetworkHooks.openScreen(serverPlayer, sbbe, center);
         }
         return InteractionResult.SUCCESS;
     }

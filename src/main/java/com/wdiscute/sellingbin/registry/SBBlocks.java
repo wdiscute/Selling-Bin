@@ -5,16 +5,17 @@ import com.wdiscute.sellingbin.bin.SellingBinBlock;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
-import net.neoforged.bus.api.IEventBus;
-import net.neoforged.neoforge.registries.DeferredBlock;
-import net.neoforged.neoforge.registries.DeferredRegister;
+import net.minecraftforge.eventbus.api.IEventBus;
+import net.minecraftforge.registries.DeferredRegister;
+import net.nikdo53.neobackports.registry.DeferredBlock;
+import net.nikdo53.neobackports.registry.DeferredRegisterTyped;
 
 import java.util.function.Supplier;
 
 public interface SBBlocks
 {
-    DeferredRegister.Items ITEMS = DeferredRegister.createItems(SellingBin.MOD_ID);
-    DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(SellingBin.MOD_ID);
+    DeferredRegisterTyped.Items ITEMS = DeferredRegisterTyped.createItems(SellingBin.MOD_ID);
+    DeferredRegisterTyped.Blocks BLOCKS = DeferredRegisterTyped.createBlocks(SellingBin.MOD_ID);
 
     DeferredBlock<Block> SELLING_BIN = registerBlock("selling_bin", SellingBinBlock::new);
 

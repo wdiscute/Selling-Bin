@@ -16,13 +16,15 @@ import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.ItemDisplayContext;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
-import net.neoforged.fml.ModList;
+import net.minecraftforge.fml.ModList;
+import net.nikdo53.neobackports.screen.BlurShaderLoader;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -128,9 +130,9 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
         //render arrow
         //scales [0, SELLING_BIN_LOWEST_VALUE]   ->   [0, 16]
         Currency currency = menu.be.currencySelected;
-        if (currency.isNone()) currency = menu.be.currencies.getFirst();
+        if (currency.isNone()) currency = menu.be.currencies.get(0);
         int arrow = (int) ((((float) progressAvailable) / ((float) currency.value())) * 16);
-        guiGraphics.blit(TEXTURE, uiX + 80, uiY + 37, 192, 16, Math.clamp(arrow, 0, 16), 16, 256, 256);
+        guiGraphics.blit(TEXTURE, uiX + 80, uiY + 37, 192, 16, Mth.clamp(arrow, 0, 16), 16, 256, 256);
 
         //insta sell pressed
         if (menu.be.instaSell)
@@ -226,6 +228,8 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
 
     protected void renderBg(GuiGraphics guiGraphics, float partialTick, int mouseX, int mouseY)
     {
+        this.renderBackground(guiGraphics);
+
         int nix = uiX + 29;
         int niy = uiY + 37;
         guiGraphics.blit(TEXTURE, uiX, uiY, 0, 0, this.imageWidth, this.imageHeight);

@@ -58,7 +58,7 @@ public class SellingBinSellingEmiRecipe implements EmiRecipe
     @Override
     public @Nullable ResourceLocation getId()
     {
-        return ResourceLocation.fromNamespaceAndPath(id.getNamespace(), "/selling/" + id.getPath());
+        return new ResourceLocation(id.getNamespace(), "/selling/" + id.getPath());
     }
 
     @Override

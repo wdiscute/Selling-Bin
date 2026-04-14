@@ -6,7 +6,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.nikdo53.neobackports.registry.DeferredHolder;
 
 import java.util.List;
 
@@ -47,6 +47,6 @@ public class FoodProcessor extends AbstractProcessor
 
         if (foodProperties == null) return 0;
 
-        return (int) (foodProperties.nutrition() + foodProperties.saturation() * 2);
+        return (int) (foodProperties.getNutrition() + foodProperties.getSaturationModifier() * 2);
     }
 }

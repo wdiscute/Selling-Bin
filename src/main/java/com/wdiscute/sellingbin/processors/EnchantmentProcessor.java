@@ -4,15 +4,14 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.Enchantment;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import net.minecraft.world.item.enchantment.ItemEnchantments;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.neoforged.neoforge.registries.DeferredHolder;
+import net.nikdo53.neobackports.registry.DeferredHolder;
 
 import java.util.List;
 import java.util.Map;
@@ -33,7 +32,7 @@ public class EnchantmentProcessor extends AbstractProcessor
 
     public static final MapCodec<EnchantmentProcessor> CODEC = RecordCodecBuilder.mapCodec(instance ->
             instance.group(
-                    Codec.unboundedMap(Enchantment.CODEC, Codec.INT)
+                    Codec.unboundedMap(BuiltInRegistries.ENCHANTMENT.holderByNameCodec(), Codec.INT)
                             .fieldOf("enchantments")
                             .forGetter(EnchantmentProcessor::getEnchantments)
             ).apply(instance, EnchantmentProcessor::new));
@@ -71,16 +70,13 @@ public class EnchantmentProcessor extends AbstractProcessor
     @Override
     public int addValue(int baseValue, int currentValue, ItemStack itemStack, BlockEntity blockEntity, Player player)
     {
-        if (!EnchantmentHelper.hasAnyEnchantments(itemStack)) return 0;
+        Map<Enchantment, Integer> map = EnchantmentHelper.getEnchantments(itemStack);
+        if (map.isEmpty()) return 0;
 
         AtomicInteger value = new AtomicInteger();
 
-        ItemEnchantments storedEnchants = itemStack.getOrDefault(DataComponents.STORED_ENCHANTMENTS, ItemEnchantments.EMPTY);
-        ItemEnchantments appliedEnchants = itemStack.getOrDefault(DataComponents.ENCHANTMENTS, ItemEnchantments.EMPTY);
-        ItemEnchantments enchants = storedEnchants.isEmpty() ? appliedEnchants : storedEnchants;
 
-
-        enchantments.forEach((o, i) -> value.addAndGet(enchants.getLevel(o) * i));
+        enchantments.forEach((o, i) -> value.addAndGet(map.get(o.value()) * i));
 
         return value.get();
 

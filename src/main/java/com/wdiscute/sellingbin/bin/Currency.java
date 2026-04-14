@@ -11,6 +11,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.registries.ForgeRegistries;
 
 import javax.annotation.Nullable;
 import java.text.DecimalFormat;
@@ -30,7 +31,7 @@ public record Currency(Item item, int value)
     public static List<Currency> getCurrencies()
     {
         //add all currencies from datamap
-        Map<ResourceKey<Item>, Integer> dataMap = BuiltInRegistries.ITEM.getDataMap(SBDataMaps.SELLING_BIN_CURRENCIES);
+        Map<ResourceKey<Item>, Integer> dataMap = ForgeRegistries.ITEMS.getDataMap(SBDataMaps.SELLING_BIN_CURRENCIES);
         List<Currency> currenciesUnfiltered = new ArrayList<>();
         dataMap.forEach((i, v) -> currenciesUnfiltered.add(new Currency(BuiltInRegistries.ITEM.get(i), v)));
 
@@ -81,7 +82,12 @@ public record Currency(Item item, int value)
     //returns formatted string of highest possible currency for the value
     public static String getStringFromValue(int value)
     {
-        List<Currency> currencies = Currency.getCurrencies().reversed();
+        List<Currency> currencies = new ArrayList<>();
+
+        for (int i = Currency.getCurrencies().size() - 1; i >= 0; i--)
+        {
+            currencies.add(Currency.getCurrencies().get(i));
+        }
 
         boolean found = false;
 
@@ -107,13 +113,13 @@ public record Currency(Item item, int value)
 
         if (!found)
         {
-            float numOfCurrency = (float) value / currencies.getLast().value();
+            float numOfCurrency = (float) value / currencies.get(currencies.size() - 1).value();
             DecimalFormat df = new DecimalFormat("#.##");
 
             if (numOfCurrency == 1)
-                s = s + df.format(numOfCurrency) + " " + currencies.getLast().item().getDescription().getString(100);
+                s = s + df.format(numOfCurrency) + " " + currencies.get(currencies.size() - 1).item().getDescription().getString(100);
             else
-                s = s + df.format(numOfCurrency) + " " + getPluralTranslation(currencies.getLast().item()).getString(100);
+                s = s + df.format(numOfCurrency) + " " + getPluralTranslation(currencies.get(currencies.size() - 1).item()).getString(100);
         }
 
         return s;
