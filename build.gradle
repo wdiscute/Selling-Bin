@@ -149,7 +149,6 @@ dependencies {
     //NeoBackports
     jarJar(modImplementation("net.nikdo53.neobackports:NeoBackports:${neobackports_version}"))
     interfaceInjectionData("net.nikdo53.neobackports:NeoBackports:${neobackports_version}")
-    interfaceInjectionData("net.nikdo53.neobackports:NeoBackports:${neobackports_version}")
 
     //EMI
     modCompileOnly "dev.emi:emi-forge:${emi_version}:api"

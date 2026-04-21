@@ -23,9 +23,17 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
+import net.minecraftforge.common.util.LazyOptional;
+import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fml.ModList;
+import net.minecraftforge.items.IItemHandler;
+import net.minecraftforge.items.ItemStackHandler;
 import net.nikdo53.tinymultiblocklib.blockentities.AbstractMultiBlockEntity;
+import org.jetbrains.annotations.NotNull;
 
 import javax.annotation.Nullable;
 import java.util.ArrayList;
@@ -427,5 +435,23 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     public void toggleSound()
     {
         sound = !sound;
+    }
+
+    private final LazyOptional<IItemHandler> holder = LazyOptional.of(() -> new ItemStackHandler(this.itemStacks));
+
+
+    @Override
+    public @NotNull <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @org.jetbrains.annotations.Nullable Direction side) {
+        if (cap == ForgeCapabilities.ITEM_HANDLER){
+            if (isCenter()){
+                return holder.cast();
+            } else {
+                BlockEntity blockEntity = level.getBlockEntity(getCenter());
+                if (blockEntity != null) {
+                  return blockEntity.getCapability(cap, side);
+                }
+            }
+        }
+        return super.getCapability(cap, side);
     }
 }
