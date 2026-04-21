@@ -26,10 +26,12 @@ import java.util.List;
 public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
 {
     private static final Identifier TEXTURE = SellingBin.rl("textures/gui/selling_bin/selling_bin_background.png");
+    private static final Identifier CARD = SellingBin.rl("textures/gui/selling_bin/card_slot.png");
 
     private int uiX = 0;
     private int uiY = 0;
     int imageHeight = 176;
+    private static boolean numismatics = false;
 
     private boolean mousePressed;
 
@@ -156,9 +158,9 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
         //sell / sell all
         MutableComponent sellComp;
         if (Minecraft.getInstance().hasShiftDown())
-            sellComp = Component.translatable("gui.selling_bin.selling_bin.sell_all");
+            sellComp = Component.translatable("gui.selling_bin.sell_all");
         else
-            sellComp = Component.translatable("gui.selling_bin.selling_bin.sell");
+            sellComp = Component.translatable("gui.selling_bin.sell");
 
         //sell text
         renderCenteredString(guiGraphics, this.font, sellComp, uiX + 101, uiY + 14, 0xff87583a, false);
@@ -181,7 +183,7 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
 
         //sound tooltip
         if (x > 140 && x < 151 && y > 40 && y < 51)
-            renderTooltip(guiGraphics, Component.translatable("gui.selling_bin.selling_bin.sell_sound"), mouseX, mouseY);
+            renderTooltip(guiGraphics, Component.translatable("gui.selling_bin.sell_sound"), mouseX, mouseY);
 
         //render currency selected
         ItemStack currencyStack = new ItemStack(menu.be.currencySelected.item());
@@ -200,9 +202,9 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
         if (x > 126 && x < 137 && y > 40 && y < 51)
         {
             List<Component> components = new ArrayList<>();
-            components.add(Component.translatable("gui.selling_bin.selling_bin.currency_selected"));
+            components.add(Component.translatable("gui.selling_bin.currency_selected"));
             if (menu.be.currencySelected.isNone())
-                components.add(Component.translatable("gui.selling_bin.selling_bin.highest"));
+                components.add(Component.translatable("gui.selling_bin.highest"));
             else
             {
                 MutableComponent mutableComponent = Component.empty();
@@ -221,7 +223,7 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
             if (menu.be.instaSell)
                 guiGraphics.blit(RenderPipelines.GUI_TEXTURED, TEXTURE, uiX + 55, uiY + 10, 192, 112, 18, 16, 256, 256);
 
-            renderTooltip(guiGraphics, Component.translatable("gui.selling_bin.selling_bin.auto_sell"), mouseX, mouseY);
+            renderTooltip(guiGraphics, Component.translatable("gui.selling_bin.auto_sell"), mouseX, mouseY);
         }
 
         //arrow tooltip

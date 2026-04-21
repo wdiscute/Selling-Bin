@@ -21,6 +21,8 @@ import java.util.Map;
 
 public record Currency(Item item, int value)
 {
+    public static Currency EMPTY = new Currency(Items.AIR, Integer.MAX_VALUE);
+
     public static final Currency NONE = new Currency(Items.AIR, 0);
 
     public boolean isNone(){return this.equals(NONE);}
@@ -35,8 +37,8 @@ public record Currency(Item item, int value)
         //remove entries with negative value
         List<Currency> currencies = new ArrayList<>(currenciesUnfiltered.stream().filter(o -> o.value() > 0).toList());
 
-        //if no entries remain, use default of just emeralds
-        if(currencies.isEmpty()) return List.of(new Currency(Items.AIR, Integer.MAX_VALUE));
+        //if no entries remain, use default of air
+        if(currencies.isEmpty()) return List.of(EMPTY);
 
         //sort by lowest value
         currencies.sort(Comparator.comparingInt(Currency::value));
@@ -122,7 +124,7 @@ public record Currency(Item item, int value)
         List<Component> comps = new ArrayList<>();
 
         if(addCurrenciesText)
-            comps.add(Component.translatable("gui.selling_bin.selling_bin.currencies"));
+            comps.add(Component.translatable("gui.selling_bin.currencies"));
 
         for (Currency c : currencies)
         {

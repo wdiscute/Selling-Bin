@@ -16,17 +16,21 @@ public class SBProcessors
     public static final DeferredHolder<AbstractProcessor, AbstractProcessor> EMPTY_PROCESSOR = register("empty_processor", EmptyProcessor::new);
     public static final DeferredHolder<AbstractProcessor, AbstractProcessor> DURABILITY = register("durability_processor", DurabilityProcessor::new);
     public static final DeferredHolder<AbstractProcessor, AbstractProcessor> FOOD_PROCESSOR = register("food_processor", FoodProcessor::new);
-    public static DeferredHolder<AbstractProcessor, AbstractProcessor> ENCHANTMENTS_PROCESSOR = register("enchantments_processor", EnchantmentProcessor::new);
+    public static final DeferredHolder<AbstractProcessor, AbstractProcessor> ENCHANTMENTS_PROCESSOR = register("enchantments_processor", EnchantmentProcessor::new);
     public static DeferredHolder<AbstractProcessor, AbstractProcessor> QUALITY_FOODS_PROCESSOR;
     public static DeferredHolder<AbstractProcessor, AbstractProcessor> WINE_AGE_PROCESSOR;
+    public static DeferredHolder<AbstractProcessor, AbstractProcessor> BEER_QUALITY_PROCESSOR;
 
     public static void registerOptionals()
     {
-        if (ModList.get().isLoaded("quality_food"))
-            QUALITY_FOODS_PROCESSOR = register("quality_foods_processor", QualityFoodsProcessor::new);
+        //if (ModList.get().isLoaded("quality_food"))
+            //QUALITY_FOODS_PROCESSOR = register("quality_foods_processor", QualityFoodsProcessor::new);
 
-        if (ModList.get().isLoaded("vinery"))
-            WINE_AGE_PROCESSOR = register("wine_age_processor", WineAgeProcessor::new);
+        //if (ModList.get().isLoaded("vinery"))
+            //WINE_AGE_PROCESSOR = register("wine_age_processor", WineAgeProcessor::new);
+
+        //if (ModList.get().isLoaded("brewery"))
+            //BEER_QUALITY_PROCESSOR = register("beer_quality_processor", BeerQualityProcessor::new);
     }
 
     public static DeferredHolder<AbstractProcessor, AbstractProcessor> register(String name, Supplier<AbstractProcessor> sup)

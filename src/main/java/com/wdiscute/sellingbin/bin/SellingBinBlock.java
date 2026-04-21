@@ -51,7 +51,11 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
     public @Nullable <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> blockEntityType)
     {
         if (!state.getValue(AbstractMultiBlock.CENTER)) return null;
-        return TickableBlockEntity.getTicketHelper(level);
+        return level.isClientSide() ? null : (level0, pos0, state0, blockEntity) ->
+        {
+            if(blockEntity instanceof SellingBinBlockEntity sellingBinBlockEntity && sellingBinBlockEntity.instaSell)
+                sellingBinBlockEntity.tick();
+        };
     }
 
     @Override
@@ -113,7 +117,6 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
         double d2 = (double) bp.getZ() + 0.5 + (double) vec3i.getZ() / 2.0;
         level.playSound(null, d0, d1, d2, sound, SoundSource.BLOCKS, 0.5F, level.getRandom().nextFloat() * 0.1F + 0.9F);
     }
-
 
     @Override
     protected InteractionResult useItemOn(ItemStack handStack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hitResult)

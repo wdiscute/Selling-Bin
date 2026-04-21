@@ -7,10 +7,13 @@ import com.wdiscute.sellingbin.registry.SBBlocks;
 import com.wdiscute.sellingbin.registry.SBDataMaps;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
+import mezz.jei.api.gui.inputs.IJeiGuiEventListener;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.components.events.GuiEventListener;
+import net.minecraft.client.gui.navigation.ScreenRectangle;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.Identifier;
@@ -42,14 +45,10 @@ public class SellingBinJeiPlugin implements IModPlugin
         listSellables.clear();
 
         //add all currencies
-        BuiltInRegistries.ITEM.getDataMap(SBDataMaps.SELLING_BIN_CURRENCIES).forEach((rk, value) ->
+        Currency.getCurrencies().forEach((currency) ->
         {
-            if (value != 0)
-            {
-                Item item = BuiltInRegistries.ITEM.getOptional(rk).get();
-                currencies.add(new ItemStack(item));
-                listCurrencies.add(new SellingBinCurrencyJeiRecipe.Recipe(item, value));
-            }
+            currencies.add(new ItemStack(currency.item()));
+            listCurrencies.add(new SellingBinCurrencyJeiRecipe.Recipe(currency.item(), currency.value()));
         });
 
         //add all item with selling bin value

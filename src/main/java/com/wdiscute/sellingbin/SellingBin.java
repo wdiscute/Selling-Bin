@@ -2,7 +2,7 @@ package com.wdiscute.sellingbin;
 
 import com.mojang.logging.LogUtils;
 import com.wdiscute.sellingbin.processors.AbstractProcessor;
-import com.wdiscute.sellingbin.processors.ModProcessors;
+import com.wdiscute.sellingbin.processors.SBProcessors;
 import com.wdiscute.sellingbin.registry.*;
 import net.minecraft.core.Registry;
 import net.minecraft.resources.Identifier;
@@ -40,15 +40,17 @@ public class SellingBin
         return Identifier.fromNamespaceAndPath(SellingBin.MOD_ID, s);
     }
 
+    public static Identifier rl(String ns, String s)
+    {
+        return Identifier.fromNamespaceAndPath(ns, s);
+    }
+
     public SellingBin(IEventBus modEventBus, ModContainer modContainer)
     {
-        SBCreativeModeTabs.register(modEventBus);
-
-        SBItems.register(modEventBus);
         SBBlocks.register(modEventBus);
         SBBlockEntities.register(modEventBus);
         SBMenuTypes.register(modEventBus);
-        ModProcessors.register(modEventBus);
+        SBProcessors.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.CLIENT, SBConfig.SPEC);
         modContainer.registerConfig(ModConfig.Type.SERVER, SBConfig.SPEC_SERVER);

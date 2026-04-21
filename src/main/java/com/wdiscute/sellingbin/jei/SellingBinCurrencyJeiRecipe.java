@@ -1,13 +1,11 @@
 package com.wdiscute.sellingbin.jei;
 
-import com.mojang.blaze3d.pipeline.RenderPipeline;
 import com.wdiscute.sellingbin.SellingBin;
 import com.wdiscute.sellingbin.registry.SBBlocks;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
@@ -31,15 +29,15 @@ public class SellingBinCurrencyJeiRecipe extends AbstractRecipeCategory<SellingB
                 Recipe.TYPE,
                 Component.translatable("emi.category.selling_bin.selling_bin_currencies"),
                 guiHelper.createDrawableItemLike(SBBlocks.SELLING_BIN),
-                SellingBinJeiPlugin.currencies.isEmpty() ? 350 : 120,
-                SellingBinJeiPlugin.currencies.isEmpty() ? 100 : 20
+                SellingBinJeiPlugin.currencies.isEmpty() || SellingBinJeiPlugin.currencies.get(0).isEmpty() ? 350 : 120,
+                SellingBinJeiPlugin.currencies.isEmpty() || SellingBinJeiPlugin.currencies.get(0).isEmpty() ? 100 : 20
         );
     }
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, Recipe recipe, IFocusGroup focuses)
     {
-        if (SellingBinJeiPlugin.currencies.isEmpty()) return;
+        if (SellingBinJeiPlugin.currencies.isEmpty() || SellingBinJeiPlugin.currencies.get(0).isEmpty()) return;
 
         builder.addInputSlot(5, 2)
                 .addItemStacks(SellingBinJeiPlugin.sellables.isEmpty() ? List.of(Items.BARRIER.getDefaultInstance()) : SellingBinJeiPlugin.sellables);
@@ -52,7 +50,7 @@ public class SellingBinCurrencyJeiRecipe extends AbstractRecipeCategory<SellingB
     @Override
     public void draw(Recipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphicsExtractor guiGraphics, double mouseX, double mouseY)
     {
-        if (SellingBinJeiPlugin.currencies.isEmpty())
+        if (SellingBinJeiPlugin.currencies.isEmpty() || SellingBinJeiPlugin.currencies.get(0).isEmpty())
         {
             for (int i = 0; i < 10; i++)
                 guiGraphics.text(Minecraft.getInstance().font, Component.translatable("gui.selling_bin.currency.empty." + i), 5, 1 + i * 10, 0xff000000, false);
@@ -76,7 +74,7 @@ public class SellingBinCurrencyJeiRecipe extends AbstractRecipeCategory<SellingB
 
     public record Recipe(Item item, Integer itemValue)
     {
-        //selling_bin_zcurrency because jei sorts alphabetically :)
+        //zselling_bin_currency because jei sorts alphabetically :)
         public static final IRecipeType<Recipe> TYPE = IRecipeType.create(SellingBin.rl("zselling_bin_currency"), Recipe.class);
     }
 }

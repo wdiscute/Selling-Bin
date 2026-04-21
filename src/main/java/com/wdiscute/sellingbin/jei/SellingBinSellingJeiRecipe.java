@@ -7,7 +7,6 @@ import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
-import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.AbstractRecipeCategory;
 import mezz.jei.api.recipe.types.IRecipeType;
 import net.minecraft.client.Minecraft;
@@ -45,7 +44,7 @@ public class SellingBinSellingJeiRecipe extends AbstractRecipeCategory<SellingBi
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, Recipe recipe, IFocusGroup focuses)
     {
-        if (SellingBinJeiPlugin.sellables.isEmpty()) return;
+        if(SellingBinJeiPlugin.sellables.isEmpty()) return;
 
         builder.addInputSlot(5, 2)
                 .add(recipe.item().getDefaultInstance());
