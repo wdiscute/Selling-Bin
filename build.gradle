@@ -45,7 +45,7 @@ dependencies {
 
     //JEI
     compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
-    runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
+    //runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
 
     //lets do vinery
     //not updated
@@ -57,6 +57,11 @@ dependencies {
 
 base {
     archivesName = mod_id
+}
+
+java {
+    withSourcesJar()
+    withJavadocJar()
 }
 
 // Mojang ships Java 25 to end users in 26.1, so mods should target Java 25.
