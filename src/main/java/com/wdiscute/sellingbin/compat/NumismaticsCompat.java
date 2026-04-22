@@ -6,7 +6,7 @@ import java.util.Arrays;
 
 public class NumismaticsCompat
 {
-    public static boolean deposit(ItemStack result, ItemStack card)
+    public static boolean deposit(ItemStack result /*, ItemStack card*/)
     {
 //        BankAccount account = Numismatics.BANK.getAccount(CardItem.get(card));
 //

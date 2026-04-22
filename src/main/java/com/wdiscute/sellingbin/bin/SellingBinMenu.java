@@ -22,7 +22,7 @@ public class SellingBinMenu extends AbstractContainerMenu
 
     public SellingBinMenu(int containerId, Inventory inv, FriendlyByteBuf extraData)
     {
-        this(containerId, inv, new SimpleContainer(3), inv.player.level().getBlockEntity(extraData.readBlockPos()));
+        this(containerId, inv, new SimpleContainer(2), inv.player.level().getBlockEntity(extraData.readBlockPos()));
     }
 
     @Override
@@ -67,7 +67,7 @@ public class SellingBinMenu extends AbstractContainerMenu
     public SellingBinMenu(int containerId, Inventory playerInventory, Container container, BlockEntity blockEntity)
     {
         super(SBMenuTypes.SELLING_BIN_MENU.get(), containerId);
-        checkContainerSize(container, 3);
+        checkContainerSize(container, 2);
         this.be = (SellingBinBlockEntity) blockEntity;
         this.container = container;
         container.startOpen(playerInventory.player);
@@ -76,10 +76,10 @@ public class SellingBinMenu extends AbstractContainerMenu
 
         this.addSlot(new SellingBinResultSlot(this, container, RESULT_SLOT, 104, 33, blockEntity != null));
 
-        if(ModList.get().isLoaded("numismatics"))
-            this.addSlot(new SellingBinCardSlot(this, container, CARD_SLOT, 30, 33, blockEntity != null));
-        else
-            this.addSlot(new SellingBinBlockedSlot(container, CARD_SLOT));
+//        if(ModList.get().isLoaded("numismatics"))
+//            this.addSlot(new SellingBinCardSlot(this, container, CARD_SLOT, 30, 33, blockEntity != null));
+//        else
+//            this.addSlot(new SellingBinBlockedSlot(container, CARD_SLOT));
 
 
         for (int i1 = 0; i1 < 3; ++i1)

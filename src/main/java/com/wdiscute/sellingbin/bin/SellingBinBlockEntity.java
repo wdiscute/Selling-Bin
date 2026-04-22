@@ -95,7 +95,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
             itemValue.processors().forEach(o -> o.onSellComplete(getItem(SellingBinMenu.ITEM_SLOT)));
             if (!all)
             {
-                update();
+                forceUpdate();
                 if (!level.isClientSide() && sound)
                     level.playSound(null, getBlockPos(), SoundEvents.NOTE_BLOCK_BELL.value(), SoundSource.BLOCKS, 0.2f, 1.3f);
                 return;
@@ -130,7 +130,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
         if(level.isClientSide()) return;
 
         ItemStack result = getItem(SellingBinMenu.RESULT_SLOT);
-        ItemStack card = getItem(SellingBinMenu.CARD_SLOT);
+        //ItemStack card = getItem(SellingBinMenu.CARD_SLOT);
 
         //prevent unnecessary updates for better performance
         boolean shouldRun = false;
@@ -180,7 +180,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
 
         if (ModList.get().isLoaded("numismatics"))
         {
-            if(NumismaticsCompat.deposit(result, card))
+            if(NumismaticsCompat.deposit(result/*, card*/))
             {
                 setItem(SellingBinMenu.RESULT_SLOT, ItemStack.EMPTY);
                 forceUpdate();
@@ -269,7 +269,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     @Override
     public int getContainerSize()
     {
-        return 3;
+        return 2;
     }
 
     @Override
