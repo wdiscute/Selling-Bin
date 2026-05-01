@@ -14,7 +14,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-@Mod.EventBusSubscriber(modid = SellingBin.MOD_ID)
+@Mod.EventBusSubscriber(modid = SellingBin.MOD_ID, bus = Mod.EventBusSubscriber.Bus.MOD)
 public class SBDataGenerators
 {
 

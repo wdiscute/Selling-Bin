@@ -18,7 +18,7 @@
     "SSS"
   ],
   "result": {
-    "count": 1,
-    "id": "selling_bin:selling_bin"
-  }
+    "item": "selling_bin:selling_bin"
+  },
+  "show_notification": true
 }

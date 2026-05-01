@@ -11,9 +11,9 @@
       "conditions": {
         "items": [
           {
-            "predicates": {
-              "selling_bin:sellable_item": {}
-            }
+            "items": [
+              "minecraft:barrel"
+            ]
           }
         ]
       },
@@ -22,13 +22,14 @@
   },
   "requirements": [
     [
-      "has_the_recipe",
-      "selling_bin_sellable"
+      "selling_bin_sellable",
+      "has_the_recipe"
     ]
   ],
   "rewards": {
     "recipes": [
       "selling_bin:selling_bin"
     ]
-  }
+  },
+  "sends_telemetry_event": false
 }
