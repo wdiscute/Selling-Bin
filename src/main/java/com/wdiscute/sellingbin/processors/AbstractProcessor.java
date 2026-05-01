@@ -10,6 +10,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoader;
 import net.nikdo53.neobackports.registry.DeferredHolder;
 
 import javax.annotation.Nullable;
@@ -23,9 +25,14 @@ public abstract class AbstractProcessor
                     {
                         if(SellingBin.SELLING_BIN_REGISTRY.getValue(loc) == null)
                         {
-                            LogUtils.getLogger().error("Selling Bin Processor {} is not registered! " +
-                                    "Make sure it's not dependent on another mod, and that you spelt the name correctly. " +
-                                    "Using empty processor instead.", loc);
+                            String namespace = loc.getNamespace();
+                            if (ModList.get().isLoaded(namespace)){
+                                SellingBin.LOGGER.error("Selling Bin Processor {} is not registered! " +
+                                        "Make sure it's not dependent on another mod, and that you spelt the name correctly. " +
+                                        "Using empty processor instead.", loc);
+                            } else {
+                                SellingBin.LOGGER.debug("Selling Bin Processor {} comes from a mod that is not present, skipping silently...", loc);
+                            }
                             return EmptyProcessor.CODEC.codec();
                         }
                         return SellingBin.SELLING_BIN_REGISTRY.getValue(loc).getCodecOrThrow().codec();
