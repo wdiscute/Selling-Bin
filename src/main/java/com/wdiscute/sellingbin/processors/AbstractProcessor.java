@@ -5,11 +5,14 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.wdiscute.sellingbin.registry.SBDataMaps;
 import com.wdiscute.sellingbin.SellingBin;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraftforge.fml.ModList;
+import net.minecraftforge.fml.ModLoader;
 import net.nikdo53.neobackports.registry.DeferredHolder;
 
 import javax.annotation.Nullable;
@@ -23,9 +26,15 @@ public abstract class AbstractProcessor
                     {
                         if(SellingBin.SELLING_BIN_REGISTRY.getValue(loc) == null)
                         {
-                            LogUtils.getLogger().error("Selling Bin Processor {} is not registered! " +
-                                    "Make sure it's not dependent on another mod, and that you spelt the name correctly. " +
-                                    "Using empty processor instead.", loc);
+                            String modid = SBProcessors.COMPAT_MOD_PROCESSORS.get(loc.getPath());
+                            if (modid != null && !ModList.get().isLoaded(modid)){
+                                //idk if this should be info or debug, since I can't think of many reasons people would want to see this
+                                SellingBin.LOGGER.debug("Selling Bin Processor {} needs mod {}, but it's not loaded! Using empty processor instead...", loc, modid);
+                            } else {
+                                SellingBin.LOGGER.error("Selling Bin Processor {} is not registered! " +
+                                        "Make sure it's not dependent on another mod, and that you spelt the name correctly. " +
+                                        "Using empty processor instead...", loc);
+                            }
                             return EmptyProcessor.CODEC.codec();
                         }
                         return SellingBin.SELLING_BIN_REGISTRY.getValue(loc).getCodecOrThrow().codec();

@@ -1,11 +1,13 @@
 package com.wdiscute.sellingbin.processors;
 
 import com.wdiscute.sellingbin.SellingBin;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.fml.ModList;
 import net.nikdo53.neobackports.registry.DeferredHolder;
 import net.nikdo53.neobackports.registry.DeferredRegisterTyped;
 
+import java.util.Map;
 import java.util.function.Supplier;
 
 public class SBProcessors
@@ -20,6 +22,13 @@ public class SBProcessors
     public static DeferredHolder<AbstractProcessor, AbstractProcessor> QUALITY_FOODS_PROCESSOR;
     public static DeferredHolder<AbstractProcessor, AbstractProcessor> WINE_AGE_PROCESSOR;
     public static DeferredHolder<AbstractProcessor, AbstractProcessor> BEER_QUALITY_PROCESSOR;
+
+    // Skips these processors if their mods are not loaded
+    public static final Map<String, String> COMPAT_MOD_PROCESSORS = Map.of(
+            "quality_foods_processor", "quality_food",
+            "wine_age_processor", "vinery",
+            "beer_quality_processor", "brewery"
+    );
 
     public static void registerOptionals()
     {
