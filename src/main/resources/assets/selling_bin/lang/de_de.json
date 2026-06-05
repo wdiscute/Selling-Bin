@@ -41,13 +41,13 @@
   "gui.selling_bin.value" : "Wert",
   "gui.selling_bin.base_price" : "Preis:",
   "gui.selling_bin.processors" : "Modifikatoren:",
-  "gui.selling_bin.sell" : "Verkaufen",
-  "gui.selling_bin.sell_all" : "Alle Verkaufen",
+  "gui.selling_bin.sell" : "Verk.",
+  "gui.selling_bin.sell_all" : "Alle vk.",
   "gui.selling_bin.auto_sell" : "Autom. Verkauf",
-  "gui.selling_bin.sell_sound" : "Verkaufs-Soundeffekt",
+  "gui.selling_bin.sell_sound" : "Soundeffekt beim Verkaufen",
   "gui.selling_bin.currency_selected" : "Währung:",
   "gui.selling_bin.currencies" : "Währungen:",
-  "gui.selling_bin.highest" : "Maximum",
+  "gui.selling_bin.highest" : "Höchstmögliche",
   "gui.selling_bin.card_slot" : "Numismatics-Bankkarte",
 
 
