@@ -1,0 +1,58 @@
+{
+  "selling_bin.configuration.always_show_selling_bin_price" : "Marktstandpreise immer anzeigen",
+  "selling_bin.configuration.selling_in_multiplier" : "Marktstand-Multiplikator",
+
+
+  "emi.category.selling_bin.selling_bin_selling" : "Marktstand",
+  "emi.category.selling_bin.selling_bin_currencies" : "Marktstand-Währungen",
+
+  "gui.selling_bin.selling.empty.0" : "Es wurden keine Gegenstände registriert, die am Marktstand verkauft werden können!",
+  "gui.selling_bin.selling.empty.1" : "",
+  "gui.selling_bin.selling.empty.2" : "Der Marktstand funktioniert nicht ohne ein Datenpaket.",
+  "gui.selling_bin.selling.empty.3" : "",
+  "gui.selling_bin.selling.empty.4" : "Im Wiki unter github.com/wdiscute/Selling-Bin/wiki findest du vorgefertigte",
+  "gui.selling_bin.selling.empty.5" : "Datenpakete sowie Anleitungen, wie du deine eigenen verwenden, erstellen und anpassen kannst.",
+  "gui.selling_bin.selling.empty.6" : "",
+  "gui.selling_bin.selling.empty.7" : "Du kannst auch eins der eingebauten vorgefertigten Datenpakete verwenden,",
+  "gui.selling_bin.selling.empty.8" : "indem du sie wie im Vanilla-Spiel während der Welterstellung aktivierst,",
+  "gui.selling_bin.selling.empty.9" : "oder den Befehl '/datapack enable XXXXXXXXX' verwendest.",
+
+
+  "gui.selling_bin.currency.empty.0" : "Es wurden keine Marktstand-Währungen registriert!",
+  "gui.selling_bin.currency.empty.1" : "",
+  "gui.selling_bin.currency.empty.2" : "Der Marktstand funktioniert nicht ohne ein Datenpaket.",
+  "gui.selling_bin.currency.empty.3" : "",
+  "gui.selling_bin.currency.empty.4" : "Im Wiki unter github.com/wdiscute/Selling-Bin/wiki findest du vorgefertigte",
+  "gui.selling_bin.currency.empty.5" : "Datenpakete sowie Anleitungen, wie du deine eigenen verwenden, erstellen und anpassen kannst.",
+  "gui.selling_bin.currency.empty.6" : "",
+  "gui.selling_bin.currency.empty.7" : "Du kannst auch eins der eingebauten vorgefertigten Datenpakete verwenden,",
+  "gui.selling_bin.currency.empty.8" : "indem du sie wie im Vanilla-Spiel während der Welterstellung aktivierst,",
+  "gui.selling_bin.currency.empty.9" : "oder den Befehl '/datapack enable XXXXXXXXX' verwendest.",
+
+
+  "gui.selling_bin.processor.durability" : "- Der Preis skaliert auf Grundlage der verbleibenden Haltbarkeit.",
+  "gui.selling_bin.processor.food" : "- Der Preis erhöht sich mit den Hunger- und Sättigungswerten.",
+  "gui.selling_bin.processor.enchantments" : "- Der Preis erhöht sich auf Grundlage der Verzauberungen.",
+  "gui.selling_bin.processor.quality_foods_processor" : "- Der Preis erhöht sich mit der Qualität.",
+  "gui.selling_bin.processor.wine_age_processor" : "- Der Preis erhöht sich mit dem Alter des Weins.",
+  "gui.selling_bin.processor.beer_quality_processor" : "- Der Preis erhöht sich mit der Bierqualität.",
+
+
+  "gui.selling_bin.value" : "Wert",
+  "gui.selling_bin.base_price" : "Preis:",
+  "gui.selling_bin.processors" : "Modifikatoren:",
+  "gui.selling_bin.sell" : "Verkaufen",
+  "gui.selling_bin.sell_all" : "Alle Verkaufen",
+  "gui.selling_bin.auto_sell" : "Autom. Verkauf",
+  "gui.selling_bin.sell_sound" : "Verkaufs-Soundeffekt",
+  "gui.selling_bin.currency_selected" : "Währung:",
+  "gui.selling_bin.currencies" : "Währungen:",
+  "gui.selling_bin.highest" : "Maximum",
+  "gui.selling_bin.card_slot" : "Numismatics-Bankkarte",
+
+
+  "block.selling_bin.selling_bin" : "Marktstand",
+
+  "item.minecraft.emerald.plural" : "Smaragde",
+  "block.minecraft.emerald_block.plural" : "Smaragdblöcke"
+}
