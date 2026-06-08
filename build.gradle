@@ -30,11 +30,6 @@ repositories {
         url = "https://modmaven.dev"
     }
 
-    //favouriteless
-    maven {
-        url = "https://maven.favouriteless.net/releases"
-    }
-
     //curios
     maven {
         name = "Illusive Soulworks maven"
@@ -63,6 +58,64 @@ repositories {
             }
         }
     }
+
+    maven {
+        url = 'https://nikdo53.github.io/NeoBackports'
+    }
+}
+
+dependencies {
+    //tiny multiblock lib
+    jarJar(modImplementation("maven.modrinth:tiny-multiblock-lib:forge-1.20.1-${tiny_multiblock_lib_version}"))
+
+    //NeoBackports
+    jarJar(modImplementation("net.nikdo53:NeoBackports:${neobackports_version}"))
+    interfaceInjectionData("net.nikdo53:NeoBackports:${neobackports_version}")
+
+    //EMI
+    modCompileOnly "dev.emi:emi-forge:${emi_version}:api"
+    modRuntimeOnly "dev.emi:emi-forge:${emi_version}"
+
+    //JEI
+    modCompileOnly("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
+    modCompileOnlyApi("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
+    //runtimeOnly("mezz.jei:jei-${mc_version}-neoforge:${jei_version}")
+
+    //quality foods compat
+    modCompileOnly("maven.modrinth:quality-food:2.3.0-1.20.1")
+    //runtimeOnly("maven.modrinth:quality-food:vLFBpk1n")
+
+    //pipez
+    //runtimeOnly "maven.modrinth:pipez:z20ZR1YE"
+
+    //let's do winery
+    modCompileOnly "maven.modrinth:lets-do-vinery:1.4.41-forge,1.20.1"
+    //runtimeOnly "maven.modrinth:lets-do-vinery:ZywXpLC6"
+
+    //let's do brewery
+    modCompileOnly "maven.modrinth:lets-do-brewery-farmcharm-compat:2.0.6-forge,1.20.1"
+    //runtimeOnly "maven.modrinth:lets-do-brewery-farmcharm-compat:vzXZ4Pak"
+
+    //Let's Do Farm & Charm
+    //compileOnly "maven.modrinth:lets-do-farm-charm:muipCbfC"
+    //runtimeOnly "maven.modrinth:lets-do-farm-charm:muipCbfC"
+
+    //Architectury API
+    modCompileOnly "maven.modrinth:architectury-api:9.2.14+forge"
+    //runtimeOnly "maven.modrinth:architectury-api:ZxYGwlk0"
+
+    //Create: Numismatics
+    modCompileOnly "maven.modrinth:numismatics:1.0.15+forge-mc1.20.1"
+    //runtimeOnly "maven.modrinth:numismatics:KMFhYqZ9"
+
+    //Create
+    modCompileOnly "maven.modrinth:create:mc1.20.1-6.0.8"
+    //runtimeOnly "maven.modrinth:create:n7NADxiG"
+
+    //Lightman's Currency
+    modCompileOnly "maven.modrinth:lightmans-currency:1.20.1-2.3.0.4e"
+    //runtimeOnly "maven.modrinth:lightmans-currency:DCVYBw7Y"
+
 }
 
 base {
@@ -139,61 +192,6 @@ configurations {
 
 obfuscation {
     createRemappingConfiguration(configurations.localRuntime)
-}
-
-
-dependencies {
-    //tiny multiblock lib
-    jarJar(modImplementation("maven.modrinth:tiny-multiblock-lib:forge-1.20.1-${tiny_multiblock_lib_version}"))
-
-    //NeoBackports
-    jarJar(modImplementation("net.nikdo53.neobackports:NeoBackports:${neobackports_version}"))
-    interfaceInjectionData("net.nikdo53.neobackports:NeoBackports:${neobackports_version}")
-
-    //EMI
-    modCompileOnly "dev.emi:emi-forge:${emi_version}:api"
-    modRuntimeOnly "dev.emi:emi-forge:${emi_version}"
-
-    //JEI
-    modCompileOnly("mezz.jei:jei-${mc_version}-forge-api:${jei_version}")
-    modCompileOnlyApi("mezz.jei:jei-${minecraft_version}-common-api:${jei_version}")
-    //runtimeOnly("mezz.jei:jei-${mc_version}-neoforge:${jei_version}")
-
-    //quality foods compat
-    modCompileOnly("maven.modrinth:quality-food:2.3.0-1.20.1")
-    //runtimeOnly("maven.modrinth:quality-food:vLFBpk1n")
-
-    //pipez
-    //runtimeOnly "maven.modrinth:pipez:z20ZR1YE"
-
-    //let's do winery
-    modCompileOnly "maven.modrinth:lets-do-vinery:1.4.41-forge,1.20.1"
-    //runtimeOnly "maven.modrinth:lets-do-vinery:ZywXpLC6"
-
-    //let's do brewery
-    modCompileOnly "maven.modrinth:lets-do-brewery-farmcharm-compat:2.0.6-forge,1.20.1"
-    //runtimeOnly "maven.modrinth:lets-do-brewery-farmcharm-compat:vzXZ4Pak"
-
-    //Let's Do Farm & Charm
-    //compileOnly "maven.modrinth:lets-do-farm-charm:muipCbfC"
-    //runtimeOnly "maven.modrinth:lets-do-farm-charm:muipCbfC"
-
-    //Architectury API
-    modCompileOnly "maven.modrinth:architectury-api:9.2.14+forge"
-    //runtimeOnly "maven.modrinth:architectury-api:ZxYGwlk0"
-
-    //Create: Numismatics
-    modCompileOnly "maven.modrinth:numismatics:1.0.15+forge-mc1.20.1"
-    //runtimeOnly "maven.modrinth:numismatics:KMFhYqZ9"
-
-    //Create
-    modCompileOnly "maven.modrinth:create:mc1.20.1-6.0.8"
-    //runtimeOnly "maven.modrinth:create:n7NADxiG"
-
-    //Lightman's Currency
-    modCompileOnly "maven.modrinth:lightmans-currency:1.20.1-2.3.0.4e"
-    //runtimeOnly "maven.modrinth:lightmans-currency:DCVYBw7Y"
-
 }
 
 jar {
