@@ -1,0 +1,58 @@
+{
+    "selling_bin.configuration.always_show_selling_bin_price": "판매함 가격 항상 표시",
+    "selling_bin.configuration.selling_in_multiplier": "판매함 배율",
+
+
+    "emi.category.selling_bin.selling_bin_selling": "판매함",
+    "emi.category.selling_bin.selling_bin_currencies": "판매함 화폐",
+
+    "gui.selling_bin.selling.empty.0": "판매함에 판매 가능한 상품이 등록되어 있지 않습니다!",
+    "gui.selling_bin.selling.empty.1": "",
+    "gui.selling_bin.selling.empty.2": "판매함은 데이터팩 없이는 아무런 기능도 하지 않습니다.",
+    "gui.selling_bin.selling.empty.3": "",
+    "gui.selling_bin.selling.empty.4": "미리 만들어진 판매함은 github.com/wdiscute/Selling-Bin/wiki에서 확인하세요.",
+    "gui.selling_bin.selling.empty.5": "사용할 수 있는 데이터팩과 자신만의 데이터팩을 추가하고 사용자 지정하는 방법을 알려드립니다.",
+    "gui.selling_bin.selling.empty.6": "",
+    "gui.selling_bin.selling.empty.7": "미리 만들어진 내장 데이터팩 중 하나를 선택할 수도 있습니다.",
+    "gui.selling_bin.selling.empty.8": "월드 생성 시 데이터팩 섹션에서 바닐라 버전과 동일하게 설정할 수 있습니다.",
+    "gui.selling_bin.selling.empty.9": "또는 /datapack enable XXXXXXXXX를 사용하십시오.",
+
+
+    "gui.selling_bin.currency.empty.0": "판매함에 등록된 화폐가 없습니다!",
+    "gui.selling_bin.currency.empty.1": "",
+    "gui.selling_bin.currency.empty.2": "판매함은 데이터팩 없이는 아무런 기능도 하지 않습니다.",
+    "gui.selling_bin.currency.empty.3": "",
+    "gui.selling_bin.currency.empty.4": "프리셋은 github.com/wdiscute/Selling-Bin/wiki에서 확인하세요.",
+    "gui.selling_bin.currency.empty.5": "사용할 수 있는 데이터팩과 자신만의 데이터팩을 추가하고 사용자 지정하는 방법을 알려드립니다.",
+    "gui.selling_bin.currency.empty.6": "",
+    "gui.selling_bin.currency.empty.7": "미리 만들어진 내장 데이터팩 중 하나를 선택할 수도 있습니다.",
+    "gui.selling_bin.currency.empty.8": "월드 생성 시, 데이터팩 섹션에서 바닐라 버전과 동일하게 설정할 수 있습니다.",
+    "gui.selling_bin.currency.empty.9": "또는 /datapack enable XXXXXXXXX를 사용하십시오.",
+
+
+    "gui.selling_bin.processor.durability": "- 남은 내구도에 따라 가격이 조정됩니다.",
+    "gui.selling_bin.processor.food": "- 배고픔 포만도에 따라 가격이 상승합니다.",
+    "gui.selling_bin.processor.enchantments": "- 마법 부여 정도에 따라 가격이 상승합니다.",
+    "gui.selling_bin.processor.quality_foods_processor": "- 품질에 따라 가격이 상승합니다.",
+    "gui.selling_bin.processor.wine_age_processor": "- 와인의 가격은 숙성 기간에 따라 인상됩니다.",
+    "gui.selling_bin.processor.beer_quality_processor": "- 맥주의 품질에 따라 가격이 인상됩니다.",
+
+
+    "gui.selling_bin.value": "가치",
+    "gui.selling_bin.base_price": "가격:",
+    "gui.selling_bin.processors": "프로세서:",
+    "gui.selling_bin.sell": "판매",
+    "gui.selling_bin.sell_all": "전부 판매",
+    "gui.selling_bin.auto_sell": "자동 판매",
+    "gui.selling_bin.sell_sound": "판매 소리",
+    "gui.selling_bin.currency_selected": "화폐:",
+    "gui.selling_bin.currencies": "화폐:",
+    "gui.selling_bin.highest": "최고가",
+    "gui.selling_bin.card_slot": "화폐학 은행 카드",
+
+
+    "block.selling_bin.selling_bin": "판매함",
+
+    "item.minecraft.emerald.plural": "에메랄드",
+    "block.minecraft.emerald_block.plural": "에메랄드 블록"
+}

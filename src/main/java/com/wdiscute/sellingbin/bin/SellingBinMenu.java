@@ -93,11 +93,13 @@ public class SellingBinMenu extends AbstractContainerMenu
 
     }
 
+    @Override
     public boolean stillValid(Player player)
     {
         return this.container.stillValid(player);
     }
 
+    @Override
     public ItemStack quickMoveStack(Player player, int index)
     {
         ItemStack itemstack = ItemStack.EMPTY;
@@ -128,6 +130,7 @@ public class SellingBinMenu extends AbstractContainerMenu
         return itemstack;
     }
 
+    @Override
     public void removed(Player player)
     {
         super.removed(player);
