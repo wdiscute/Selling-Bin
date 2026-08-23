@@ -1,4 +1,9 @@
 {
+  "itemGroup.selling_bin.selling_bin" : "wd's Selling Bin",
+  "section.selling_bin.bin" : "Bin!",
+  "section.selling_bin.currencies" : "Currencies",
+  "section.selling_bin.sellables" : "Sellables",
+
   "selling_bin.configuration.always_show_selling_bin_price" : "Always Show Selling Bin Prices",
   "selling_bin.configuration.selling_in_multiplier" : "Selling Bin Multiplier",
 

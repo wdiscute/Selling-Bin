@@ -22,7 +22,7 @@ public class DGSBRecipeProvider extends RecipeProvider
     protected void buildRecipes(RecipeOutput output)
     {
         //selling bin
-        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, SBBlocks.SELLING_BIN)
+        ShapedRecipeBuilder.shaped(RecipeCategory.REDSTONE, SBBlocks.SELLING_BIN_BLOCK)
                 .define('B', Blocks.BARREL)
                 .define('S', ItemTags.WOODEN_SLABS)
                 .define('C', ItemTags.WOOL_CARPETS)

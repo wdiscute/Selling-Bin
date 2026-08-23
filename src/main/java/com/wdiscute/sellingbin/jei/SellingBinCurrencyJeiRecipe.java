@@ -27,7 +27,7 @@ public class SellingBinCurrencyJeiRecipe extends AbstractRecipeCategory<SellingB
         super(
                 Recipe.TYPE,
                 Component.translatable("emi.category.selling_bin.selling_bin_currencies"),
-                guiHelper.createDrawableItemLike(SBBlocks.SELLING_BIN),
+                guiHelper.createDrawableItemLike(SBBlocks.SELLING_BIN_BLOCK),
                 SellingBinJeiPlugin.currencies.isEmpty() || SellingBinJeiPlugin.currencies.get(0).isEmpty() ? 350 : 120,
                 SellingBinJeiPlugin.currencies.isEmpty() || SellingBinJeiPlugin.currencies.get(0).isEmpty() ? 100 : 20
         );

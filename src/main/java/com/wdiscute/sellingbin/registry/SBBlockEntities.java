@@ -16,7 +16,7 @@ public interface SBBlockEntities
 
     Supplier<BlockEntityType<SellingBinBlockEntity>> SELLING_BIN = BLOCK_ENTITIES.register("selling_bin",
             () -> BlockEntityType.Builder.of(SellingBinBlockEntity::new,
-                    SBBlocks.SELLING_BIN.get()
+                    SBBlocks.SELLING_BIN_BLOCK.get()
             ).build(null));
 
 

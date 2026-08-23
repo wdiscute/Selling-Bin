@@ -52,6 +52,8 @@ public class SellingBin
         SBMenuTypes.register(modEventBus);
         SBProcessors.register(modEventBus);
         SBItemPredicate.register(modEventBus);
+        SBDataComponents.register(modEventBus);
+        SBCreativeModeTab.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.CLIENT, SBConfig.SPEC);
         modContainer.registerConfig(ModConfig.Type.SERVER, SBConfig.SPEC_SERVER);

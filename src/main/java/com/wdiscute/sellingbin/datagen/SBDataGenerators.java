@@ -8,6 +8,7 @@ import net.minecraft.data.loot.LootTableProvider;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
+import net.neoforged.neoforge.common.data.BlockTagsProvider;
 import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.Collections;
@@ -27,8 +28,8 @@ public class SBDataGenerators
         CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
 
         //loot table
-        gen.addProvider(event.includeServer(), new LootTableProvider(output, Collections.emptySet(),
-                List.of(new LootTableProvider.SubProviderEntry(DGSBlockLootTableProvider::new, LootContextParamSets.BLOCK)), lookupProvider));
+        //gen.addProvider(event.includeServer(), new LootTableProvider(output, Collections.emptySet(),
+        //        List.of(new LootTableProvider.SubProviderEntry(DGSBlockLootTableProvider::new, LootContextParamSets.BLOCK)), lookupProvider));
 
 
         //recipe
@@ -36,6 +37,10 @@ public class SBDataGenerators
 
         //data map
         gen.addProvider(event.includeServer(), new DGSBDataMapsProvider(output, lookupProvider));
+
+        //block tags
+        BlockTagsProvider btp = new DGSBBlocksTagsProvider(output, lookupProvider, event.getExistingFileHelper());
+        gen.addProvider(event.includeServer(), btp);
 
     }
 }

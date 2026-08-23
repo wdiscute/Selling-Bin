@@ -8,6 +8,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.neoforge.registries.datamaps.DataMapType;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
@@ -24,6 +25,19 @@ public interface SBDataMaps
     {
         T data = stack.getItemHolder().getData(dataMap);
         if(data == null) return d;
+        return data;
+    }
+
+    static <T> T getOrDefault(Item item, DataMapType<Item, T> dataMap, T d)
+    {
+        T data = item.builtInRegistryHolder().getData(dataMap);
+        if(data == null) return d;
+        return data;
+    }
+
+    static <T> @Nullable T get(Item item, DataMapType<Item, T> dataMap)
+    {
+        T data = item.builtInRegistryHolder().getData(dataMap);
         return data;
     }
 

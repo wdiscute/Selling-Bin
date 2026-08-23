@@ -13,7 +13,6 @@ import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 
@@ -24,7 +23,7 @@ import java.util.Map;
 @EmiEntrypoint
 public class SellingBinEmiPlugin implements EmiPlugin
 {
-    public static final EmiStack MY_WORKSTATION = EmiStack.of(SBBlocks.SELLING_BIN);
+    public static final EmiStack MY_WORKSTATION = EmiStack.of(SBBlocks.SELLING_BIN_BLOCK);
     public static final EmiRecipeCategory SELLING_BIN_SELLING_CATEGORY
             = new EmiRecipeCategory(
             SellingBin.rl("selling_bin_selling"),

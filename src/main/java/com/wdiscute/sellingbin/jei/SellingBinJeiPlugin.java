@@ -102,8 +102,8 @@ public class SellingBinJeiPlugin implements IModPlugin
     @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration)
     {
-        registration.addRecipeCatalyst(SBBlocks.SELLING_BIN, SellingBinSellingJeiRecipe.Recipe.TYPE);
-        registration.addRecipeCatalyst(SBBlocks.SELLING_BIN, SellingBinCurrencyJeiRecipe.Recipe.TYPE);
+        registration.addRecipeCatalyst(SBBlocks.SELLING_BIN_BLOCK, SellingBinSellingJeiRecipe.Recipe.TYPE);
+        registration.addRecipeCatalyst(SBBlocks.SELLING_BIN_BLOCK, SellingBinCurrencyJeiRecipe.Recipe.TYPE);
     }
 
     @Override

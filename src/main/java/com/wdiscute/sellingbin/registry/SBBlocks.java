@@ -7,6 +7,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 import java.util.function.Supplier;
@@ -16,14 +17,9 @@ public interface SBBlocks
     DeferredRegister.Items ITEMS = DeferredRegister.createItems(SellingBin.MOD_ID);
     DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(SellingBin.MOD_ID);
 
-    DeferredBlock<Block> SELLING_BIN = registerBlock("selling_bin", SellingBinBlock::new);
-
-    private static <T extends Block> DeferredBlock<T> registerBlock(String name, Supplier<T> block)
-    {
-        DeferredBlock<T> toReturn = BLOCKS.register(name, block);
-        ITEMS.register(name, () -> new BlockItem(toReturn.get(), new Item.Properties()));
-        return toReturn;
-    }
+    DeferredBlock<Block> SELLING_BIN_BLOCK = BLOCKS.registerBlock("selling_bin", SellingBinBlock::new);
+    DeferredItem<Item> SELLING_BIN_ITEM = ITEMS.registerItem("selling_bin",
+            (p) -> new BlockItem(SELLING_BIN_BLOCK.get(), p));
 
     static void register(IEventBus eventBus)
     {

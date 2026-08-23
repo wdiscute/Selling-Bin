@@ -1,6 +1,7 @@
 package com.wdiscute.sellingbin.bin;
 
 import com.wdiscute.sellingbin.registry.SBBlockEntities;
+import com.wdiscute.sellingbin.registry.SBBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -8,6 +9,7 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.*;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -35,9 +37,9 @@ import java.util.List;
 public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableMultiblock, WorldlyContainerHolder
 {
 
-    public SellingBinBlock()
+    public SellingBinBlock(BlockBehaviour.Properties properties)
     {
-        super(BlockBehaviour.Properties.of()
+        super(properties
                 .noOcclusion()
                 .destroyTime(2)
         );
@@ -52,6 +54,25 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
             if(blockEntity instanceof SellingBinBlockEntity sellingBinBlockEntity && sellingBinBlockEntity.instaSell)
                 sellingBinBlockEntity.tick();
         };
+    }
+
+    @Override
+    public BlockState playerWillDestroy(Level level, BlockPos pos, BlockState state, Player player)
+    {
+        BlockEntity blockentity = level.getBlockEntity(pos);
+        if (blockentity instanceof SellingBinBlockEntity tbbe && level.getBlockEntity(tbbe.getCenter()) instanceof SellingBinBlockEntity centerBin && centerBin.isCenter())
+        {
+            if (!level.isClientSide)
+            {
+                ItemStack itemstack = new ItemStack(SBBlocks.SELLING_BIN_BLOCK.asItem());
+                itemstack.applyComponents(centerBin.collectComponents());
+                ItemEntity itementity = new ItemEntity(level, (double) pos.getX() + (double) 0.5F, (double) pos.getY() + (double) 0.5F, (double) pos.getZ() + (double) 0.5F, itemstack);
+                itementity.setDefaultPickUpDelay();
+                level.addFreshEntity(itementity);
+            }
+        }
+
+        return super.playerWillDestroy(level, pos, state, player);
     }
 
     @Override
@@ -107,7 +128,7 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
 
     private void playSound(Level level, BlockPos bp, BlockState state, SoundEvent sound)
     {
-        Vec3i vec3i = state.getValue(HorizontalDirectionalBlock.FACING).getNormal();
+        Vec3i vec3i = state.getOptionalValue(HorizontalDirectionalBlock.FACING).orElse(Direction.NORTH).getNormal();
         double d0 = (double) bp.getX() + 0.5 + (double) vec3i.getX() / 2.0;
         double d1 = (double) bp.getY() + 0.5 + (double) vec3i.getY() / 2.0;
         double d2 = (double) bp.getZ() + 0.5 + (double) vec3i.getZ() / 2.0;
