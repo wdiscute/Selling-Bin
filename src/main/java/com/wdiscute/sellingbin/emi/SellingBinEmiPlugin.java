@@ -23,7 +23,7 @@ import java.util.Map;
 @EmiEntrypoint
 public class SellingBinEmiPlugin implements EmiPlugin
 {
-    public static final EmiStack MY_WORKSTATION = EmiStack.of(SBBlocks.SELLING_BIN_BLOCK);
+    public static final EmiStack MY_WORKSTATION = EmiStack.of(SBBlocks.SELLING_BIN);
     public static final EmiRecipeCategory SELLING_BIN_SELLING_CATEGORY
             = new EmiRecipeCategory(
             SellingBin.rl("selling_bin_selling"),

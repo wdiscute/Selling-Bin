@@ -28,7 +28,7 @@ public class SellingBinSellingJeiRecipe extends AbstractRecipeCategory<SellingBi
         super(
                 Recipe.TYPE,
                 Component.translatable("emi.category.selling_bin.selling_bin_selling"),
-                guiHelper.createDrawableItemLike(SBBlocks.SELLING_BIN_BLOCK),
+                guiHelper.createDrawableItemLike(SBBlocks.SELLING_BIN),
                 SellingBinJeiPlugin.sellables.isEmpty() ? 350 : 120,
                 SellingBinJeiPlugin.sellables.isEmpty() ? 100 : 20
         );

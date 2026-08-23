@@ -35,11 +35,11 @@ public class SBevents
     {
         if (event.getTabKey() == CreativeModeTabs.FUNCTIONAL_BLOCKS)
         {
-            event.accept(SBBlocks.SELLING_BIN_BLOCK);
+            event.accept(SBBlocks.SELLING_BIN);
         }
         if (event.getTabKey() == CreativeModeTabs.REDSTONE_BLOCKS)
         {
-            event.accept(SBBlocks.SELLING_BIN_BLOCK);
+            event.accept(SBBlocks.SELLING_BIN);
         }
     }
 

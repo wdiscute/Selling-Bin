@@ -10,16 +10,14 @@ import net.neoforged.neoforge.registries.DeferredBlock;
 import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
-import java.util.function.Supplier;
-
 public interface SBBlocks
 {
     DeferredRegister.Items ITEMS = DeferredRegister.createItems(SellingBin.MOD_ID);
     DeferredRegister.Blocks BLOCKS = DeferredRegister.createBlocks(SellingBin.MOD_ID);
 
-    DeferredBlock<Block> SELLING_BIN_BLOCK = BLOCKS.registerBlock("selling_bin", SellingBinBlock::new);
+    DeferredBlock<Block> SELLING_BIN = BLOCKS.registerBlock("selling_bin", SellingBinBlock::new);
     DeferredItem<Item> SELLING_BIN_ITEM = ITEMS.registerItem("selling_bin",
-            (p) -> new BlockItem(SELLING_BIN_BLOCK.get(), p));
+            (p) -> new BlockItem(SELLING_BIN.get(), p));
 
     static void register(IEventBus eventBus)
     {

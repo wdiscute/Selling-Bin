@@ -25,6 +25,6 @@ public class DGSBBlocksTagsProvider extends BlockTagsProvider
     protected void addTags(HolderLookup.Provider provider)
     {
         tag(BlockTags.MINEABLE_WITH_AXE)
-                .add(SBBlocks.SELLING_BIN_BLOCK.get());
+                .add(SBBlocks.SELLING_BIN.get());
     }
 }

@@ -64,7 +64,7 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
         {
             if (!level.isClientSide)
             {
-                ItemStack itemstack = new ItemStack(SBBlocks.SELLING_BIN_BLOCK.asItem());
+                ItemStack itemstack = new ItemStack(SBBlocks.SELLING_BIN.asItem());
                 itemstack.applyComponents(centerBin.collectComponents());
                 ItemEntity itementity = new ItemEntity(level, (double) pos.getX() + (double) 0.5F, (double) pos.getY() + (double) 0.5F, (double) pos.getZ() + (double) 0.5F, itemstack);
                 itementity.setDefaultPickUpDelay();

@@ -4,7 +4,6 @@ import com.wdiscute.sellingbin.SellingBin;
 import net.mcexpanded.fancytabsections.FancyTabSections;
 import net.mcexpanded.fancytabsections.Section.SectionColored;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.neoforged.bus.api.IEventBus;
@@ -24,7 +23,7 @@ public interface SBCreativeModeTab
                 new SectionColored(SellingBin.rl("bin"))
                         .setBannerColor(0xff8dc53b)
                         .setCentered(true)
-                        .add(SBBlocks.SELLING_BIN_BLOCK)
+                        .add(SBBlocks.SELLING_BIN)
         );
 
         FancyTabSections.addSection(SellingBin.rl("selling_bin"),
