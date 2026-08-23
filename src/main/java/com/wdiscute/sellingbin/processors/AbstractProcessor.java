@@ -23,9 +23,9 @@ public abstract class AbstractProcessor
                     {
                         if(SellingBin.SELLING_BIN_REGISTRY.get(loc) == null)
                         {
-                            LogUtils.getLogger().error("Selling Bin Processor {} is not registered! " +
-                                    "Make sure it's not dependent on another mod, and that you spelt the name correctly. " +
-                                    "Using empty processor instead.", loc);
+                            //LogUtils.getLogger().error("Selling Bin Processor {} is not registered! " +
+                            //        "Make sure it's not dependent on another mod, and that you spelt the name correctly. " +
+                            //        "Using empty processor instead.", loc);
                             return EmptyProcessor.CODEC;
                         }
                         return SellingBin.SELLING_BIN_REGISTRY.get(loc).getCodecOrThrow();
