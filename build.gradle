@@ -23,6 +23,8 @@ java {
 
 repositories
         {
+            mavenLocal()
+
             //emi
             maven {
                 name = "TerraformersMC"
@@ -37,6 +39,12 @@ repositories
             //jei
             maven {
                 url = "https://maven.blamejared.com/"
+            }
+
+            //nikdo github
+            maven {
+                name = 'Nikdo53 Maven'
+                url = 'https://nikdo53.github.io'
             }
 
             repositories {
@@ -55,10 +63,13 @@ repositories
 
 dependencies {
     //tiny multiblock lib
-    jarJar(implementation("maven.modrinth:tiny-multiblock-lib:neo-1.21.1-${tiny_multiblock_lib_version}"))
+    jarJar(implementation("net.nikdo53:tiny-multiblock-lib-neoforge-1.21.1:${tiny_multiblock_lib_version}"))
+
+    //wdutils
+    jarJar(implementation("com.wdiscute:wdUtils:1.8-NEOFORGE-1.21.1"))
 
     //fancy tab sections
-    jarJar(implementation("maven.modrinth:fancytabsections:6.1-NEOFORGE-1.21.1"))
+    jarJar(implementation("maven.modrinth:fancytabsections:6.2-NEOFORGE-1.21.1"))
 
     //EMI
     compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
@@ -102,8 +113,6 @@ dependencies {
     //Lightman's Currency
     compileOnly "maven.modrinth:lightmans-currency:DCVYBw7Y"
     //runtimeOnly "maven.modrinth:lightmans-currency:DCVYBw7Y"
-
-
 }
 
 
