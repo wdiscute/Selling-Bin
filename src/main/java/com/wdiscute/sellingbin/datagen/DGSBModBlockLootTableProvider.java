@@ -2,7 +2,7 @@ package com.wdiscute.sellingbin.datagen;
 
 import com.wdiscute.sellingbin.registry.SBBlocks;
 import com.wdiscute.sellingbin.registry.SBDataComponents;
-import net.minecraft.advancements.criterion.StatePropertiesPredicate.Builder;
+import net.minecraft.advancements.predicates.StatePropertiesPredicate;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.data.loot.BlockLootSubProvider;
@@ -16,6 +16,7 @@ import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.nikdo53.tinymultiblocklib.block.AbstractMultiBlock;
+import net.nikdo53.tinymultiblocklib.block.BaseMultiblock;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,8 +38,8 @@ public class DGSBModBlockLootTableProvider extends BlockLootSubProvider
                         .setRolls(ConstantValue.exactly(1.0F))
                         .add(LootItem.lootTableItem(SBBlocks.SELLING_BIN.get())
                                 .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(SBBlocks.SELLING_BIN.get())
-                                        .setProperties(Builder.properties()
-                                                .hasProperty(AbstractMultiBlock.CENTER, true)))
+                                        .setProperties(StatePropertiesPredicate.Builder.properties()
+                                                .hasProperty(BaseMultiblock.CENTER, true)))
                                 .apply(CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY)
                                         .include(DataComponents.CUSTOM_NAME)
                                         .include(DataComponents.CONTAINER)

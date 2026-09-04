@@ -11,7 +11,7 @@ modId="selling_bin"
 version="${mod_version}"
 displayName="${mod_name}"
 displayURL="http://curseforge.com/minecraft/mc-mods/wds-selling-bin"
-logoFile = "icon.png"
+iconFile = "icon.png"
 mod_authors="${mod_authors}" #optional
 description='''A data-driven Selling Bin mod
 

@@ -84,12 +84,6 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
     }
 
     @Override
-    public BlockState getDefaultStateForPreviews(Direction direction)
-    {
-        return IPreviewableMultiblock.super.getDefaultStateForPreviews(direction);
-    }
-
-    @Override
     public RenderShape getMultiblockRenderShape(BlockState state, boolean c)
     {
         return RenderShape.MODEL;
@@ -172,7 +166,7 @@ public class SellingBinBlock extends AbstractMultiBlock implements IPreviewableM
     }
 
     @Override
-    public @Nullable BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState)
+    public @Nullable SellingBinBlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState)
     {
         return SBBlockEntities.SELLING_BIN.get().create(blockPos, blockState);
     }

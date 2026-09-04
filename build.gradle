@@ -41,14 +41,14 @@ repositories {
 dependencies {
 
     //tiny multiblock lib
-    jarJar(implementation("maven.modrinth:tiny-multiblock-lib:neo-26.1-${tiny_multiblock_lib_version}"))
+    jarJar(implementation("maven.modrinth:tiny-multiblock-lib:neo-26.2-4.0.0"))
 
     //FTS
-    jarJar(implementation("maven.modrinth:fancytabsections:6.2-NEOFORGE-26.1.2"))
+    jarJar(implementation("maven.modrinth:fancytabsections:6.2-NEOFORGE-26.2"))
     //jarJar(implementation("net.mcexpanded:Fancy-Tabs-Neo:6.2-NEOFORGE-26.1.2"))
 
     //JEI
-    compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
+    compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:30.30.0.204")
     //runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
 }
 

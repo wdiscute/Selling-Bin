@@ -4,6 +4,7 @@ import com.wdiscute.sellingbin.SBConfig;
 import com.wdiscute.sellingbin.registry.SBDataMaps;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.locale.Language;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.entity.player.Player;
@@ -146,7 +147,7 @@ public record Currency(Item item, int value)
 
     public static Component getPluralTranslation(Item item)
     {
-        if(I18n.exists(item.getDescriptionId() + ".plural"))
+        if(Language.getInstance().getLanguageData().get(item.getDescriptionId() + ".plural") != null)
             return Component.translatable(item.getDescriptionId() + ".plural");
         else
             return Component.translatable(item.getDescriptionId());
