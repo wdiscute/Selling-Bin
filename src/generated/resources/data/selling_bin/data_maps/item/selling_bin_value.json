@@ -1,33 +1,3 @@
 {
-  "values": {
-
-    "#vinery:red_wine": {
-      "base_value": 200,
-      "processors": [
-        {
-          "type": "selling_bin:wine_age_processor",
-          "age_multipliers": {
-            "1": 1.5,
-            "2": 3.0,
-            "3": 5.0
-          }
-        }
-      ]
-    },
-
-    "#vinery:white_wine": {
-      "base_value": 200,
-      "processors": [
-        {
-          "type": "selling_bin:wine_age_processor",
-          "age_multipliers": {
-            "1": 1.5,
-            "2": 3.0,
-            "3": 5.0
-          }
-        }
-      ]
-    }
-
-  }
+  "values": {}
 }

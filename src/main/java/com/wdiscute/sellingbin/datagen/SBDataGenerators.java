@@ -30,6 +30,8 @@ public class SBDataGenerators
         gen.addProvider(true, new LootTableProvider(output, Collections.emptySet(),
                 List.of(new LootTableProvider.SubProviderEntry(DGSBModBlockLootTableProvider::new, LootContextParamSets.BLOCK)), lookupProvider));
 
+        //block tags
+        gen.addProvider(true, new DGSBBlocksTagsProvider(output, lookupProvider));
 
         //recipe
         gen.addProvider(true, new DGSBRecipeProvider.Runner(output, lookupProvider));

@@ -3,8 +3,14 @@ package com.wdiscute.sellingbin.bin;
 import com.wdiscute.sellingbin.compat.NumismaticsCompat;
 import com.wdiscute.sellingbin.registry.SBBlockEntities;
 import com.wdiscute.sellingbin.registry.SBDataMaps;
+import com.wdiscute.sellingbin.registry.SBDataComponents;
 import net.minecraft.core.*;
+import net.minecraft.core.component.DataComponentGetter;
+import net.minecraft.core.component.DataComponentMap;
+import net.minecraft.core.component.DataComponents;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
@@ -21,6 +27,7 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.ItemContainerContents;
 import net.minecraft.world.level.block.HorizontalDirectionalBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.storage.ValueInput;
@@ -29,36 +36,35 @@ import net.neoforged.fml.ModList;
 import net.nikdo53.tinymultiblocklib.blockentities.AbstractMultiBlockEntity;
 
 import javax.annotation.Nullable;
+import java.util.ArrayList;
 import java.util.List;
 
 public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements WorldlyContainer, MenuProvider
 {
 
     private NonNullList<ItemStack> itemStacks;
-    public int storedProgress;
+    public int storedValue;
     public boolean instaSell = false;
     public boolean sound = true;
     public Currency currencySelected = Currency.NONE;
     public List<Currency> currencies;
     public List<Currency> currenciesReversed;
+    private Component name = Component.empty();
 
     public SellingBinBlockEntity(BlockPos pos, BlockState blockState)
     {
         super(SBBlockEntities.SELLING_BIN.get(), pos, blockState);
-        this.itemStacks = NonNullList.withSize(2, ItemStack.EMPTY);
+        this.itemStacks = NonNullList.withSize(3, ItemStack.EMPTY);
         this.currencies = Currency.getCurrencies();
         this.currenciesReversed = currencies.reversed();
     }
 
-
     void playSound(SoundEvent soundEvent)
     {
         if (!sound) return;
-        BlockState state = level.getBlockState(getBlockPos());
-        Vec3i vec3i = state.getValue(HorizontalDirectionalBlock.FACING).getUnitVec3i();
-        double d0 = (double) this.worldPosition.getX() + 0.5 + (double) vec3i.getX() / 2.0;
-        double d1 = (double) this.worldPosition.getY() + 0.5 + (double) vec3i.getY() / 2.0;
-        double d2 = (double) this.worldPosition.getZ() + 0.5 + (double) vec3i.getZ() / 2.0;
+        double d0 = (double) this.worldPosition.getX() + 0.5;
+        double d1 = (double) this.worldPosition.getY() + 0.5;
+        double d2 = (double) this.worldPosition.getZ() + 0.5;
         this.level.playSound(null, d0, d1, d2, soundEvent, SoundSource.BLOCKS, 0.5F, this.level.getRandom().nextFloat() * 0.1F + 0.9F);
     }
 
@@ -87,7 +93,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
         while (getItem(SellingBinMenu.ITEM_SLOT).getCount() > 0)
         {
             itemValue.processors().forEach(o -> o.onSellStart(getItem(SellingBinMenu.ITEM_SLOT)));
-            storedProgress += value;
+            storedValue += value;
             if (itemValue.processors().stream().noneMatch(o -> o.shouldCancelShrink(getItem(SellingBinMenu.ITEM_SLOT))))
                 getItem(SellingBinMenu.ITEM_SLOT).shrink(1);
 
@@ -111,7 +117,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
 
     public int getProgressAvailable()
     {
-        return storedProgress + SBDataMaps.getOrDefault(getItem(SellingBinMenu.RESULT_SLOT), SBDataMaps.SELLING_BIN_CURRENCIES, 0) * getItem(SellingBinMenu.RESULT_SLOT).getCount();
+        return storedValue + SBDataMaps.getOrDefault(getItem(SellingBinMenu.RESULT_SLOT), SBDataMaps.SELLING_BIN_CURRENCIES, 0) * getItem(SellingBinMenu.RESULT_SLOT).getCount();
     }
 
     public void forceUpdate()
@@ -125,20 +131,22 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     boolean extraUpdate = false;
     Currency currencyCached = null;
     int cachedOutputCount = 0;
+
     public void update()
     {
-        if(level.isClientSide()) return;
+        if (level.isClientSide()) return;
+        updateToClient();
 
         ItemStack result = getItem(SellingBinMenu.RESULT_SLOT);
-        //ItemStack card = getItem(SellingBinMenu.CARD_SLOT);
+        ItemStack card = getItem(SellingBinMenu.CARD_SLOT);
 
         //prevent unnecessary updates for better performance
         boolean shouldRun = false;
-        if(currencySelected != currencyCached) shouldRun = true;
-        if(extraUpdate) shouldRun = true;
-        if(cachedOutputCount != result.getCount()) shouldRun = true;
+        if (currencySelected != currencyCached) shouldRun = true;
+        if (extraUpdate) shouldRun = true;
+        if (cachedOutputCount != result.getCount()) shouldRun = true;
 
-        if(!shouldRun) return;
+        if (!shouldRun) return;
         currencyCached = currencySelected;
         cachedOutputCount = result.getCount();
         extraUpdate = false;
@@ -159,7 +167,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
 
                     setItem(SellingBinMenu.RESULT_SLOT, result);
 
-                    storedProgress = progressAvailable - c.value() * count;
+                    storedValue = progressAvailable - c.value() * count;
 
                     break;
                 }
@@ -175,12 +183,12 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
 
             setItem(SellingBinMenu.RESULT_SLOT, result);
 
-            storedProgress = progressAvailable - currencySelected.value() * count;
+            storedValue = progressAvailable - currencySelected.value() * count;
         }
 
         if (ModList.get().isLoaded("numismatics"))
         {
-            if(NumismaticsCompat.deposit(result/*, card*/))
+            if (NumismaticsCompat.deposit(result, card))
             {
                 setItem(SellingBinMenu.RESULT_SLOT, ItemStack.EMPTY);
                 forceUpdate();
@@ -206,6 +214,8 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
 
         if (!isCenter()) return;
 
+        output.store("CustomName", ComponentSerialization.CODEC, name);
+
         //insta sell
         output.putBoolean("insta_sell", instaSell);
 
@@ -222,17 +232,19 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
             output.putInt("currency", -1);
 
         //stored progress
-        output.putInt("stored_progress", storedProgress);
+        output.putInt("stored_progress", storedValue);
 
-        ContainerHelper.saveAllItems(output, this.itemStacks, false);
+        //save items (from ShulkerBoxBlockEntity)
+        ContainerHelper.saveAllItems(output, this.itemStacks);
     }
 
     @Override
     protected void loadAdditional(ValueInput input)
     {
         super.loadAdditional(input);
-
         if (!isCenter()) return;
+
+        this.name = input.read("CustomName", ComponentSerialization.CODEC).orElse(Component.empty());
 
         //insta sell
         instaSell = input.getBooleanOr("insta_sell", false);
@@ -241,14 +253,13 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
         sound = input.getBooleanOr("sound", true);
 
         //currency
-
-        if (input.getInt("currency").isPresent())
-            if (input.getInt("currency").get() == -1) currencySelected = Currency.NONE;
-            else if (currencies.size() > input.getInt("currency").get())
-                currencySelected = currencies.get(input.getInt("currency").get());
+        int currency = input.getIntOr("currency", -1);
+        if (currency == -1) currencySelected = Currency.NONE;
+        else if (currencies.size() > currency)
+            currencySelected = currencies.get(currency);
 
         //stored progress
-        if (input.getInt("stored_progress").isPresent()) storedProgress = input.getInt("stored_progress").get();
+        storedValue = input.getIntOr("stored_progress", 0);
 
         //retrieve items (from ShulkerBoxBlockEntity)
         this.itemStacks = NonNullList.withSize(this.getContainerSize(), ItemStack.EMPTY);
@@ -269,7 +280,7 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
     @Override
     public int getContainerSize()
     {
-        return 2;
+        return 3;
     }
 
     @Override
@@ -354,6 +365,32 @@ public class SellingBinBlockEntity extends AbstractMultiBlockEntity implements W
 
         if (direction == Direction.DOWN) return new int[]{1};
         return new int[]{0};
+    }
+
+    @Override
+    protected void collectImplicitComponents(DataComponentMap.Builder components)
+    {
+        super.collectImplicitComponents(components);
+        if (!name.equals(Component.empty()))
+            components.set(DataComponents.CUSTOM_NAME, this.name);
+        components.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(this.getItems()));
+        components.set(SBDataComponents.STORED_VALUE, storedValue);
+    }
+
+    @Override
+    protected void applyImplicitComponents(DataComponentGetter components)
+    {
+        super.applyImplicitComponents(components);
+        components.getOrDefault(DataComponents.CONTAINER, ItemContainerContents.EMPTY).copyInto(this.getItems());
+        storedValue = components.getOrDefault(SBDataComponents.STORED_VALUE, 0);
+        this.name = components.getOrDefault(DataComponents.CUSTOM_NAME, Component.empty());
+    }
+
+    @Override
+    public void preRemoveSideEffects(BlockPos pos, BlockState state)
+    {
+        //not called since we don't want to drop container contents
+        //super.preRemoveSideEffects(pos, state);
     }
 
     @Override

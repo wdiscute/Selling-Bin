@@ -20,6 +20,19 @@
               }
             }
           ],
+          "functions": [
+            {
+              "function": "minecraft:copy_components",
+              "include": [
+                "minecraft:custom_name",
+                "minecraft:container",
+                "minecraft:lock",
+                "minecraft:container_loot",
+                "selling_bin:stored_value"
+              ],
+              "source": "block_entity"
+            }
+          ],
           "name": "selling_bin:selling_bin"
         }
       ],

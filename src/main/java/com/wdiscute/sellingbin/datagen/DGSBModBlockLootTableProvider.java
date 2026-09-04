@@ -1,14 +1,18 @@
 package com.wdiscute.sellingbin.datagen;
 
 import com.wdiscute.sellingbin.registry.SBBlocks;
+import com.wdiscute.sellingbin.registry.SBDataComponents;
 import net.minecraft.advancements.criterion.StatePropertiesPredicate.Builder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.data.loot.BlockLootSubProvider;
 import net.minecraft.world.flag.FeatureFlags;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
+import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
+import net.minecraft.world.level.storage.loot.parameters.LootContextParams;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
 import net.minecraft.world.level.storage.loot.providers.number.ConstantValue;
 import net.nikdo53.tinymultiblocklib.block.AbstractMultiBlock;
@@ -28,7 +32,22 @@ public class DGSBModBlockLootTableProvider extends BlockLootSubProvider
     protected void generate()
     {
         //selling bin because datagen sucks
-        LootTable.Builder builder = LootTable.lootTable().withPool(this.applyExplosionCondition(SBBlocks.SELLING_BIN.get(), LootPool.lootPool().setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(SBBlocks.SELLING_BIN.get()).when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(SBBlocks.SELLING_BIN.get()).setProperties(Builder.properties().hasProperty(AbstractMultiBlock.CENTER, true))))));
+        LootTable.Builder builder = LootTable.lootTable()
+                .withPool(this.applyExplosionCondition(SBBlocks.SELLING_BIN.get(), LootPool.lootPool()
+                        .setRolls(ConstantValue.exactly(1.0F))
+                        .add(LootItem.lootTableItem(SBBlocks.SELLING_BIN.get())
+                                .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(SBBlocks.SELLING_BIN.get())
+                                        .setProperties(Builder.properties()
+                                                .hasProperty(AbstractMultiBlock.CENTER, true)))
+                                .apply(CopyComponentsFunction.copyComponentsFromBlockEntity(LootContextParams.BLOCK_ENTITY)
+                                        .include(DataComponents.CUSTOM_NAME)
+                                        .include(DataComponents.CONTAINER)
+                                        .include(DataComponents.LOCK)
+                                        .include(DataComponents.CONTAINER_LOOT)
+                                        .include(SBDataComponents.STORED_VALUE.get()
+                                        )))
+                ));
+
         add(SBBlocks.SELLING_BIN.get(), builder);
     }
 

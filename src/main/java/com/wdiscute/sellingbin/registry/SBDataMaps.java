@@ -27,6 +27,13 @@ public interface SBDataMaps
         return data;
     }
 
+    static <T> T getOrDefault(Item item, DataMapType<Item, T> dataMap, T d)
+    {
+        T data = item.builtInRegistryHolder().getData(dataMap);
+        if(data == null) return d;
+        return data;
+    }
+
     record ItemValue(int baseValue, List<AbstractProcessor> processors)
     {
         public static final Codec<ItemValue> CODEC = RecordCodecBuilder.create(instance ->

@@ -43,16 +43,13 @@ dependencies {
     //tiny multiblock lib
     jarJar(implementation("maven.modrinth:tiny-multiblock-lib:neo-26.1-${tiny_multiblock_lib_version}"))
 
+    //FTS
+    jarJar(implementation("maven.modrinth:fancytabsections:6.2-NEOFORGE-26.1.2"))
+    //jarJar(implementation("net.mcexpanded:Fancy-Tabs-Neo:6.2-NEOFORGE-26.1.2"))
+
     //JEI
     compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}")
     //runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
-
-    //lets do vinery
-    //not updated
-
-    //lets do brewery
-    //not updates
-
 }
 
 base {
