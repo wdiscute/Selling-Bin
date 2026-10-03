@@ -55,7 +55,7 @@ public class SellingBin
         SBCreativeModeTab.register(modEventBus);
 
         modContainer.registerConfig(ModConfig.Type.CLIENT, SBConfig.SPEC);
-        modContainer.registerConfig(ModConfig.Type.SERVER, SBConfig.SPEC_SERVER);
+        modContainer.registerConfig(ModConfig.Type.SYNCED, SBConfig.SPEC_SERVER);
     }
 
     @Mod(value = SellingBin.MOD_ID, dist = Dist.CLIENT)

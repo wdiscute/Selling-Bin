@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'net.neoforged.moddev' version '2.0.141'
+    id 'net.neoforged.moddev' version '2.0.147'
     id 'idea'
 }
 
@@ -36,20 +36,24 @@ repositories {
     maven {
         url = "https://maven.blamejared.com/"
     }
+
+    //nikdo github
+    maven {
+        name = 'Nikdo53 Maven'
+        url = 'https://nikdo53.github.io'
+    }
 }
 
 dependencies {
 
     //tiny multiblock lib
-    jarJar(implementation("maven.modrinth:tiny-multiblock-lib:neo-26.2-4.0.0"))
+    jarJar(implementation("net.nikdo53:tiny-multiblock-lib-neoforge-26.3:4.0.1"))
 
     //FTS
-    jarJar(implementation("maven.modrinth:fancytabsections:6.2-NEOFORGE-26.2"))
-    //jarJar(implementation("net.mcexpanded:Fancy-Tabs-Neo:6.2-NEOFORGE-26.1.2"))
+    jarJar(implementation("maven.modrinth:fancytabsections:6.2-NEOFORGE-26.3"))
 
     //JEI
-    compileOnly("mezz.jei:jei-${minecraft_version}-neoforge-api:30.30.0.204")
-    //runtimeOnly("mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}")
+    compileOnly "mezz.jei:jei-26.3-neoforge:31.9.0.56"
 }
 
 base {

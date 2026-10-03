@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "selling_bin:selling_bin"
+        "recipes": "selling_bin:selling_bin"
       },
       "trigger": "minecraft:recipe_unlocked"
     }

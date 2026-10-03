@@ -80,16 +80,11 @@ public class SellingBinSellingJeiRecipe extends AbstractRecipeCategory<SellingBi
 
     public void renderTooltip(GuiGraphicsExtractor guiGraphics, List<Component> components, int mouseX, int mouseY)
     {
-        var clientTooltipComponents = components.stream().map(Component::getVisualOrderText).map(ClientTooltipComponent::create).toList();
-
-        Identifier identifier = ItemStack.EMPTY.get(DataComponents.TOOLTIP_STYLE);
-
-        guiGraphics.tooltip(Minecraft.getInstance().font,
-                clientTooltipComponents,
+        guiGraphics.setTooltipForNextFrame(Minecraft.getInstance().font,
+                components,
+                Optional.empty(),
                 mouseX,
-                mouseY,
-                DefaultTooltipPositioner.INSTANCE,
-                identifier
+                mouseY
         );
     }
 

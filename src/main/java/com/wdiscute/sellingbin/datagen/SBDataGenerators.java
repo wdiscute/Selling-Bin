@@ -2,9 +2,14 @@ package com.wdiscute.sellingbin.datagen;
 
 import com.wdiscute.sellingbin.SellingBin;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.RegistrySetBuilder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.data.DataGenerator;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.loot.LootTableProvider;
+import net.minecraft.data.loot.packs.VanillaBlockLoot;
+import net.minecraft.data.loot.packs.VanillaLootTableProvider;
+import net.minecraft.world.level.storage.loot.BuiltInLootTables;
 import net.minecraft.world.level.storage.loot.parameters.LootContextParamSets;
 import net.neoforged.bus.api.SubscribeEvent;
 import net.neoforged.fml.common.EventBusSubscriber;
@@ -12,32 +17,38 @@ import net.neoforged.neoforge.data.event.GatherDataEvent;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 
 @EventBusSubscriber(modid = SellingBin.MOD_ID)
 public class SBDataGenerators
 {
-
     @SubscribeEvent
     public static void gatherData(GatherDataEvent.Client event)
     {
-        DataGenerator gen = event.getGenerator();
+        RegistrySetBuilder registry = new RegistrySetBuilder()
+                .add(
+                        Registries.LOOT_TABLE,
+                        new LootTableProvider(
+                                Set.of(),
+                                List.of(
+                                        new LootTableProvider.SubProviderEntry(DGSBModBlockLootTableProvider::new, LootContextParamSets.BLOCK)
+                                )
+                        )
+                )
+                .add(
+                        DGSBRecipeProvider.create()
+                );
 
-        PackOutput output = gen.getPackOutput();
-        CompletableFuture<HolderLookup.Provider> lookupProvider = event.getLookupProvider();
-
-        //loot table
-        gen.addProvider(true, new LootTableProvider(output, Collections.emptySet(),
-                List.of(new LootTableProvider.SubProviderEntry(DGSBModBlockLootTableProvider::new, LootContextParamSets.BLOCK)), lookupProvider));
 
         //block tags
-        gen.addProvider(true, new DGSBBlocksTagsProvider(output, lookupProvider));
+        event.getGenerator().addProvider(true, new DGSBBlocksTagsProvider(
+                event.getDefaultPackGenerator().getPackOutput(),
+                event.getReloadableLookupProvider()));
 
-        //recipe
-        gen.addProvider(true, new DGSBRecipeProvider.Runner(output, lookupProvider));
+        //data map - not ran on 26+
+        //gen.addProvider(true, new DGSBDataMapsProvider(output, lookupProvider));
 
-        //data map
-        gen.addProvider(true, new DGSBDataMapsProvider(output, lookupProvider));
-
+        event.createReloadableRegistryObjects(registry);
     }
 }

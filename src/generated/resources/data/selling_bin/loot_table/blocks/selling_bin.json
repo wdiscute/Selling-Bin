@@ -2,40 +2,38 @@
   "type": "minecraft:block",
   "pools": [
     {
-      "conditions": [
-        {
-          "condition": "minecraft:survives_explosion"
-        }
-      ],
+      "condition": {
+        "type": "minecraft:all_of",
+        "terms": [
+          {
+            "type": "minecraft:match_block",
+            "state": {
+              "center": "true"
+            }
+          },
+          {
+            "type": "minecraft:survives_explosion"
+          }
+        ]
+      },
       "entries": [
         {
           "type": "minecraft:item",
-          "conditions": [
-            {
-              "block": "selling_bin:selling_bin",
-              "condition": "minecraft:block_state_property",
-              "properties": {
-                "center": "true"
-              }
-            }
-          ],
-          "functions": [
-            {
-              "function": "minecraft:copy_components",
-              "include": [
-                "minecraft:custom_name",
-                "minecraft:container",
-                "minecraft:lock",
-                "minecraft:container_loot",
-                "selling_bin:stored_value"
-              ],
-              "source": "block_entity"
-            }
-          ],
+          "modifier": {
+            "type": "minecraft:copy_components",
+            "include": [
+              "minecraft:custom_name",
+              "minecraft:container",
+              "minecraft:lock",
+              "minecraft:container_loot",
+              "selling_bin:stored_value"
+            ],
+            "source": "block_entity"
+          },
           "name": "selling_bin:selling_bin"
         }
       ],
-      "rolls": 1.0
+      "rolls": 1
     }
   ],
   "random_sequence": "selling_bin:blocks/selling_bin"

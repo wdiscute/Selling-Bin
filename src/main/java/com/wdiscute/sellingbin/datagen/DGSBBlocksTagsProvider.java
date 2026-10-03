@@ -11,8 +11,7 @@ import java.util.concurrent.CompletableFuture;
 
 public class DGSBBlocksTagsProvider extends BlockTagsProvider
 {
-    public DGSBBlocksTagsProvider(PackOutput output,
-                                  CompletableFuture<HolderLookup.Provider> lookupProvider)
+    public DGSBBlocksTagsProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> lookupProvider)
     {
         super(output, lookupProvider, SellingBin.MOD_ID);
     }

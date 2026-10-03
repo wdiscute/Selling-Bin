@@ -22,6 +22,7 @@ import net.minecraft.world.item.Items;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
 {
@@ -112,16 +113,11 @@ public class SellingBinScreen extends AbstractContainerScreen<SellingBinMenu>
 
     public void renderTooltip(GuiGraphicsExtractor guiGraphics, List<Component> components, int mouseX, int mouseY)
     {
-        var clientTooltipComponents = components.stream().map(Component::getVisualOrderText).map(ClientTooltipComponent::create).toList();
-
-        Identifier identifier = ItemStack.EMPTY.get(DataComponents.TOOLTIP_STYLE);
-
-        guiGraphics.tooltip(this.font,
-                clientTooltipComponents,
+        guiGraphics.setTooltipForNextFrame(this.font,
+                components,
+                Optional.empty(),
                 mouseX,
-                mouseY,
-                DefaultTooltipPositioner.INSTANCE,
-                identifier
+                mouseY
         );
     }
 
